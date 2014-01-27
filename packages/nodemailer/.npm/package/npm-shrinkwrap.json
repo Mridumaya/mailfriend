@@ -1,0 +1,81 @@
+{
+  "dependencies": {
+    "nodemailer": {
+      "version": "0.6.0",
+      "dependencies": {
+        "mailcomposer": {
+          "version": "0.2.7",
+          "dependencies": {
+            "mimelib": {
+              "version": "0.2.14",
+              "dependencies": {
+                "encoding": {
+                  "version": "0.1.7",
+                  "dependencies": {
+                    "iconv-lite": {
+                      "version": "0.2.11"
+                    }
+                  }
+                },
+                "addressparser": {
+                  "version": "0.2.0"
+                }
+              }
+            },
+            "mime": {
+              "version": "1.2.9"
+            },
+            "punycode": {
+              "version": "1.2.3"
+            },
+            "follow-redirects": {
+              "version": "0.0.3",
+              "dependencies": {
+                "underscore": {
+                  "version": "1.5.2"
+                }
+              }
+            },
+            "dkim-signer": {
+              "version": "0.1.0"
+            }
+          }
+        },
+        "simplesmtp": {
+          "version": "0.3.18",
+          "dependencies": {
+            "rai": {
+              "version": "0.1.9"
+            },
+            "xoauth2": {
+              "version": "0.1.8"
+            }
+          }
+        },
+        "directmail": {
+          "version": "0.1.6"
+        },
+        "he": {
+          "version": "0.3.6"
+        },
+        "public-address": {
+          "version": "0.1.0"
+        },
+        "readable-stream": {
+          "version": "1.1.10",
+          "dependencies": {
+            "core-util-is": {
+              "version": "1.0.1"
+            },
+            "string_decoder": {
+              "version": "0.10.24"
+            },
+            "debuglog": {
+              "version": "0.0.2"
+            }
+          }
+        }
+      }
+    }
+  }
+}
