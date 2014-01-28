@@ -1,5 +1,4 @@
 Meteor.startup ->
-
   googleOauth =
     id: "641565285402-b7u0f11mjhsuapuhthn3ntqn1u4jpbpp.apps.googleusercontent.com"
     secret: "quILGppmE6wJGcmULASCvAmF"

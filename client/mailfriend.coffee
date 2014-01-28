@@ -1,12 +1,14 @@
 Template.invite_friends.rendered = ->
-  if Meteor.user()
-    $(this.find('.add-google-oauth')).prop('disabled', true)
-  else
-    $(this.find('.add-google-oauth')).prop('disabled', false)
+  # if Meteor.user()
+  #   $(this.find('.add-google-oauth')).prop('disabled', true)
+  # else
+  #   $(this.find('.add-google-oauth')).prop('disabled', false)
 
 Template.invite_friends.events
   'click .add-google-oauth': (e) ->
-    $(e.currentTarget).prop('disabled', true)
+    console.log new Date()
+    button = $(e.currentTarget)
+    $(button).prop('disabled', true)
     Meteor.loginWithGoogle({
       requestPermissions: ["https://mail.google.com/", # imap
                            "https://www.googleapis.com/auth/userinfo.profile", # profile
@@ -16,5 +18,8 @@ Template.invite_friends.events
       requestOfflineToken: true
       forceApprovalPrompt: true
     }, (err) ->
-      $(e.currentTarget).prop('disabled', false)
+      $(button).prop('disabled', false)
+      unless err
+        Meteor.call 'loadContacts', Meteor.userId(), (err) ->
+          console.log err if err
     )
