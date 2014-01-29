@@ -29,15 +29,18 @@ Template.invite_friends.events
 Template.contact_list.helpers
   contacts: ->
     contacts = Contacts.find().fetch()
-    _.sortBy contacts, (c) -> -c.uids.length
+    contacts = _.sortBy contacts, (c) -> -c.uids.length
+    _.map contacts, (c, i) -> _.extend c, {index: i+1}
   messages: ->
     @uids.length
 
 Template.contact_list.events
   'click tr.contact': (e) ->
     $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('icon-ok')
+    $('.alert-contact').hide()
 
   'click button.selectAll': (e) ->
+    $('.alert-contact').hide()
     selectAll = $(e.currentTarget)
     if $(selectAll).toggleClass('selected').hasClass('selected')
       $(selectAll).text('Unselect All')
@@ -46,3 +49,43 @@ Template.contact_list.events
       $(selectAll).text('Select All')
       $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
 
+Template.contact_list.rendered = ->
+  $(this.find('.alert-contact')).hide()
+
+Template.compose.rendered = ->
+  $(this.find('.email-subject')).focus() if Meteor.user()
+  $(this.find('.alert-body')).hide()
+
+Template.compose.events
+  'keypress .email-subject': (e) ->
+    $('.email-body').focus() if e.which is 13
+  'focus .email-body': (e) ->
+    $('.alert-body').hide()
+  'keypress .email-body': (e) ->
+    $('.email-send').focus() if e.which is 13
+  'click .email-send': (e) ->
+    subject = $('.email-subject').val().trim() || "Invitation"
+    body = $('.email-body').val().trim()
+
+    return $('.alert-body').show() unless body
+    return $('.alert-contact').show() unless $('tr.contact.info').length
+    emails = []
+    $('tr.contact.info').each -> emails.push $(this).data('email')
+    to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
+
+    # console.log subject
+    # console.log body
+    # console.log to
+    $('#email_draft .draft-subject').text(subject)
+    $('#email_draft .draft-body').text(body)
+    $('#email_draft .draft-to').html(to.join(''))
+    $('#email_draft').modal()
+
+Template.email_draft.events
+  'click button.draft-send': (e) ->
+    console.log 'click send'
+    subject = $('#email_draft .draft-subject').text()
+    body = $('#email_draft .draft-body').text()
+    to = []
+    $('#email_draft .draft-to p.email').each -> to.push $(this).text()
+    console.log subject, body, to

@@ -7,6 +7,7 @@
     {{> invite_friends}}
     {{> compose}}
     {{> contact_list}}
+    {{> email_draft}}
   </div>
 </body>
 
@@ -14,10 +15,32 @@
   <p>Send messages to your friends</p>
   <div class="input-prepend">
     <span class="add-on">Email Subject:</span>
-    <input class="span6" type="text" placeholder="Invitation">
+    <input class="span6 email-subject" type="text" placeholder="Invitation">
   </div>
-  <textarea class="span8" rows="3" placeholder="Write some here"></textarea>
-  <button class="btn btn-primary">Send Messages</button>
+  <div class="alert alert-warning alert-body">Warning! Please write some text!</div>
+  <textarea class="span8 email-body" rows="3" placeholder="Write some here"></textarea>
+  <button class="btn btn-primary email-send">Send Messages</button>
+</template>
+
+<template name="email_draft">
+  <div id="email_draft" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3>Email Content Preview</h3>
+    </div>
+    <div class="modal-body">
+      <h4>Subject:</h4>
+      <p class="draft-subject"></p>
+      <h4>Body:</h4>
+      <p class="draft-body"></p>
+      <h4>Send To:</h4>
+      <p class="draft-to"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      <button class="btn btn-primary draft-send">Send</button>
+    </div>
+  </div>
 </template>
 
 <template name="invite_friends">
@@ -27,6 +50,7 @@
 </template>
 
 <template name="contact_list">
+  <div class="alert alert-warning alert-contact">Warning! Select emails of friends first!</div>
   <table class="table table-bordered table-hover contacts">
     <thead>
       <tr>
@@ -39,7 +63,7 @@
     <tbody>
       {{#each contacts}}
         <tr class="contact" data-email="{{email}}">
-          <td class="icon"><i></i></td>
+          <td class="icon"><i></i><span>  {{index}}</span></td>
           <td>{{name}}</td>
           <td>{{email}}</td>
           <td>{{messages}}</td>
