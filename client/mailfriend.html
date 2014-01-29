@@ -3,14 +3,48 @@
 </head>
 
 <body>
-  {{> invite_friends}}
+  <div class="container">
+    {{> invite_friends}}
+    {{> compose}}
+    {{> contact_list}}
+  </div>
 </body>
 
-<template name="invite_friends">
-  <h1>Hello, invite your friends!</h1>
-  <textarea class="plain-text" placeholder="Write some here"></textarea>
-  Click here to populate your invitations
-  <button class="add-google-oauth">Add google oauth</button>
+<template name="compose">
+  <p>Send messages to your friends</p>
+  <div class="input-prepend">
+    <span class="add-on">Email Subject:</span>
+    <input class="span6" type="text" placeholder="Invitation">
+  </div>
+  <textarea class="span8" rows="3" placeholder="Write some here"></textarea>
+  <button class="btn btn-primary">Send Messages</button>
 </template>
 
+<template name="invite_friends">
+  <h1>Hello, <span style="color:blue;">{{name}}</span> invite your friends!</h1>
+  Click here to populate your invitations
+  <button class="add-google-oauth btn btn-primary">Add google oauth</button>
+</template>
 
+<template name="contact_list">
+  <table class="table table-bordered table-hover contacts">
+    <thead>
+      <tr>
+        <th><button class="selectAll btn btn-primary">Select All</button></th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Number of Messages</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each contacts}}
+        <tr class="contact" data-email="{{email}}">
+          <td class="icon"><i></i></td>
+          <td>{{name}}</td>
+          <td>{{email}}</td>
+          <td>{{messages}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>

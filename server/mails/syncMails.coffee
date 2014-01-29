@@ -11,7 +11,7 @@ parseContacts = (contacts) ->
       from: from
       uid: c.uid
       email: email
-      name: name
+      name: name || ''
     }
 
 addContacts = (contacts, user_id) ->
@@ -61,10 +61,9 @@ addContacts = (contacts, user_id) ->
           rejectUnauthorized: false
       })
       imapServer.once 'ready', ->
-        imapServer.getBoxes (err, boxes) -> console.log "[MailSync]: boxes ", boxes
+        # imapServer.getBoxes (err, boxes) -> console.log "[MailSync]: boxes ", boxes
 
         imapServer.openBox "INBOX", true, (err, box) ->
-        # imapServer.openBox "Sent Messages", true, (err, box) ->
           if err
             console.log('[LoadGmail]: Open InBox error', err)
             do imapServer.end
@@ -72,8 +71,9 @@ addContacts = (contacts, user_id) ->
           console.log 'total messages in INBOX: ', box.messages.total
 
             # fetch latest 1000 header of mails.
-          if box.messages.total > 1000
-            range = (box.messages.total - 1000) + ":*"
+          MAX_MESSAGES = 2000
+          if box.messages.total > MAX_MESSAGES
+            range = (box.messages.total - MAX_MESSAGES) + ":*"
           else
             range = "1:*"
           allContacts = []
@@ -81,7 +81,7 @@ addContacts = (contacts, user_id) ->
             bodies: 'HEADER.FIELDS (FROM TO)',
             struct: true
           f.on 'message', (msg, seqno) ->
-            prefix = '(#' + seqno + ') '
+            # prefix = '(#' + seqno + ') '
             contact = {}
             msg.on 'body', (stream, info) ->
               buffer = ''
@@ -90,7 +90,14 @@ addContacts = (contacts, user_id) ->
                 contact = Imap.parseHeader(buffer)
 
             msg.once 'attributes', (attrs) -> contact.uid = attrs.uid
-            msg.once 'end', -> allContacts.push contact
+            msg.once 'end', -> 
+              # console.log contact.to.join(','), ' - ', user.services.google.email
+              to = contact.to
+              if to?.join(',').indexOf(user.services.google.email) != -1
+                unless contact.from.join('').match(/no-?reply/i)
+                  allContacts.push contact
+              else
+                console.log "Not Send to #{user.services.google.email} but #{contact.to}"
 
           f.once 'error', (err) -> console.log('Fetch error: ' + err)
           f.once 'end', ->

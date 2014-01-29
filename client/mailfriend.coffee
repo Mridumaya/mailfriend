@@ -1,8 +1,10 @@
-Template.invite_friends.rendered = ->
-  # if Meteor.user()
-  #   $(this.find('.add-google-oauth')).prop('disabled', true)
-  # else
-  #   $(this.find('.add-google-oauth')).prop('disabled', false)
+Template.invite_friends.helpers
+  name: ->
+    user = Meteor.user()
+    if user
+      user.profile.name
+    else
+      ''
 
 Template.invite_friends.events
   'click .add-google-oauth': (e) ->
@@ -23,3 +25,24 @@ Template.invite_friends.events
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log err if err
     )
+
+Template.contact_list.helpers
+  contacts: ->
+    contacts = Contacts.find().fetch()
+    _.sortBy contacts, (c) -> -c.uids.length
+  messages: ->
+    @uids.length
+
+Template.contact_list.events
+  'click tr.contact': (e) ->
+    $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('icon-ok')
+
+  'click button.selectAll': (e) ->
+    selectAll = $(e.currentTarget)
+    if $(selectAll).toggleClass('selected').hasClass('selected')
+      $(selectAll).text('Unselect All')
+      $('tr.contact').addClass('info').find('.icon i').addClass('icon-ok')
+    else
+      $(selectAll).text('Select All')
+      $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
+
