@@ -12,13 +12,14 @@
 </body>
 
 <template name="compose">
+  <h3>Email Content</h3>
   <p>Send messages to your friends</p>
   <div class="input-prepend">
     <span class="add-on">Email Subject:</span>
-    <input class="span6 email-subject" type="text" placeholder="Invitation">
+    <input class="span7 email-subject" type="text" placeholder="Invitation">
   </div>
   <div class="alert alert-warning alert-body">Warning! Please write some text!</div>
-  <textarea class="span8 email-body" rows="3" placeholder="Write some here"></textarea>
+  <div><textarea class="span8 email-body" rows="3" placeholder="Write some here"></textarea></div>
   <button class="btn btn-primary email-send">Send Messages</button>
 </template>
 
@@ -37,7 +38,7 @@
       <p class="draft-to"></p>
     </div>
     <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      <button class="btn draft-close" data-dismiss="modal" aria-hidden="true">Close</button>
       <button class="btn btn-primary draft-send">Send</button>
     </div>
   </div>
@@ -50,6 +51,7 @@
 </template>
 
 <template name="contact_list">
+  <h3>Your friends</h3>
   <div class="alert alert-warning alert-contact">Warning! Select emails of friends first!</div>
   <table class="table table-bordered table-hover contacts">
     <thead>

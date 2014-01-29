@@ -83,9 +83,14 @@ Template.compose.events
 
 Template.email_draft.events
   'click button.draft-send': (e) ->
-    console.log 'click send'
     subject = $('#email_draft .draft-subject').text()
     body = $('#email_draft .draft-body').text()
     to = []
     $('#email_draft .draft-to p.email').each -> to.push $(this).text()
     console.log subject, body, to
+    $('.draft-send').prop('disabled', true)
+    Meteor.call 'sendMail', subject, body, to, (err, result) ->
+      console.log err if err
+      console.log 'send mail success'
+      $('.draft-send').prop('disabled', false)
+      $('.draft-close').trigger('click')
