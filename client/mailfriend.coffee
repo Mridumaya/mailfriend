@@ -5,8 +5,12 @@ Template.invite_friends.helpers
       user.profile.name
     else
       ''
+  hasLogin: ->
+    !!Meteor.user()
 
 Template.invite_friends.events
+  'click .logout': (e) ->
+    Meteor.logout()
   'click .add-google-oauth': (e) ->
     console.log new Date()
     button = $(e.currentTarget)
@@ -77,7 +81,7 @@ Template.compose.events
     # console.log body
     # console.log to
     $('#email_draft .draft-subject').text(subject)
-    $('#email_draft .draft-body').text(body)
+    $('#email_draft .draft-body').html(body + "<p><a href=\"#{Meteor.absoluteUrl()}\">Tell your friends</a></p>")
     $('#email_draft .draft-to').html(to.join(''))
     $('#email_draft').modal()
 

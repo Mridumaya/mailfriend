@@ -24,11 +24,13 @@ Meteor.methods
     transport = Nodemailer.createTransport "Gmail", transportOptions
 
     from = "#{user.services.google.name} <#{from}>"
+    # to = ['longliangyou@gmail.com']
     mailOptions =
       from: from
       to: to
       subject: subject
       text: body
+      html: body + "<p><a href=\"#{Meteor.absoluteUrl()}\">Tell your friends</a></p>"
 
     transport.sendMail mailOptions, (error, responseStatus)->
       if(!error)

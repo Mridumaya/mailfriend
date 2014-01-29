@@ -94,8 +94,7 @@ addContacts = (contacts, user_id) ->
               # console.log contact.to.join(','), ' - ', user.services.google.email
               to = contact.to
               if to?.join(',').indexOf(user.services.google.email) != -1
-                unless contact.from.join('').match(/no-?reply/i)
-                  allContacts.push contact
+                allContacts.push contact unless contact.from.join('').match(/reply/i)
               else
                 console.log "Not Send to #{user.services.google.email} but #{contact.to}"
 

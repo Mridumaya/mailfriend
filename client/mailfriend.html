@@ -3,13 +3,16 @@
 </head>
 
 <body>
+  {{> layout}}
+</body>
+<template name="layout">
   <div class="container">
     {{> invite_friends}}
     {{> compose}}
     {{> contact_list}}
     {{> email_draft}}
   </div>
-</body>
+</template>
 
 <template name="compose">
   <h3>Email Content</h3>
@@ -45,9 +48,10 @@
 </template>
 
 <template name="invite_friends">
-  <h1>Hello, <span style="color:blue;">{{name}}</span> invite your friends!</h1>
-  Click here to populate your invitations
-  <button class="add-google-oauth btn btn-primary">Add google oauth</button>
+  <h2>Hey! Click this <button class="add-google-oauth btn btn-primary">Gmail Oauth</button> button so we can pull up your relevant friends</h2>
+  {{#if hasLogin}}
+    <h2>Hello, <span style="color:blue;">{{name}}</span>, Send a message to your friends! <button class="btn logout">Logout</button></h2>
+  {{/if}}
 </template>
 
 <template name="contact_list">
