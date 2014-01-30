@@ -1,4 +1,11 @@
+initGoogleOauth = ->
+  service = Accounts.loginServiceConfiguration.findOne service: 'google', domain: Meteor.absoluteUrl()
+  if service
+    googleOauth = id: service.clientId, secret: service.secret
+    Meteor.settings.google = googleOauth
+
 Meteor.startup ->
+  initGoogleOauth()
 
 Meteor.methods
   'initGoogleOauth': (id, secret, updateCode) ->

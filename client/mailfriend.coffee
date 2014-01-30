@@ -55,10 +55,12 @@ Template.contact_list.events
 
 Template.contact_list.rendered = ->
   $(this.find('.alert-contact')).hide()
+  $(this.find('button.selectAll')).prop('disabled', !Meteor.user())
 
 Template.compose.rendered = ->
   $(this.find('.email-subject')).focus() if Meteor.user()
   $(this.find('.alert-body')).hide()
+  $(this.find('.email-send')).prop('disabled', !Meteor.user())
 
 Template.compose.events
   'keypress .email-subject': (e) ->
@@ -66,7 +68,11 @@ Template.compose.events
   'focus .email-body': (e) ->
     $('.alert-body').hide()
   'keypress .email-body': (e) ->
-    $('.email-send').focus() if e.which is 13
+    if e.which is 13
+      $('.email-send').focus()
+    else
+      $('.email-send').prop('disabled', false)
+
   'click .email-send': (e) ->
     subject = $('.email-subject').val().trim() || "Invitation"
     body = $('.email-body').val().trim()
