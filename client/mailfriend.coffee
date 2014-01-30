@@ -33,10 +33,12 @@ Template.invite_friends.events
 Template.contact_list.helpers
   contacts: ->
     contacts = Contacts.find().fetch()
-    contacts = _.sortBy contacts, (c) -> -c.uids.length
+    contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
     _.map contacts, (c, i) -> _.extend c, {index: i+1}
-  messages: ->
-    @uids.length
+  receivedMessages: ->
+    @uids?.length || 0
+  sentMessages: ->
+    @sent_uids?.length || 0
 
 Template.contact_list.events
   'click tr.contact': (e) ->

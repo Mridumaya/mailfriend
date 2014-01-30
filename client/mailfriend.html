@@ -94,7 +94,8 @@
         <th><button class="selectAll btn btn-primary">Select All</button></th>
         <th>Name</th>
         <th>Email</th>
-        <th>Number of Messages</th>
+        <th>Messages(received)</th>
+        <th>Messages(sent)</th>
       </tr>
     </thead>
     <tbody>
@@ -103,7 +104,8 @@
           <td class="icon"><i></i><span>  {{index}}</span></td>
           <td>{{name}}</td>
           <td>{{email}}</td>
-          <td>{{messages}}</td>
+          <td>{{receivedMessages}}</td>
+          <td>{{sentMessages}}</td>
         </tr>
       {{/each}}
     </tbody>
