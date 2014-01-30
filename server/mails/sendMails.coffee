@@ -37,3 +37,8 @@ Meteor.methods
         console.log(responseStatus.message) # response from the server
         console.log(responseStatus.messageId) # Message-ID value used
       transport.close()
+
+      Fiber = Npm.require("fibers")
+      Fiber ->
+        Contacts.update({email: {$in: to}, user_id: user._id}, {$inc: {sends: 1}}, multi: true)
+      .run()
