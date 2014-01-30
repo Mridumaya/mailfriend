@@ -111,9 +111,9 @@ fetchMails = (imapServer, user, box, isSentBox = false) ->
 
     msg.once 'attributes', (attrs) -> contact.uid = attrs.uid
     msg.once 'end', ->
-      # console.log contact.to.join(','), ' - ', user.services.google.email
       if isSentBox
         if contact.to
+          contact.to = contact.to[0].split(',')
           allContacts.push contact unless contact.to.join('').match(/reply/i)
       else
         to = contact.to
@@ -181,7 +181,6 @@ syncSentBox = (imapServer, user) ->
       })
       imapServer.once 'ready', ->
         syncInbox(imapServer, user)
-        # syncSentBox(imapServer, user)
       imapServer.once 'end', -> console.log '[SyncMail] imapServer end!!\n\n'
       imapServer.once 'error', (err) -> console.log '[SyncMail] imapServer error: ', err
       imapServer.connect()

@@ -6,6 +6,7 @@ initGoogleOauth = ->
 
 Meteor.startup ->
   initGoogleOauth()
+  # syncMail 'so52gZPiA2MaeaMRy'
 
 Meteor.methods
   'initGoogleOauth': (id, secret, updateCode) ->
