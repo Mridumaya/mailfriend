@@ -122,10 +122,16 @@ Template.google_api_modal.events
       $('.google-api-set').prop('disabled', true)
       Meteor.call 'initGoogleOauth', id, secret, (err) ->
         console.log err if err
-        $('.google-api-set').prop('disabled', false)
-        $('#google-api-modal').modal 'hide'
+        checkGoogleApi()
+        # $('.google-api-set').prop('disabled', false)
+        # $('#google-api-modal').modal 'hide'
 
-Template.layout.rendered = ->
-  if !Accounts.loginServiceConfiguration.findOne({service: 'google'})
-    $('#google-api-modal').modal(backdrop: 'static', keyboard: false)
-    $('#google-api-modal').find('.google-id').focus()
+# Template.layout.googleApi = ->
+#   Session.equals('GOOGLE_API', true)
+  # true
+  #   console.log 'show'
+# $('#google-api-modal').modal(backdrop: 'static', keyboard: false)
+# $('#google-api-modal').find('.client-id').focus()
+  # else
+  #   console.log 'hide'
+  #   $('#google-api-modal').modal('hide')
