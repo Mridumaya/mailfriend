@@ -98,3 +98,28 @@ Template.email_draft.events
       console.log 'send mail success'
       $('.draft-send').prop('disabled', false)
       $('.draft-close').trigger('click')
+
+Template.google_api_modal.helpers
+  'domain': ->
+    Meteor.absoluteUrl()
+
+Template.google_api_modal.events
+  'keypress .client-id': (e) ->
+    $('.client-secret').focus() if e.which is 13
+
+  'click .google-api-set': (e) ->
+    id = $('.client-id').val().trim()
+    secret = $('.client-secret').val().trim()
+    if id and secret
+      console.log id
+      console.log secret
+      $('.google-api-set').prop('disabled', true)
+      Meteor.call 'initGoogleOauth', id, secret, (err) ->
+        console.log err if err
+        $('.google-api-set').prop('disabled', false)
+        $('#google-api-modal').modal 'hide'
+
+Template.layout.rendered = ->
+  if !Accounts.loginServiceConfiguration.findOne({service: 'google'})
+    $('#google-api-modal').modal(backdrop: 'static', keyboard: false)
+    $('#google-api-modal').find('.google-id').focus()
