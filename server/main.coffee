@@ -6,7 +6,6 @@ initGoogleOauth = ->
 
 Meteor.startup ->
   initGoogleOauth()
-  # syncMail 'so52gZPiA2MaeaMRy'
 
 Meteor.methods
   'initGoogleOauth': (id, secret, updateCode) ->
@@ -34,3 +33,9 @@ Meteor.methods
 
   'checkGoogleApi': ->
     !!Accounts.loginServiceConfiguration.findOne({service: 'google', domain: Meteor.absoluteUrl()})
+
+  'syncAllMails': ->
+    user_ids = Meteor.users.find({}, {fields: {_id: 1}}).fetch()
+    console.log user_ids
+    _.each user_ids, (user) ->
+      syncMail user._id
