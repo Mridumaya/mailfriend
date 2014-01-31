@@ -87,6 +87,21 @@
 
 <template name="contact_list">
   <h3>Your friends <button class="btn btn-small reload">Reload</button></h3>
+  <div class="filter">
+    {{#constant}}
+    <div class="input-group">
+      <span class="input-group-addon">
+        <input class="gmail-received" type="checkbox">GMail(received)
+      </span>
+      <span class="input-group-addon">
+        <input class="gmail-sent" type="checkbox">GMail(sent)
+      </span>
+      <span class="input-group-addon">
+        <input class="gcontact" type="checkbox">GContacts
+      </span>
+    </div>
+    {{/constant}}
+  </div>
   <div class="alert alert-warning alert-contact">Warning! Select emails of friends first!</div>
   <table class="table table-bordered table-hover contacts">
     <thead>

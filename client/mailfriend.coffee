@@ -32,7 +32,11 @@ Template.invite_friends.events
 
 Template.contact_list.helpers
   contacts: ->
-    contacts = Contacts.find().fetch()
+    selector = {}
+    _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
+    _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
+    _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
+    contacts = Contacts.find(selector).fetch()
     contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
     _.map contacts, (c, i) -> _.extend c, {index: i+1}
   receivedMessages: ->
@@ -43,10 +47,15 @@ Template.contact_list.helpers
     @source is 'gcontact'
 
 Template.contact_list.events
+  'click .gmail-received': (e) ->
+    Session.set("FILTER_GMAIL_RECEIVED", $(e.currentTarget).is(":checked"))
+  'click .gmail-sent': (e) ->
+    Session.set("FILTER_GMAIL_SENT", $(e.currentTarget).is(":checked"))
+  'click .gcontact': (e) ->
+    Session.set("FILTER_GCONTACT", $(e.currentTarget).is(":checked"))
   'click tr.contact': (e) ->
     $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('icon-ok')
     $('.alert-contact').hide()
-
   'click button.selectAll': (e) ->
     $('.alert-contact').hide()
     selectAll = $(e.currentTarget)
@@ -69,6 +78,9 @@ Template.compose.rendered = ->
   $(this.find('.email-subject')).focus() if Meteor.user()
   $(this.find('.alert-body')).hide()
   $(this.find('.email-send')).prop('disabled', !Meteor.user())
+  $(this.find('.gmail-received')).prop('checked', true) if Session.equals('FILTER_GMAIL_RECEIVED', true)
+  $(this.find('.gmail-sent')).prop('checked', true) if Session.equals('FILTER_GMAIL_SENT', true)
+  $(this.find('.gcontact')).prop('checked', true) if Session.equals('FILTER_GCONTACT', true)
 
 Template.compose.events
   'keypress .email-subject': (e) ->
@@ -131,15 +143,3 @@ Template.google_api_modal.events
       Meteor.call 'initGoogleOauth', id, secret, (err) ->
         console.log err if err
         checkGoogleApi()
-        # $('.google-api-set').prop('disabled', false)
-        # $('#google-api-modal').modal 'hide'
-
-# Template.layout.googleApi = ->
-#   Session.equals('GOOGLE_API', true)
-  # true
-  #   console.log 'show'
-# $('#google-api-modal').modal(backdrop: 'static', keyboard: false)
-# $('#google-api-modal').find('.client-id').focus()
-  # else
-  #   console.log 'hide'
-  #   $('#google-api-modal').modal('hide')
