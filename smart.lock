@@ -1,0 +1,15 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "google-contacts": {}
+    },
+    "packages": {
+      "google-contacts": {
+        "git": "https://github.com/iyou/Meteor-Google-Contacts.git",
+        "tag": "v0.1.1",
+        "commit": "21927ee0b427fa33beda25bdbda63f5725ab0efb"
+      }
+    }
+  }
+}
