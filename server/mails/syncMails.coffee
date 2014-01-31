@@ -176,6 +176,7 @@ syncSentBox = (imapServer, user) ->
         host: 'imap.gmail.com'
         port: 993
         tls: true
+        # debug: console.log
         tlsOptions:
           rejectUnauthorized: false
       })

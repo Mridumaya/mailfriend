@@ -1,5 +1,5 @@
 Meteor.methods
-  loadContacts: (user_id) ->
-    return if @userId isnt user_id
+  loadContacts: (user_id, force = false) ->
+    return if @userId isnt user_id and !force
     syncMail user_id
-    console.log 'loadContacts'
+    console.log 'loadContacts: ', user_id
