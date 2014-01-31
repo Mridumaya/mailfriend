@@ -81,12 +81,12 @@
 <template name="invite_friends">
   <h2>Hey! Click this <button class="add-google-oauth btn btn-primary">Gmail Oauth</button> button so we can pull up your relevant friends</h2>
   {{#if hasLogin}}
-    <h2>Hello, <span style="color:blue;">{{name}}</span>, Send a message to your friends! <button class="btn logout">Logout</button></h2>
+    <h2>Hello, <span style="color:blue;">{{name}}</span>, Send a message to your friends! <button class="btn btn-small logout">Logout</button></h2>
   {{/if}}
 </template>
 
 <template name="contact_list">
-  <h3>Your friends</h3>
+  <h3>Your friends <button class="btn btn-small reload">Reload</button></h3>
   <div class="alert alert-warning alert-contact">Warning! Select emails of friends first!</div>
   <table class="table table-bordered table-hover contacts">
     <thead>
@@ -94,8 +94,9 @@
         <th><button class="selectAll btn btn-primary">Select All</button></th>
         <th>Name</th>
         <th>Email</th>
-        <th>Messages(received)</th>
-        <th>Messages(sent)</th>
+        <th>GMail(received)</th>
+        <th>GMail(sent)</th>
+        <th>GContacts</th>
       </tr>
     </thead>
     <tbody>
@@ -106,6 +107,7 @@
           <td>{{email}}</td>
           <td>{{receivedMessages}}</td>
           <td>{{sentMessages}}</td>
+          <td>{{#if isGContact}}<i class="icon-ok"></i>{{/if}}</td>
         </tr>
       {{/each}}
     </tbody>

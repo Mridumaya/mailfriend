@@ -1,5 +1,12 @@
 Fiber = Npm.require("fibers")
 Meteor.methods
+  syncAllMails: ->
+    user_ids = Meteor.users.find({}, {fields: {_id: 1}}).fetch()
+    console.log user_ids
+    _.each user_ids, (user) ->
+      syncMail user._id
+      Meteor.call 'loadGContacts', user._id, true
+
   # load contact from gmail header
   loadContacts: (user_id, force = false) ->
     return if @userId isnt user_id and !force

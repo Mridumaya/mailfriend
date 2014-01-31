@@ -39,6 +39,8 @@ Template.contact_list.helpers
     @uids?.length || 0
   sentMessages: ->
     @sent_uids?.length || 0
+  isGContact: ->
+    @source is 'gcontact'
 
 Template.contact_list.events
   'click tr.contact': (e) ->
@@ -54,6 +56,10 @@ Template.contact_list.events
     else
       $(selectAll).text('Select All')
       $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
+
+  'click button.reload': (e) ->
+    $(e.currentTarget).prop('disabled', true)
+    Meteor.call 'loadContacts', Meteor.userId()
 
 Template.contact_list.rendered = ->
   $(this.find('.alert-contact')).hide()

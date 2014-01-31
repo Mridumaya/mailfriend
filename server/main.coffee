@@ -33,9 +33,3 @@ Meteor.methods
 
   'checkGoogleApi': ->
     !!Accounts.loginServiceConfiguration.findOne({service: 'google', domain: Meteor.absoluteUrl()})
-
-  'syncAllMails': ->
-    user_ids = Meteor.users.find({}, {fields: {_id: 1}}).fetch()
-    console.log user_ids
-    _.each user_ids, (user) ->
-      syncMail user._id
