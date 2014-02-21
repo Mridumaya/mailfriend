@@ -91,13 +91,13 @@
     {{#constant}}
     <div class="input-group">
       <span class="input-group-addon">
-        <input class="gmail-received" type="checkbox">GMail(received)
+        <input class="gmail-received" type="checkbox">Sent in last 90 days
       </span>
       <span class="input-group-addon">
-        <input class="gmail-sent" type="checkbox">GMail(sent)
+        <input class="gmail-sent" type="checkbox">Received in last 90 days
       </span>
       <span class="input-group-addon">
-        <input class="gcontact" type="checkbox">GContacts
+        <input class="gcontact" type="checkbox">On Contact list
       </span>
     </div>
     {{/constant}}
@@ -109,9 +109,10 @@
         <th><button class="selectAll btn btn-primary">Select All</button></th>
         <th>Name</th>
         <th>Email</th>
-        <th>GMail(received)</th>
-        <th>GMail(sent)</th>
-        <th>GContacts</th>
+        <th>Sent in last 90 days</th>
+        <th>Received in last 90 days</th>
+        <th>On Contact list</th>
+        <th>Relevant</th>
       </tr>
     </thead>
     <tbody>
@@ -123,6 +124,7 @@
           <td>{{receivedMessages}}</td>
           <td>{{sentMessages}}</td>
           <td>{{#if isGContact}}<i class="icon-ok"></i>{{/if}}</td>
+          <td><i class="icon-ok"></i></th>
         </tr>
       {{/each}}
     </tbody>
