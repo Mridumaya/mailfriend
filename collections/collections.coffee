@@ -2,4 +2,4 @@
   # transform: (doc) ->
   #   new UserAccount(doc)
 
-@AppVariables = new Meteor.Collection "app_variables"
+@Sharings = new Meteor.Collection "sharings"

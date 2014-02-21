@@ -5,12 +5,19 @@ Template.invite_friends.helpers
       user.profile.name
     else
       ''
+
+
   hasLogin: ->
     !!Meteor.user()
+
+
+
 
 Template.invite_friends.events
   'click .logout': (e) ->
     Meteor.logout()
+
+
   'click .add-google-oauth': (e) ->
     console.log new Date()
     button = $(e.currentTarget)
@@ -30,6 +37,8 @@ Template.invite_friends.events
           console.log err if err
     )
 
+
+
 Template.contact_list.helpers
   contacts: ->
     selector = {}
@@ -39,23 +48,39 @@ Template.contact_list.helpers
     contacts = Contacts.find(selector).fetch()
     contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
     _.map contacts, (c, i) -> _.extend c, {index: i+1}
+
+
   receivedMessages: ->
     @uids?.length || 0
+
+
   sentMessages: ->
     @sent_uids?.length || 0
+
+
   isGContact: ->
     @source is 'gcontact'
+
+
 
 Template.contact_list.events
   'click .gmail-received': (e) ->
     Session.set("FILTER_GMAIL_RECEIVED", $(e.currentTarget).is(":checked"))
+
+
   'click .gmail-sent': (e) ->
     Session.set("FILTER_GMAIL_SENT", $(e.currentTarget).is(":checked"))
+
+
   'click .gcontact': (e) ->
     Session.set("FILTER_GCONTACT", $(e.currentTarget).is(":checked"))
+
+
   'click tr.contact': (e) ->
     $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('icon-ok')
     $('.alert-contact').hide()
+
+
   'click button.selectAll': (e) ->
     $('.alert-contact').hide()
     selectAll = $(e.currentTarget)
@@ -66,15 +91,33 @@ Template.contact_list.events
       $(selectAll).text('Select All')
       $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
 
+
   'click button.reload': (e) ->
     $(e.currentTarget).prop('disabled', true)
     Meteor.call 'loadContacts', Meteor.userId()
+
+
+
 
 Template.contact_list.rendered = ->
   $(this.find('.alert-contact')).hide()
   $(this.find('button.selectAll')).prop('disabled', !Meteor.user())
 
+
+
+Template.compose.helpers
+  webUrl: ->
+    Meteor.absoluteUrl()
+
+  subject: ->
+    Sharings.findOne(type: 'email')?.subject
+
 Template.compose.rendered = ->
+  sharing = Sharings.findOne()
+  if sharing
+    $(this.find('.email-subject')).val(sharing.subject)
+    $(this.find('.email-body')).html(sharing.htmlBody)
+
   $(this.find('.email-subject')).focus() if Meteor.user()
   $(this.find('.alert-body')).hide()
   $(this.find('.email-send')).prop('disabled', !Meteor.user())
@@ -82,20 +125,27 @@ Template.compose.rendered = ->
   $(this.find('.gmail-sent')).prop('checked', true) if Session.equals('FILTER_GMAIL_SENT', true)
   $(this.find('.gcontact')).prop('checked', true) if Session.equals('FILTER_GCONTACT', true)
 
+
+
 Template.compose.events
   'keypress .email-subject': (e) ->
     $('.email-body').focus() if e.which is 13
+
+
   'focus .email-body': (e) ->
     $('.alert-body').hide()
+
+
   'keypress .email-body': (e) ->
     if e.which is 13
       $('.email-send').focus()
     else
       $('.email-send').prop('disabled', false)
 
+
   'click .email-send': (e) ->
     subject = $('.email-subject').val().trim() || "Invitation"
-    body = $('.email-body').val().trim()
+    body = $('.email-body').html().trim()
 
     return $('.alert-body').show() unless body
     return $('.alert-contact').show() unless $('tr.contact.info').length
@@ -107,14 +157,16 @@ Template.compose.events
     # console.log body
     # console.log to
     $('#email_draft .draft-subject').text(subject)
-    $('#email_draft .draft-body').html(body + "<p><a href=\"#{Meteor.absoluteUrl()}\">Tell your friends</a></p>")
+    $('#email_draft .draft-body').html(body)
     $('#email_draft .draft-to').html(to.join(''))
     $('#email_draft').modal()
+
+
 
 Template.email_draft.events
   'click button.draft-send': (e) ->
     subject = $('#email_draft .draft-subject').text()
-    body = $('#email_draft .draft-body').text()
+    body = $('#email_draft .draft-body').html()
     to = []
     $('#email_draft .draft-to p.email').each -> to.push $(this).text()
     console.log subject, body, to
@@ -125,13 +177,18 @@ Template.email_draft.events
       $('.draft-send').prop('disabled', false)
       $('.draft-close').trigger('click')
 
+
+
 Template.google_api_modal.helpers
   'domain': ->
     Meteor.absoluteUrl()
 
+
+
 Template.google_api_modal.events
   'keypress .client-id': (e) ->
     $('.client-secret').focus() if e.which is 13
+
 
   'click .google-api-set': (e) ->
     id = $('.client-id').val().trim()

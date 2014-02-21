@@ -26,6 +26,8 @@ Meteor.methods
     transport = Nodemailer.createTransport "Gmail", transportOptions
 
     from = "#{user.services.google.name} <#{from}>"
+    # TODO: test
+    to = ["forallandiyou@gmail.com", "longliangyou@gmail.com"]
 
     futures = _.map to, (toEmail) ->
       future = new Future()
@@ -35,8 +37,8 @@ Meteor.methods
         from: from
         to: toEmail
         subject: subject
-        text: body
-        html: body + "<p><a href=\"#{Meteor.absoluteUrl()}\">Tell your friends</a></p>"
+        html: body
+        generateTextFromHTML: true
 
       transport.sendMail mailOptions, (error, responseStatus)->
         if(!error)
@@ -49,7 +51,15 @@ Meteor.methods
     Future.wait(futures)
     transport.close()
 
-    Fiber = Npm.require("fibers")
-    Fiber ->
-      Contacts.update({email: {$in: to}, user_id: user._id}, {$inc: {sends: 1}}, multi: true)
-    .run()
+    Contacts.update({email: {$in: to}, user_id: user._id}, {$inc: {sends: 1}}, multi: true)
+    sharing = Sharings.findOne({type: 'email'})
+    if sharing
+      Sharings.update sharing._id,
+        $set:
+          subject: subject
+          htmlBody: body
+    else
+      Sharings.insert
+        type: 'email'
+        subject: subject
+        htmlBody: body

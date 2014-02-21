@@ -50,10 +50,15 @@
   <p>Send messages to your friends</p>
   <div class="input-prepend">
     <span class="add-on">Email Subject:</span>
-    <input class="span7 email-subject" type="text" placeholder="Invitation">
+    <input class="span7 email-subject" type="text" placeholder="Invitation" value="{{subject}}"></input>
   </div>
   <div class="alert alert-warning alert-body">Warning! Please write some text!</div>
-  <div><textarea class="span8 email-body" rows="3" placeholder="Write some here"></textarea></div>
+  <div class="row">
+    <div class="span8 email-body" contenteditable style="border: 1px solid">
+      Write some here<br /><br />
+      <a href="{{webUrl}}">Tell your friends</a>
+    </div>
+  </div>
   <button class="btn btn-primary email-send">Send Messages</button>
 </template>
 
