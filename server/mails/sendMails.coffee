@@ -1,3 +1,5 @@
+Future = Npm.require('fibers/future')
+
 Meteor.methods
   'sendMail': (subject, body, to) ->
     check(subject, String)
@@ -20,25 +22,34 @@ Meteor.methods
             }
         }
     }
-    console.log 'send mail to ', to
+    console.log 'send mail to ', to.join(';')
     transport = Nodemailer.createTransport "Gmail", transportOptions
 
     from = "#{user.services.google.name} <#{from}>"
-    # to = ['longliangyou@gmail.com']
-    mailOptions =
-      from: from
-      to: to
-      subject: subject
-      text: body
-      html: body + "<p><a href=\"#{Meteor.absoluteUrl()}\">Tell your friends</a></p>"
 
-    transport.sendMail mailOptions, (error, responseStatus)->
-      if(!error)
-        console.log(responseStatus.message) # response from the server
-        console.log(responseStatus.messageId) # Message-ID value used
-      transport.close()
+    futures = _.map to, (toEmail) ->
+      future = new Future()
+      onComplete = future.resolver()
 
-      Fiber = Npm.require("fibers")
-      Fiber ->
-        Contacts.update({email: {$in: to}, user_id: user._id}, {$inc: {sends: 1}}, multi: true)
-      .run()
+      mailOptions =
+        from: from
+        to: toEmail
+        subject: subject
+        text: body
+        html: body + "<p><a href=\"#{Meteor.absoluteUrl()}\">Tell your friends</a></p>"
+
+      transport.sendMail mailOptions, (error, responseStatus)->
+        if(!error)
+          console.log(responseStatus.message) # response from the server
+          console.log(responseStatus.messageId) # Message-ID value used
+        onComplete(error, responseStatus)
+
+      return future
+
+    Future.wait(futures)
+    transport.close()
+
+    Fiber = Npm.require("fibers")
+    Fiber ->
+      Contacts.update({email: {$in: to}, user_id: user._id}, {$inc: {sends: 1}}, multi: true)
+    .run()
