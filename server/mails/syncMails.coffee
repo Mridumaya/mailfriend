@@ -18,7 +18,8 @@ parseReveivedContacts = (contacts) ->
       name: nameAndEmail.name
     }
 
-addContacts = (contacts, user_id) ->
+addContacts = (contacts, user_id, searchQ) ->
+  console.log "addContacts: ", contacts.length, " searchQ: ", searchQ
   parsedContacts = parseReveivedContacts(contacts)
     # console.log contacts
   groupedContacts = _.groupBy parsedContacts, (c) -> c.email
@@ -29,7 +30,7 @@ addContacts = (contacts, user_id) ->
       name: _.find(v, (c)->c.name)?.name || ''
       uids: _.pluck(v, 'uid')
     }
-
+  console.log "addContacts: ", contacts.length, " searchQ: ", searchQ
   Fiber = Npm.require("fibers")
   Fiber ->
     dbContacts = Contacts.find({user_id: user_id}, {fields: {uids: true}}).fetch()
@@ -39,10 +40,11 @@ addContacts = (contacts, user_id) ->
       Contacts.update {email: c.email, user_id: user_id},
         {
           $set: {uids: c.uids}
+          $addToSet: {searchQ: searchQ}
         },
         (err, num) ->
           console.log err if err
-          Contacts.insert(_.extend(c, {user_id: user_id})) unless num
+          Contacts.insert(_.extend(c, {user_id: user_id, searchQ: [searchQ]})) unless num
     console.log insertContacts.length
   .run()
 
@@ -89,7 +91,7 @@ addSentContact = (contacts, user_id) ->
     console.log insertContacts.length
   .run()
 
-fetchMails = (imapServer, user, box, isSentBox = false) ->
+fetchMails = (imapServer, user, box, isSentBox, searchQ = '') ->
   # fetch latest 2000 header of mails.
   if user.profile?.isLoadAll
     MAX_MESSAGES = 100*1000
@@ -100,6 +102,24 @@ fetchMails = (imapServer, user, box, isSentBox = false) ->
     range = (box.messages.total - MAX_MESSAGES) + ":*"
   else
     range = "1:*"
+
+  if searchQ
+    console.log "[SyncMail] 3. search Q: ", searchQ
+    imapServer.search [['BODY', searchQ]], (err, results) ->
+      if err
+        console.log('[LoadGmail]: Open InBox error', err)
+        do imapServer.end
+        return
+      range = results
+      fetchAllMails(imapServer, user, box, range, false, searchQ)
+  else
+    console.log "[SyncMail] 3. fetch message"
+    fetchAllMails(imapServer, user, box, range, isSentBox, searchQ)
+
+
+
+fetchAllMails = (imapServer, user, box, range, isSentBox, searchQ) ->
+  console.log '[SyncMail] 4. fetch ALL message: ', searchQ
   allContacts = []
   f = imapServer.seq.fetch range,
     bodies: 'HEADER.FIELDS (FROM TO CC BCC)',
@@ -131,17 +151,21 @@ fetchMails = (imapServer, user, box, isSentBox = false) ->
       addSentContact(allContacts, user._id)
       imapServer.end()
     else
-      addContacts(allContacts, user._id)
-      syncSentBox(imapServer, user)
+      addContacts(allContacts, user._id, searchQ)
+      syncSentBox(imapServer, user) unless searchQ
 
-syncInbox = (imapServer, user) ->
+
+
+syncInbox = (imapServer, user, searchQ = '') ->
   imapServer.openBox 'INBOX', true, (err, box) ->
     if err
       console.log('[LoadGmail]: Open InBox error', err)
       do imapServer.end
       return
-    console.log 'total messages in INBOX: ', box.messages.total
-    fetchMails(imapServer, user, box)
+    console.log 'total messages in #INBOX: ', box.messages.total, " ", searchQ
+    fetchMails(imapServer, user, box, false, searchQ)
+
+
 
 
 syncSentBox = (imapServer, user) ->
@@ -156,13 +180,13 @@ syncSentBox = (imapServer, user) ->
           console.log('[LoadGmail]: Open InBox error', err)
           imapServer.end()
           return
-        console.log "total messages in #{boxname}: ", box.messages.total
+        console.log "total messages in ##{boxname}: ", box.messages.total
         fetchMails(imapServer, user, box, true)
     else
     if user.profile?.isLoadAll
       imapServer.end()
 
-@syncMail = (user_id) ->
+@syncMail = (user_id, searchQ = '') ->
   # find user
   user = Meteor.users.findOne 'services.google': {$exists: true}, _id: user_id
   return unless user
@@ -176,6 +200,7 @@ syncSentBox = (imapServer, user) ->
     if err
       console.error '[SyncMail] get xoauth2gen token error: ', err, xoauth2gen.options.user
     else
+      console.log "[SyncMail] 1. got xoauth2gen"
       imapServer = new Imap({
         xoauth2: token
         host: 'imap.gmail.com'
@@ -186,7 +211,8 @@ syncSentBox = (imapServer, user) ->
           rejectUnauthorized: false
       })
       imapServer.once 'ready', ->
-        syncInbox(imapServer, user)
+        console.log "[SyncMail] 2. connected imap ", searchQ
+        syncInbox(imapServer, user, searchQ)
       imapServer.once 'end', -> console.log '[SyncMail] imapServer end!!\n\n'
       imapServer.once 'error', (err) -> console.log '[SyncMail] imapServer error: ', err
       imapServer.connect()

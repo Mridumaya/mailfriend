@@ -38,6 +38,27 @@ Template.invite_friends.events
     )
 
 
+  'click .search-button': (e) ->
+    searchQuery = $('.search-query').val().trim()
+    if searchQuery
+      $(e.target).prop('disabled', true)
+      Meteor.setTimeout ->
+        $(e.target).prop('disabled', false)
+      , 60*1000
+      searchContacts(searchQuery)
+
+
+
+searchContacts = (searchQuery) ->
+  Meteor.setTimeout ->
+    if Meteor.user()
+      Meteor.call 'searchContacts', searchQuery, (err) ->
+        Session.set('searchQ', searchQuery)
+        console.log 'searchContact Error: ', err if err
+    else
+      searchContacts(searchQuery)
+  , 500
+
 Template.contact_list.helpers
   contacts: ->
     selector = {}
@@ -60,7 +81,8 @@ Template.contact_list.helpers
   isGContact: ->
     @source is 'gcontact'
 
-
+  isRelevant: ->
+    _.contains @searchQ || [], Session.get('searchQ') if Session.get('searchQ')
 
 Template.contact_list.events
   'click .gmail-received': (e) ->
@@ -74,13 +96,15 @@ Template.contact_list.events
   'click .gcontact': (e) ->
     Session.set("FILTER_GCONTACT", $(e.currentTarget).is(":checked"))
 
+  'click .add-all-relevant': (e) ->
+    $('tr.contact').find('i.relevant-contact').closest('tr.contact').addClass('info').find('.icon i').addClass('icon-ok')
 
   'click tr.contact': (e) ->
     $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('icon-ok')
     $('.alert-contact').hide()
 
 
-  'click button.selectAll': (e) ->
+  'click button.selectAll, ': (e) ->
     $('.alert-contact').hide()
     selectAll = $(e.currentTarget)
     if $(selectAll).toggleClass('selected').hasClass('selected')
@@ -90,6 +114,8 @@ Template.contact_list.events
       $(selectAll).text('Select All')
       $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
 
+  'click .add-all': (e) ->
+    $('tr.contact').addClass('info').find('.icon i').addClass('icon-ok')
 
   'click button.reload': (e) ->
     $(e.currentTarget).prop('disabled', true)
@@ -110,7 +136,7 @@ loadAllGmails = (isLoadAll) ->
       Meteor.call 'loadAllGmails', Meteor.userId(), isLoadAll, (err) ->
         console.log err if err
     else
-      loadAllGmails()
+      loadAllGmails(isLoadAll)
   , 500
 
 
@@ -125,8 +151,11 @@ Template.compose.helpers
   webUrl: ->
     Meteor.absoluteUrl()
 
+
   subject: ->
     Sharings.findOne(type: 'email')?.subject
+
+
 
 Template.compose.rendered = ->
   sharing = Sharings.findOne()

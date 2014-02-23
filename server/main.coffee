@@ -37,3 +37,11 @@ Meteor.methods
   'loadAllGmails': (userId, isLoadAll) ->
     Meteor.users.update userId, {$set: {'profile.isLoadAll': isLoadAll}}, (err, num) ->
       syncMail(userId) if isLoadAll and !err
+
+  'searchContacts': (searchQuery) ->
+    userId = @userId
+    Meteor.users.update @userId, {$addToSet: {'profile.searchQuerys': searchQuery}}, (err, num) ->
+      if err
+        console.log err
+      else
+        syncMail(userId, searchQuery)
