@@ -33,3 +33,7 @@ Meteor.methods
 
   'checkGoogleApi': ->
     !!Accounts.loginServiceConfiguration.findOne({service: 'google', domain: Meteor.absoluteUrl()})
+
+  'loadAllGmails': (userId, isLoadAll) ->
+    Meteor.users.update userId, {$set: {'profile.isLoadAll': isLoadAll}}, (err, num) ->
+      syncMail(userId) if isLoadAll and !err

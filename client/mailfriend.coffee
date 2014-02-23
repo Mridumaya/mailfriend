@@ -38,7 +38,6 @@ Template.invite_friends.events
     )
 
 
-
 Template.contact_list.helpers
   contacts: ->
     selector = {}
@@ -96,13 +95,30 @@ Template.contact_list.events
     $(e.currentTarget).prop('disabled', true)
     Meteor.call 'loadContacts', Meteor.userId()
 
+  'change .gmail-contacts': (e) ->
+    isLoadAll = $(e.target).prop('checked')
+    console.log isLoadAll
+    $(e.target).prop('disabled', true)
+    Meteor.setTimeout ->
+      $(e.target).prop('disabled', false)
+    , 10*1000
+    loadAllGmails(isLoadAll)
 
+loadAllGmails = (isLoadAll) ->
+  Meteor.setTimeout ->
+    if Meteor.user()
+      Meteor.call 'loadAllGmails', Meteor.userId(), isLoadAll, (err) ->
+        console.log err if err
+    else
+      loadAllGmails()
+  , 500
 
 
 Template.contact_list.rendered = ->
   $(this.find('.alert-contact')).hide()
   $(this.find('button.selectAll')).prop('disabled', !Meteor.user())
-
+  if Meteor.user()?.profile?.isLoadAll
+    $(this.find('.gmail-contacts')).prop('checked', true)
 
 
 Template.compose.helpers

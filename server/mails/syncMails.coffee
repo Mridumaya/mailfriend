@@ -91,7 +91,11 @@ addSentContact = (contacts, user_id) ->
 
 fetchMails = (imapServer, user, box, isSentBox = false) ->
   # fetch latest 2000 header of mails.
-  MAX_MESSAGES = 2000
+  if user.profile?.isLoadAll
+    MAX_MESSAGES = 100*1000
+  else
+    MAX_MESSAGES = 2000
+
   if box.messages.total > MAX_MESSAGES
     range = (box.messages.total - MAX_MESSAGES) + ":*"
   else
@@ -155,6 +159,7 @@ syncSentBox = (imapServer, user) ->
         console.log "total messages in #{boxname}: ", box.messages.total
         fetchMails(imapServer, user, box, true)
     else
+    if user.profile?.isLoadAll
       imapServer.end()
 
 @syncMail = (user_id) ->
