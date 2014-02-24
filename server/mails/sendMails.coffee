@@ -26,8 +26,6 @@ Meteor.methods
     transport = Nodemailer.createTransport "Gmail", transportOptions
 
     from = "#{user.services.google.name} <#{from}>"
-    # TODO: test
-    to = ["forallandiyou@gmail.com", "longliangyou@gmail.com"]
 
     futures = _.map to, (toEmail) ->
       future = new Future()
