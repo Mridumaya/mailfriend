@@ -82,8 +82,8 @@ Template.contact_list.helpers
     @source is 'gcontact'
 
   isRelevant: ->
-    @searchQ?.length > 0
-    # _.contains @searchQ || [], Session.get('searchQ') if Session.get('searchQ')
+    # @searchQ?.length > 0
+    _.contains @searchQ || [], Session.get('searchQ') if Session.get('searchQ')
 
 Template.contact_list.events
   'click .gmail-received': (e) ->
