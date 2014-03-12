@@ -31,16 +31,22 @@ Meteor.methods
       secret: Meteor.settings.google.secret
       domain: Meteor.absoluteUrl()
 
+
+
   'checkGoogleApi': ->
     !!Accounts.loginServiceConfiguration.findOne({service: 'google', domain: Meteor.absoluteUrl()})
+
+
 
   'loadAllGmails': (userId, isLoadAll) ->
     Meteor.users.update userId, {$set: {'profile.isLoadAll': isLoadAll}}, (err, num) ->
       syncMail(userId) if isLoadAll and !err
 
-  'searchContacts': (searchQuery) ->
-    userId = @userId
-    Meteor.users.update @userId, {$addToSet: {'profile.searchQuerys': searchQuery}}, (err, num) ->
+
+
+  'searchContacts': (searchQuery, userId = '') ->
+    userId = userId || @userId
+    Meteor.users.update userId, {$addToSet: {'profile.searchQuerys': searchQuery}}, (err, num) ->
       if err
         console.log err
       else

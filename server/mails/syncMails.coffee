@@ -110,9 +110,12 @@ fetchMails = (imapServer, user, box, isSentBox, searchQ = '') ->
         console.log('[LoadGmail]: Open InBox error', err)
         do imapServer.end
         return
-      range = results.slice(MAX_MESSAGES)
+      range = results.slice(-MAX_MESSAGES)
       if range.length > 0
+        console.log range.length
         fetchAllMails(imapServer, user, box, range, false, searchQ)
+      else
+        console.log 'result-range', results, range
   else
     console.log "[SyncMail] 3. fetch message"
     fetchAllMails(imapServer, user, box, range, isSentBox, searchQ)
@@ -122,7 +125,7 @@ fetchMails = (imapServer, user, box, isSentBox, searchQ = '') ->
 fetchAllMails = (imapServer, user, box, range, isSentBox, searchQ) ->
   console.log '[SyncMail] 4. fetch ALL message: ', searchQ
   allContacts = []
-  f = imapServer.seq.fetch range,
+  f = imapServer.fetch range,
     bodies: 'HEADER.FIELDS (FROM TO CC BCC)',
     struct: true
   f.on 'message', (msg, seqno) ->
@@ -136,6 +139,7 @@ fetchAllMails = (imapServer, user, box, range, isSentBox, searchQ) ->
 
     msg.once 'attributes', (attrs) -> contact.uid = attrs.uid
     msg.once 'end', ->
+      # console.log contact.to, ' - ', contact.from
       if isSentBox
         if contact.to
           contact.to = contact.to[0].split(',')
@@ -153,7 +157,10 @@ fetchAllMails = (imapServer, user, box, range, isSentBox, searchQ) ->
       imapServer.end()
     else
       addContacts(allContacts, user._id, searchQ)
-      syncSentBox(imapServer, user) unless searchQ
+      if searchQ
+        imapServer.end()
+      else
+        syncSentBox(imapServer, user) 
 
 
 
