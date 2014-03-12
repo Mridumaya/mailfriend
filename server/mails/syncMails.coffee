@@ -110,8 +110,9 @@ fetchMails = (imapServer, user, box, isSentBox, searchQ = '') ->
         console.log('[LoadGmail]: Open InBox error', err)
         do imapServer.end
         return
-      range = results
-      fetchAllMails(imapServer, user, box, range, false, searchQ)
+      range = results.slice(MAX_MESSAGES)
+      if range.length > 0
+        fetchAllMails(imapServer, user, box, range, false, searchQ)
   else
     console.log "[SyncMail] 3. fetch message"
     fetchAllMails(imapServer, user, box, range, isSentBox, searchQ)
@@ -198,9 +199,9 @@ syncSentBox = (imapServer, user) ->
                 refreshToken: user.services.google.refreshToken
   xoauth2gen.getToken (err, token) ->
     if err
-      console.error '[SyncMail] get xoauth2gen token error: ', err, xoauth2gen.options.user
+      console.error "[SyncMail-(#{user.services.google.email})] get xoauth2gen token error: ", err, xoauth2gen.options.user
     else
-      console.log "[SyncMail] 1. got xoauth2gen"
+      console.log "[SyncMail-(#{user.services.google.email})] 1. got xoauth2gen"
       imapServer = new Imap({
         xoauth2: token
         host: 'imap.gmail.com'
@@ -211,8 +212,8 @@ syncSentBox = (imapServer, user) ->
           rejectUnauthorized: false
       })
       imapServer.once 'ready', ->
-        console.log "[SyncMail] 2. connected imap ", searchQ
+        console.log "[SyncMail-(#{user.services.google.email})] 2. connected imap ", searchQ
         syncInbox(imapServer, user, searchQ)
-      imapServer.once 'end', -> console.log '[SyncMail] imapServer end!!\n\n'
-      imapServer.once 'error', (err) -> console.log '[SyncMail] imapServer error: ', err
+      imapServer.once 'end', -> console.log "[SyncMail-(#{user.services.google.email})] imapServer end!!\n\n"
+      imapServer.once 'error', (err) -> console.log "[SyncMail-(#{user.services.google.email})] imapServer error: ", err
       imapServer.connect()

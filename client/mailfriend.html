@@ -6,6 +6,8 @@
   {{> layout}}
 </body>
 
+
+
 <template name="layout">
   <div class="container">
     {{> invite_friends}}
@@ -15,6 +17,8 @@
     {{> google_api_modal}}
   </div>
 </template>
+
+
 
 <template name="google_api_modal">
   <div id="google-api-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -45,6 +49,8 @@
   </div>
 </template>
 
+
+
 <template name="compose">
   <h3>Email Content</h3>
   <p>Send messages to your friends</p>
@@ -54,13 +60,17 @@
   </div>
   <div class="alert alert-warning alert-body">Warning! Please write some text!</div>
   <div class="row">
-    <div class="span8 email-body" contenteditable style="border: 1px solid">
-      Write some here<br /><br />
-      <a href="{{webUrl}}">Tell your friends</a>
+    <div class="span8">
+      <div class="summernote email-body">
+        Write some here<br /><br />
+        <a href="{{webUrl}}">Tell your friends</a>
+      </div>
     </div>
   </div>
   <button class="btn btn-primary email-send">Send Messages</button>
 </template>
+
+
 
 <template name="email_draft">
   <div id="email_draft" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -83,15 +93,20 @@
   </div>
 </template>
 
+
+
 <template name="invite_friends">
   <div class="row">
-    <input type="search" class="search-query"></input><button type="submit" class="btn btn-small search-button" type="button"><i class="icon-search"></i></button>
+    <input type="search" class="search-query" value="{{searchQ}}"></input>
+    <button type="submit" class="btn btn-small search-button" type="button"><i class="icon-search"></i></button>
   </div>
   <h2>Hey! Click this <button class="add-google-oauth btn btn-primary">Gmail Oauth</button> button so we can pull up your relevant friends</h2>
   {{#if hasLogin}}
     <h2>Hello, <span style="color:blue;">{{name}}</span>, Send a message to your friends! <button class="btn btn-small logout">Logout</button></h2>
   {{/if}}
 </template>
+
+
 
 <template name="contact_list">
   <h3>Your friends 
@@ -125,7 +140,7 @@
         <th>Sent in last 90 days</th>
         <th>Received in last 90 days</th>
         <th>On Contact list</th>
-        <th>Relevant</th>
+        <th>Relevant{{#if searchQ}}({{searchQ}}){{/if}}</th>
       </tr>
     </thead>
     <tbody>

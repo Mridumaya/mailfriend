@@ -1,5 +1,6 @@
 {
   "packages": {
-    "google-contacts": {}
+    "google-contacts": {},
+    "font-awesome": {}
   }
 }

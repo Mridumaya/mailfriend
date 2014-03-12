@@ -11,6 +11,9 @@ Template.invite_friends.helpers
     !!Meteor.user()
 
 
+  searchQ: ->
+    Session.get('searchQ') || ''
+
 
 
 Template.invite_friends.events
@@ -42,22 +45,26 @@ Template.invite_friends.events
     searchQuery = $('.search-query').val().trim()
     if searchQuery
       $(e.target).prop('disabled', true)
-      Meteor.setTimeout ->
+      # Meteor.setTimeout ->
+      #   $(e.target).prop('disabled', false)
+      # , 60*1000
+      searchContacts searchQuery, ->
         $(e.target).prop('disabled', false)
-      , 60*1000
-      searchContacts(searchQuery)
 
 
 
-searchContacts = (searchQuery) ->
+searchContacts = (searchQuery, cb) ->
   Meteor.setTimeout ->
     if Meteor.user()
       Meteor.call 'searchContacts', searchQuery, (err) ->
         Session.set('searchQ', searchQuery)
         console.log 'searchContact Error: ', err if err
+        cb()
     else
       searchContacts(searchQuery)
   , 500
+
+
 
 Template.contact_list.helpers
   contacts: ->
@@ -78,12 +85,20 @@ Template.contact_list.helpers
     @sent_uids?.length || 0
 
 
+
   isGContact: ->
     @source is 'gcontact'
 
+
+
   isRelevant: ->
-    # @searchQ?.length > 0
-    _.contains @searchQ || [], Session.get('searchQ') if Session.get('searchQ')
+    if Session.get('searchQ')
+      (@name.indexOf(Session.get('searchQ')) isnt -1) || _.contains((@searchQ || []), Session.get('searchQ'))
+
+
+  searchQ: ->
+    Session.get('searchQ') || ''
+
 
 Template.contact_list.events
   'click .gmail-received': (e) ->
@@ -171,27 +186,40 @@ Template.compose.rendered = ->
   $(this.find('.gmail-sent')).prop('checked', true) if Session.equals('FILTER_GMAIL_SENT', true)
   $(this.find('.gcontact')).prop('checked', true) if Session.equals('FILTER_GCONTACT', true)
 
+  $(this.find('.summernote')).summernote({
+    toolbar: [
+      #['style', ['style']], # no style button
+      ['style', ['bold', 'italic', 'underline', 'clear']],
+      ['fontsize', ['fontsize']],
+      ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['height', ['height']],
+      #['insert', ['picture', 'link']], # no insert buttons
+      #['table', ['table']], # no table button
+      #['help', ['help']] #no help button
+    ]
+  });
 
 
 Template.compose.events
-  'keypress .email-subject': (e) ->
-    $('.email-body').focus() if e.which is 13
+  # 'keypress .email-subject': (e) ->
+  #   $('.email-body').focus() if e.which is 13
 
 
-  'focus .email-body': (e) ->
-    $('.alert-body').hide()
+  # 'focus .email-body': (e) ->
+  #   $('.alert-body').hide()
 
 
-  'keypress .email-body': (e) ->
-    if e.which is 13
-      $('.email-send').focus()
-    else
-      $('.email-send').prop('disabled', false)
+  # 'keypress .email-body': (e) ->
+  #   if e.which is 13
+  #     $('.email-send').focus()
+  #   else
+  #     $('.email-send').prop('disabled', false)
 
 
   'click .email-send': (e) ->
     subject = $('.email-subject').val().trim() || "Invitation"
-    body = $('.email-body').html().trim()
+    body = $('.summernote').code() # $('.email-body').html().trim() 
 
     return $('.alert-body').show() unless body
     return $('.alert-contact').show() unless $('tr.contact.info').length
