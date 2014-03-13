@@ -12,6 +12,7 @@
   <div class="container">
     {{> invite_friends}}
     {{> compose}}
+    {{> searchQ}}
     {{> contact_list}}
     {{> email_draft}}
     {{> google_api_modal}}
@@ -52,8 +53,9 @@
 
 
 <template name="compose">
-  <h3>Email Content</h3>
-  <p>Send messages to your friends</p>
+  <br><br>
+  <h3>2. This is theoretically the message you are going to send along. Notice your friend already customized it when they sent it to you. Sweet. Edit it a little if you want.</h3>
+  <p>(nobody is getting mailed, no funny business, promise!)</p>
   <div class="input-prepend">
     <span class="add-on">Email Subject:</span>
     <input class="span7 email-subject" type="text" placeholder="Invitation" value="{{subject}}"></input>
@@ -62,12 +64,23 @@
   <div class="row">
     <div class="span8">
       <div class="summernote email-body">
-        Write some here<br /><br />
+        Write some here<br><br>
         <a href="{{webUrl}}">Tell your friends</a>
       </div>
     </div>
   </div>
-  <button class="btn btn-primary email-send">Send Messages</button>
+</template>
+
+
+
+<template name="searchQ">
+  <br><br>
+  <h3>3. Now we find out which of your friends might actually care about this message by using some “relevance” terms. Type a few words.</h3>
+  <p>(nobody getting mailed, etc etc.)</p>
+  <div class="row" style="margin-left:0px">
+    <input type="search" class="search-query" value="{{searchQ}}"></input>
+    <button type="submit" class="btn btn-small search-button" type="button"><i class="icon-search"></i></button>
+  </div>
 </template>
 
 
@@ -96,25 +109,44 @@
 
 
 <template name="invite_friends">
-  <div class="row">
-    <input type="search" class="search-query" value="{{searchQ}}"></input>
-    <button type="submit" class="btn btn-small search-button" type="button"><i class="icon-search"></i></button>
-  </div>
-  <h2>Hey! Click this <button class="add-google-oauth btn btn-primary">Gmail Oauth</button> button so we can pull up your relevant friends</h2>
+  <h1 style="color:blue;">Mailfriend</h1>
+
+  <h3>Hey! Mailfriend lets you pass the word to your friends who might actually care.</h3>
+  <br>
   {{#if hasLogin}}
-    <h2>Hello, <span style="color:blue;">{{name}}</span>, Send a message to your friends! <button class="btn btn-small logout">Logout</button></h2>
+    <h3>1. Hello, <span style="color:blue;">{{name}}</span>, Send a message to your friends! <button class="btn btn-small logout">Logout</button></h3>
+  {{else}}
+    <h3>1. Click this <button class="add-google-oauth btn btn-primary">Gmail Oauth</button> button so we can pull up your relevant friends</h3>
   {{/if}}
+  (nobody is getting mailed, no funny business, promise!) 
 </template>
 
 
 
 <template name="contact_list">
+  <br><br>
+  <h3>4. Now pick who gets it from this list of the most relevant people you email! Use one of the green buttons to just quickly send to a few people. </h3>
+  <p>(here is the part where we send)</p>
+  <div class="btn-toolbar">
+    <div class="btn-group">
+      <button class="btn btn-success sendToTop15">send to top 15</button>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-success sendToTop30">send to top 30 relevant</button>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-success sendToAll">send to all</button>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-success sendToHandpicked">send to my hand-picked list</button>
+    </div>
+  </div>
   <h3>Your friends 
     <button class="btn btn-small reload">Reload</button>
     <button class="btn btn-primary add-all-relevant">Add All Relevant</button>
     <button class="btn btn-primary add-all">Add All</button>
   </h3>
-  <input class="gmail-contacts" type="checkbox">Click to get recipients of all your emails (Or it will only recent recipients</input>
+  <input class="gmail-contacts" type="checkbox">Click to get recipients of all your emails (Or it will only recent recipients)</input>
   <div class="filter">
     {{#constant}}
     <div class="input-group">
@@ -144,7 +176,19 @@
       </tr>
     </thead>
     <tbody>
-      {{#each contacts}}
+      {{#each matchedContacts}}
+        <tr class="contact" data-email="{{email}}">
+          <td class="icon"><i></i><span>  {{index}}</span></td>
+          <td>{{name}}</td>
+          <td>{{email}}</td>
+          <td>{{receivedMessages}}</td>
+          <td>{{sentMessages}}</td>
+          <td>{{#if isGContact}}<i class="icon-ok"></i>{{/if}}</td>
+          <td>{{#if isRelevant}}<i class="relevant-contact icon-ok"></i>{{/if}}</th>
+        </tr>
+      {{/each}}
+
+      {{#each unmatchedContacts}}
         <tr class="contact" data-email="{{email}}">
           <td class="icon"><i></i><span>  {{index}}</span></td>
           <td>{{name}}</td>

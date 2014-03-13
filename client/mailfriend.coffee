@@ -11,10 +11,6 @@ Template.invite_friends.helpers
     !!Meteor.user()
 
 
-  searchQ: ->
-    Session.get('searchQ') || ''
-
-
 
 Template.invite_friends.events
   'click .logout': (e) ->
@@ -41,6 +37,14 @@ Template.invite_friends.events
     )
 
 
+
+Template.searchQ.helpers
+  searchQ: ->
+    Session.get('searchQ') || ''
+
+
+
+Template.searchQ.events
   'click .search-button': (e) ->
     searchQuery = $('.search-query').val().trim()
     if searchQuery
@@ -67,13 +71,31 @@ searchContacts = (searchQuery, cb) ->
 
 
 Template.contact_list.helpers
-  contacts: ->
+  matchedContacts: ->
+    if Session.get('searchQ')
+      selector = {}
+      _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
+      _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
+      _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
+      _.extend(selector, {searchQ: Session.get('searchQ')})
+
+      contacts = Contacts.find(selector).fetch()
+      contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
+
+      _.map contacts, (c, i) -> _.extend c, {index: i+1}
+    else
+      []
+
+  unmatchedContacts: ->
     selector = {}
     _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
     _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
     _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
+    _.extend(selector, {searchQ: {$ne: Session.get('searchQ')}}) if Session.get('searchQ')
+
     contacts = Contacts.find(selector).fetch()
     contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
+
     _.map contacts, (c, i) -> _.extend c, {index: i+1}
 
 
@@ -146,6 +168,33 @@ Template.contact_list.events
     , 10*1000
     loadAllGmails(isLoadAll)
 
+
+
+  'click .sendToTop15': (e) ->
+    console.log 'sendToTop15'
+    $('tr.contact').slice(0,15).addClass('info').find('.icon i').addClass('icon-ok')
+    clickSendMessages()
+
+
+  'click .sendToTop30': (e) ->
+    console.log 'sendToTop30'
+    $('tr.contact').slice(0,30).addClass('info').find('.icon i').addClass('icon-ok')
+    clickSendMessages()
+
+
+  'click .sendToAll': (e) ->
+    console.log 'sendToAll'
+    $('tr.contact').addClass('info').find('.icon i').addClass('icon-ok')
+    clickSendMessages()
+
+
+
+  'click .sendToHandpicked': (e) ->
+    console.log 'sendToHandpicked'
+    clickSendMessages()
+
+
+
 loadAllGmails = (isLoadAll) ->
   Meteor.setTimeout ->
     if Meteor.user()
@@ -188,52 +237,34 @@ Template.compose.rendered = ->
 
   $(this.find('.summernote')).summernote({
     toolbar: [
-      #['style', ['style']], # no style button
       ['style', ['bold', 'italic', 'underline', 'clear']],
       ['fontsize', ['fontsize']],
       ['color', ['color']],
       ['para', ['ul', 'ol', 'paragraph']],
       ['height', ['height']],
-      #['insert', ['picture', 'link']], # no insert buttons
-      #['table', ['table']], # no table button
-      #['help', ['help']] #no help button
     ]
   });
 
 
-Template.compose.events
-  # 'keypress .email-subject': (e) ->
-  #   $('.email-body').focus() if e.which is 13
 
+clickSendMessages = (toEmails=[])->
+  subject = $('.email-subject').val().trim() || "Invitation"
+  body = $('.summernote').code() # $('.email-body').html().trim() 
 
-  # 'focus .email-body': (e) ->
-  #   $('.alert-body').hide()
-
-
-  # 'keypress .email-body': (e) ->
-  #   if e.which is 13
-  #     $('.email-send').focus()
-  #   else
-  #     $('.email-send').prop('disabled', false)
-
-
-  'click .email-send': (e) ->
-    subject = $('.email-subject').val().trim() || "Invitation"
-    body = $('.summernote').code() # $('.email-body').html().trim() 
-
-    return $('.alert-body').show() unless body
-    return $('.alert-contact').show() unless $('tr.contact.info').length
-    emails = []
+  return $('.alert-body').show() unless body
+  return $('.alert-contact').show() unless $('tr.contact.info').length
+  emails = []
+  if toEmails.length
+    emails = toEmails
+  else
     $('tr.contact.info').each -> emails.push $(this).data('email')
-    to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
 
-    # console.log subject
-    # console.log body
-    # console.log to
-    $('#email_draft .draft-subject').text(subject)
-    $('#email_draft .draft-body').html(body)
-    $('#email_draft .draft-to').html(to.join(''))
-    $('#email_draft').modal()
+  to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
+  $('#email_draft .draft-subject').text(subject)
+  $('#email_draft .draft-body').html(body)
+  $('#email_draft .draft-to').html(to.join(''))
+  $('#email_draft').modal()
+
 
 
 
