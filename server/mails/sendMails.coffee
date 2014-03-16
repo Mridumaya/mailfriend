@@ -50,14 +50,3 @@ Meteor.methods
     transport.close()
 
     Contacts.update({email: {$in: to}, user_id: user._id}, {$inc: {sends: 1}}, multi: true)
-    sharing = Sharings.findOne({type: 'email'})
-    if sharing
-      Sharings.update sharing._id,
-        $set:
-          subject: subject
-          htmlBody: body
-    else
-      Sharings.insert
-        type: 'email'
-        subject: subject
-        htmlBody: body

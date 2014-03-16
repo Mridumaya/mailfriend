@@ -226,30 +226,73 @@ Template.compose.rendered = ->
   sharing = Sharings.findOne()
   if sharing
     $(this.find('.email-subject')).val(sharing.subject)
-    $(this.find('.email-body')).html(sharing.htmlBody)
+    $(this.find('.email-body2')).html(sharing.htmlBody)
 
-  $(this.find('.email-subject')).focus() if Meteor.user()
+  # $(this.find('.email-subject')).focus() if Meteor.user()
   $(this.find('.alert-body')).hide()
   $(this.find('.email-send')).prop('disabled', !Meteor.user())
   $(this.find('.gmail-received')).prop('checked', true) if Session.equals('FILTER_GMAIL_RECEIVED', true)
   $(this.find('.gmail-sent')).prop('checked', true) if Session.equals('FILTER_GMAIL_SENT', true)
   $(this.find('.gcontact')).prop('checked', true) if Session.equals('FILTER_GCONTACT', true)
 
-  $(this.find('.summernote')).summernote({
+
+  $(this.findAll('.summernote')).summernote({
     toolbar: [
       ['style', ['bold', 'italic', 'underline', 'clear']],
       ['fontsize', ['fontsize']],
       ['color', ['color']],
       ['para', ['ul', 'ol', 'paragraph']],
+      ['insert', ['link']]
       ['height', ['height']],
     ]
   });
+
+  sharing = Sharings.findOne()
+  if sharing?.isLocked
+    $(this.find('.email-body2')).siblings().find(".note-editable").prop("contenteditable", false)
+    $(this.find('.lock-message')).prop('checked', true)
+    $(this.find('.lock-message-label')).text('unlock the message')
+
+
+validatePassword = (password) ->
+  password is 'Chapter37'
+
+
+
+Template.compose.events
+  'change .lock-message': (e) ->
+    if $(e.currentTarget).prop('checked')
+      $(e.currentTarget).siblings('.lock-message-label').text('unlock the message')
+    else
+      $(e.currentTarget).siblings('.lock-message-label').text('lock the message')
+    $('.lock-message-password').focus()
+
+
+
+  'click .lock-message-button': (e) ->
+    isLocked = $(".lock-message").prop('checked')
+    password = $(".lock-message-password").val()
+    if validatePassword(password) and Meteor.userId()
+      sharing = Sharings.findOne({})
+      options = {
+        $set: 
+          isLocked: isLocked
+          lockedByUser: Meteor.userId()
+      }
+      Sharings.update(sharing._id, options)
+    else
+      $(".alert-lock-message").removeClass("hidden")
+      Meteor.setTimeout ->
+        $(".alert-lock-message").addClass("hidden")
+      , 2000
+      console.log 'Password is wrong.'
 
 
 
 clickSendMessages = (toEmails=[])->
   subject = $('.email-subject').val().trim() || "Invitation"
-  body = $('.summernote').code() # $('.email-body').html().trim() 
+  body = $('.email-body').code() + $('.email-body2').code() # $('.email-body').html().trim() 
+
 
   return $('.alert-body').show() unless body
   return $('.alert-contact').show() unless $('tr.contact.info').length
@@ -276,12 +319,25 @@ Template.email_draft.events
     $('#email_draft .draft-to p.email').each -> to.push $(this).text()
     console.log subject, body, to
     $('.draft-send').prop('disabled', true)
+    sharingBody = $('.email-body2').code()
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
-      console.log err if err
+      if err
+        console.log err 
+      else
+        sharing = Sharings.findOne({type: 'email'})
+        if sharing
+          Sharings.update sharing._id,
+            $set:
+              subject: subject
+              htmlBody: sharingBody
+        else
+          Sharings.insert
+            type: 'email'
+            subject: subject
+            htmlBody: sharingBody
       console.log 'send mail success'
       $('.draft-send').prop('disabled', false)
       $('.draft-close').trigger('click')
-
 
 
 Template.google_api_modal.helpers
