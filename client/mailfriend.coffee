@@ -135,25 +135,41 @@ Template.contact_list.events
     Session.set("FILTER_GCONTACT", $(e.currentTarget).is(":checked"))
 
   'click .add-all-relevant': (e) ->
-    $('tr.contact').find('i.relevant-contact').closest('tr.contact').addClass('info').find('.icon i').addClass('icon-ok')
+    selector = $('tr.contact').find('i.relevant-contact').closest('tr.contact').addClass('info')
+    selector.find('.icon i').addClass('icon-ok')
+    selector.each ->
+      SelectedEmailsHelper.selectEmail($(this).data('email'))
 
   'click tr.contact': (e) ->
-    $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('icon-ok')
+    console.log $(e.currentTarget).data("email")
+    if $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('icon-ok').hasClass('icon-ok')
+      SelectedEmailsHelper.selectEmail($(e.currentTarget).data('email'))
+    else
+      SelectedEmailsHelper.unselectEmail($(e.currentTarget).data('email'))
     $('.alert-contact').hide()
 
 
-  'click button.selectAll, ': (e) ->
+  'click button.selectAll': (e) ->
     $('.alert-contact').hide()
     selectAll = $(e.currentTarget)
     if $(selectAll).toggleClass('selected').hasClass('selected')
       $(selectAll).text('Unselect All')
-      $('tr.contact').addClass('info').find('.icon i').addClass('icon-ok')
+      selector = $('tr.contact').addClass('info')
+      selector.find('.icon i').addClass('icon-ok')
+      selector.each ->
+        SelectedEmailsHelper.selectEmail($(this).data('email'))
     else
       $(selectAll).text('Select All')
-      $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
+      selector = $('tr.contact').removeClass('info')
+      selector.find('.icon i').removeClass('icon-ok')
+      selector.each ->
+        SelectedEmailsHelper.unselectEmail($(this).data('email'))
 
   'click .add-all': (e) ->
-    $('tr.contact').addClass('info').find('.icon i').addClass('icon-ok')
+    selector = $('tr.contact').addClass('info')
+    selector.find('.icon i').addClass('icon-ok')
+    selector.each ->
+      SelectedEmailsHelper.selectEmail($(this).data('email'))
 
   'click button.reload': (e) ->
     $(e.currentTarget).prop('disabled', true)
@@ -172,12 +188,14 @@ Template.contact_list.events
 
   'click .sendToTop15': (e) ->
     console.log 'sendToTop15'
+    $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
     $('tr.contact').slice(0,15).addClass('info').find('.icon i').addClass('icon-ok')
     clickSendMessages()
 
 
   'click .sendToTop30': (e) ->
     console.log 'sendToTop30'
+    $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
     $('tr.contact').slice(0,30).addClass('info').find('.icon i').addClass('icon-ok')
     clickSendMessages()
 
@@ -205,11 +223,15 @@ loadAllGmails = (isLoadAll) ->
   , 500
 
 
+
 Template.contact_list.rendered = ->
   $(this.find('.alert-contact')).hide()
   $(this.find('button.selectAll')).prop('disabled', !Meteor.user())
   if Meteor.user()?.profile?.isLoadAll
     $(this.find('.gmail-contacts')).prop('checked', true)
+  $(this.findAll("tr.contact")).each ->
+    if SelectedEmailsHelper.containEmail($(this).data('email'))
+      $(this).addClass('info').find('.icon i').addClass('icon-ok')
 
 
 Template.compose.helpers
