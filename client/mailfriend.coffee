@@ -135,25 +135,41 @@ Template.contact_list.events
     Session.set("FILTER_GCONTACT", $(e.currentTarget).is(":checked"))
 
   'click .add-all-relevant': (e) ->
-    $('tr.contact').find('i.relevant-contact').closest('tr.contact').addClass('info').find('.icon i').addClass('icon-ok')
+    selector = $('tr.contact').find('i.relevant-contact').closest('tr.contact').addClass('info')
+    selector.find('.icon i').addClass('icon-ok')
+    selector.each ->
+      SelectedEmailsHelper.selectEmail($(this).data('email'))
 
   'click tr.contact': (e) ->
-    $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('icon-ok')
+    console.log $(e.currentTarget).data("email")
+    if $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('icon-ok').hasClass('icon-ok')
+      SelectedEmailsHelper.selectEmail($(e.currentTarget).data('email'))
+    else
+      SelectedEmailsHelper.unselectEmail($(e.currentTarget).data('email'))
     $('.alert-contact').hide()
 
 
-  'click button.selectAll, ': (e) ->
+  'click button.selectAll': (e) ->
     $('.alert-contact').hide()
     selectAll = $(e.currentTarget)
     if $(selectAll).toggleClass('selected').hasClass('selected')
       $(selectAll).text('Unselect All')
-      $('tr.contact').addClass('info').find('.icon i').addClass('icon-ok')
+      selector = $('tr.contact').addClass('info')
+      selector.find('.icon i').addClass('icon-ok')
+      selector.each ->
+        SelectedEmailsHelper.selectEmail($(this).data('email'))
     else
       $(selectAll).text('Select All')
-      $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
+      selector = $('tr.contact').removeClass('info')
+      selector.find('.icon i').removeClass('icon-ok')
+      selector.each ->
+        SelectedEmailsHelper.unselectEmail($(this).data('email'))
 
   'click .add-all': (e) ->
-    $('tr.contact').addClass('info').find('.icon i').addClass('icon-ok')
+    selector = $('tr.contact').addClass('info')
+    selector.find('.icon i').addClass('icon-ok')
+    selector.each ->
+      SelectedEmailsHelper.selectEmail($(this).data('email'))
 
   'click button.reload': (e) ->
     $(e.currentTarget).prop('disabled', true)
@@ -172,12 +188,14 @@ Template.contact_list.events
 
   'click .sendToTop15': (e) ->
     console.log 'sendToTop15'
+    $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
     $('tr.contact').slice(0,15).addClass('info').find('.icon i').addClass('icon-ok')
     clickSendMessages()
 
 
   'click .sendToTop30': (e) ->
     console.log 'sendToTop30'
+    $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
     $('tr.contact').slice(0,30).addClass('info').find('.icon i').addClass('icon-ok')
     clickSendMessages()
 
@@ -205,11 +223,15 @@ loadAllGmails = (isLoadAll) ->
   , 500
 
 
+
 Template.contact_list.rendered = ->
   $(this.find('.alert-contact')).hide()
   $(this.find('button.selectAll')).prop('disabled', !Meteor.user())
   if Meteor.user()?.profile?.isLoadAll
     $(this.find('.gmail-contacts')).prop('checked', true)
+  $(this.findAll("tr.contact")).each ->
+    if SelectedEmailsHelper.containEmail($(this).data('email'))
+      $(this).addClass('info').find('.icon i').addClass('icon-ok')
 
 
 Template.compose.helpers
@@ -226,30 +248,73 @@ Template.compose.rendered = ->
   sharing = Sharings.findOne()
   if sharing
     $(this.find('.email-subject')).val(sharing.subject)
-    $(this.find('.email-body')).html(sharing.htmlBody)
+    $(this.find('.email-body2')).html(sharing.htmlBody)
 
-  $(this.find('.email-subject')).focus() if Meteor.user()
+  # $(this.find('.email-subject')).focus() if Meteor.user()
   $(this.find('.alert-body')).hide()
   $(this.find('.email-send')).prop('disabled', !Meteor.user())
   $(this.find('.gmail-received')).prop('checked', true) if Session.equals('FILTER_GMAIL_RECEIVED', true)
   $(this.find('.gmail-sent')).prop('checked', true) if Session.equals('FILTER_GMAIL_SENT', true)
   $(this.find('.gcontact')).prop('checked', true) if Session.equals('FILTER_GCONTACT', true)
 
-  $(this.find('.summernote')).summernote({
+
+  $(this.findAll('.summernote')).summernote({
     toolbar: [
       ['style', ['bold', 'italic', 'underline', 'clear']],
       ['fontsize', ['fontsize']],
       ['color', ['color']],
       ['para', ['ul', 'ol', 'paragraph']],
+      ['insert', ['link']]
       ['height', ['height']],
     ]
   });
+
+  sharing = Sharings.findOne()
+  if sharing?.isLocked
+    $(this.find('.email-body2')).siblings().find(".note-editable").prop("contenteditable", false)
+    $(this.find('.lock-message')).prop('checked', true)
+    $(this.find('.lock-message-label')).text('unlock the message')
+
+
+validatePassword = (password) ->
+  password is 'Chapter37'
+
+
+
+Template.compose.events
+  'change .lock-message': (e) ->
+    if $(e.currentTarget).prop('checked')
+      $(e.currentTarget).siblings('.lock-message-label').text('unlock the message')
+    else
+      $(e.currentTarget).siblings('.lock-message-label').text('lock the message')
+    $('.lock-message-password').focus()
+
+
+
+  'click .lock-message-button': (e) ->
+    isLocked = $(".lock-message").prop('checked')
+    password = $(".lock-message-password").val()
+    if validatePassword(password) and Meteor.userId()
+      sharing = Sharings.findOne({})
+      options = {
+        $set: 
+          isLocked: isLocked
+          lockedByUser: Meteor.userId()
+      }
+      Sharings.update(sharing._id, options)
+    else
+      $(".alert-lock-message").removeClass("hidden")
+      Meteor.setTimeout ->
+        $(".alert-lock-message").addClass("hidden")
+      , 2000
+      console.log 'Password is wrong.'
 
 
 
 clickSendMessages = (toEmails=[])->
   subject = $('.email-subject').val().trim() || "Invitation"
-  body = $('.summernote').code() # $('.email-body').html().trim() 
+  body = $('.email-body').code() + $('.email-body2').code() # $('.email-body').html().trim() 
+
 
   return $('.alert-body').show() unless body
   return $('.alert-contact').show() unless $('tr.contact.info').length
@@ -276,12 +341,25 @@ Template.email_draft.events
     $('#email_draft .draft-to p.email').each -> to.push $(this).text()
     console.log subject, body, to
     $('.draft-send').prop('disabled', true)
+    sharingBody = $('.email-body2').code()
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
-      console.log err if err
+      if err
+        console.log err 
+      else
+        sharing = Sharings.findOne({type: 'email'})
+        if sharing
+          Sharings.update sharing._id,
+            $set:
+              subject: subject
+              htmlBody: sharingBody
+        else
+          Sharings.insert
+            type: 'email'
+            subject: subject
+            htmlBody: sharingBody
       console.log 'send mail success'
       $('.draft-send').prop('disabled', false)
       $('.draft-close').trigger('click')
-
 
 
 Template.google_api_modal.helpers

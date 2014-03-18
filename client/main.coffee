@@ -30,4 +30,4 @@ checkGoogleApi = ->
 Session.setDefault("GOOGLE_API", true)
 Meteor.startup ->
   checkGoogleApi()
-
+  SelectedEmails.remove()

@@ -64,9 +64,22 @@
   <div class="row">
     <div class="span8">
       <div class="summernote email-body">
+      </div>
+    </div>
+    <div class="span8">
+      <div class="summernote email-body2">
         Write some here<br><br>
         <a href="{{webUrl}}">Tell your friends</a>
       </div>
+    </div>
+    <div class="span8">
+      <div class="alert alert-error alert-lock-message hidden">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        Wrong Password!
+      </div>
+       <input class="lock-message" type="checkbox"><span class="lock-message-label">lock the message</span>
+       <input type="password" style="margin-bottom:0px;" class="lock-message-password input-small" placeholder="Password">
+       <button class="btn btn-small btn-primary lock-message-button">OK</button>
     </div>
   </div>
 </template>
