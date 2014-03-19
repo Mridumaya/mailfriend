@@ -122,6 +122,7 @@ Template.contact_list.helpers
     Session.get('searchQ') || ''
 
 
+
 Template.contact_list.events
   'click .gmail-received': (e) ->
     Session.set("FILTER_GMAIL_RECEIVED", $(e.currentTarget).is(":checked"))
@@ -294,10 +295,12 @@ Template.compose.events
   'click .lock-message-button': (e) ->
     isLocked = $(".lock-message").prop('checked')
     password = $(".lock-message-password").val()
+    htmlBody = $(".email-body2").code()
     if validatePassword(password) and Meteor.userId()
       sharing = Sharings.findOne({})
       options = {
         $set: 
+          htmlBody: htmlBody
           isLocked: isLocked
           lockedByUser: Meteor.userId()
       }
