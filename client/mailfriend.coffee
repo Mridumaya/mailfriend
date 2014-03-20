@@ -1,3 +1,8 @@
+Template.layout.helpers
+  hasLogin: ->
+    !!Meteor.user()
+
+
 Template.invite_friends.helpers
   name: ->
     user = Meteor.user()
@@ -7,14 +12,7 @@ Template.invite_friends.helpers
       ''
 
 
-  hasLogin: ->
-    !!Meteor.user()
-
-
-
 Template.invite_friends.events
-  'click .logout': (e) ->
-    Meteor.logout()
 
 
   'click .add-google-oauth': (e) ->
@@ -283,6 +281,11 @@ validatePassword = (password) ->
 
 
 Template.compose.events
+  'click .logout': (e) ->
+    e.preventDefault
+    Meteor.logout()
+    return true
+
   'change .lock-message': (e) ->
     if $(e.currentTarget).prop('checked')
       $(e.currentTarget).siblings('.lock-message-label').text('unlock the message')

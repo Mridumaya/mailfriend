@@ -1,22 +1,35 @@
 <head>
   <title>mailfriend</title>
+    <link rel="stylesheet" href="style/style.css">
 </head>
-
 <body>
-  {{> layout}}
+    <nav class="navbar navbar-default navbar-blue navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="brand">Mail Friend</div>
+        </div>
+    </nav>
+    {{> layout}}
+
+    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+        <div class="container">
+        </div>
+    </nav>
 </body>
 
 
 
 <template name="layout">
-  <div class="container">
-    {{> invite_friends}}
-    {{> compose}}
-    {{> searchQ}}
-    {{> contact_list}}
-    {{> email_draft}}
-    {{> google_api_modal}}
-  </div>
+ {{#if hasLogin}}
+    <div class="container wrapper">
+      {{> compose}}
+      {{> searchQ}}
+      {{> contact_list}}
+      {{> email_draft}}
+      {{> google_api_modal}}
+    </div>
+    {{else}}
+      {{> invite_friends}}
+ {{/if}}
 </template>
 
 
@@ -50,9 +63,31 @@
   </div>
 </template>
 
+<template name="invite_friends">
+    <article>
+        <div class="main">
+            <div class="title">Mailfriend lets you pass the word to your friends who might actually care</div>
+            <button class="btn btn-success btn-lg btn-block login add-google-oauth">Login with your Gmail account</button>
+        </div>
+    </article>
+</template>
+
+<template name="invite_friends_old">
+    <h1 style="color:blue;">Mailfriend</h1>
+
+    <h3>Hey! Mailfriend lets you pass the word to your friends who might actually care.</h3>
+    <br>
+    {{#if hasLogin}}
+    <h3>1. Hello, <span style="color:blue;">{{name}}</span>, Send a message to your friends! <button class="btn btn-small logout">Logout</button></h3>
+    {{else}}
+    <h3>1. Click this <button class="add-google-oauth btn btn-primary">Gmail Oauth</button> button so we can pull up your relevant friends</h3>
+    {{/if}}
+    (nobody is getting mailed, no funny business, promise!)
+</template>
 
 
 <template name="compose">
+    <button class="btn btn-small logout">Logout</button>
   <br><br>
   <h3>2. This is theoretically the message you are going to send along. Notice your friend already customized it when they sent it to you. Sweet. Edit it a little if you want.</h3>
   <p>(nobody is getting mailed, no funny business, promise!)</p>
@@ -121,18 +156,6 @@
 
 
 
-<template name="invite_friends">
-  <h1 style="color:blue;">Mailfriend</h1>
-
-  <h3>Hey! Mailfriend lets you pass the word to your friends who might actually care.</h3>
-  <br>
-  {{#if hasLogin}}
-    <h3>1. Hello, <span style="color:blue;">{{name}}</span>, Send a message to your friends! <button class="btn btn-small logout">Logout</button></h3>
-  {{else}}
-    <h3>1. Click this <button class="add-google-oauth btn btn-primary">Gmail Oauth</button> button so we can pull up your relevant friends</h3>
-  {{/if}}
-  (nobody is getting mailed, no funny business, promise!) 
-</template>
 
 
 

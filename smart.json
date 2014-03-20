@@ -1,6 +1,7 @@
 {
   "packages": {
     "google-contacts": {},
-    "font-awesome": {}
+    "font-awesome": {},
+    "bootstrap-3": {}
   }
 }
