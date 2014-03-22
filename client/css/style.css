@@ -1,7 +1,36 @@
 html, body{
     font-family: 'Open Sans', sans-serif;
     height: 100%;
+    font-size: 15px;
 }
+
+input[type=text],input[type=search], textarea {
+    border: 1px solid #cecece;
+    padding: 8px;
+    margin: 5px;
+    font-size: 15px;
+}
+
+.input-full {
+    width: 100%;
+}
+.input-large {
+    width: 85%;
+}
+
+label{
+    display: block;
+    font-weight: normal;
+}
+
+.btn {
+    padding: 8px 16px;
+}
+
+.btn-search{
+    margin-bottom: 4px;
+}
+
 .brand {
     margin-left: auto;
     margin-right: auto;
@@ -52,6 +81,11 @@ a.logout,a.logout:hover  {
 .container.wrapper {
     padding-top: 69px;
     padding-bottom: 69px;
+    min-height: 100%;
+}
+
+.welcome {
+    margin-top: 50px;
 }
 
 .welcome .original-message {
@@ -59,9 +93,47 @@ a.logout,a.logout:hover  {
     min-height: 250px;
     border: 1px solid #C2C2C2;
     font-size: 19px;
+    padding: 5px;
 }
 .welcome textarea {
     min-height: 250px;width: 100%;
+    font-size: 19px;
+    padding: 5px;
+}
+
+.welcome .error {
+    color: #ff0000;
+}
+.searchq{
+    margin-top:100px;
+}
+
+.contact_list {
+    text-align: center;
+    margin-top: 50px;
+    max-width: 900px;
+}
+.contact_list h2 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.contact_list .btn-send-group{
+    margin-top: 30px;
+}
+
+.contact_list .btn-group{
+    margin: 5px;
+}
+
+.confirm {
+    margin-top: 100px;
+}
+
+.confirm .preview {
+    background-color: #dedede;
+    min-height: 250px;
+    padding: 10px;
 }
 
 footer{

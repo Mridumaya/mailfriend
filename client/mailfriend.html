@@ -1,6 +1,6 @@
 <head>
   <title>mailfriend</title>
-    <link rel="stylesheet" href="style/style.css">
+  <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
     {{> layout}}
@@ -25,9 +25,18 @@
           {{#if stepIsWelcome}}
             {{> welcome}}
           {{/if}}
+          {{#if stepIsSearchQ}}
+            {{> searchQ}}
+          {{/if}}
+          {{#if stepIsContactList}}
+            {{> contact_list}}
+          {{/if}}
+          {{#if stepIsConfirm}}
+            {{> confirm}}
+          {{/if}}
         </div>
-        {{else}}
-          {{> invite_friends}}
+     {{else}}
+        {{> login}}
      {{/if}}
     <footer></footer>
 </template>
@@ -63,7 +72,7 @@
   </div>
 </template>
 
-<template name="invite_friends">
+<template name="login">
     <article>
         <div class="main">
             <div class="title">Mailfriend lets you pass the word to your friends who might actually care</div>
@@ -74,14 +83,16 @@
 
 <template name="welcome">
     <article class="welcome">
-        <h1>Welcome [User]</h1>
+        <h1>Welcome {{name}}</h1>
         <h2>[Someone] would like you to spread the word about [email title]. Checkout their message</h2>
-        <div class="original-message">
+        <div class="original-message" id="original_message">
             This is some existing message that is going to be places here.
         </div>
         <h2>Add your own note here before sending</h2>
-        <textarea></textarea>
-        <button class="btn btn-success pull-right">Next</button>
+        <textarea id="own_message"></textarea>
+        <div class="row">
+            <label class="pull-right" style="margin-right: 13px;">Step 1 of 4</label></div>
+        <button class="btn btn-success pull-right welcome-to-searchq">Next</button>
     </article>
     <div class="modal fade" id="defMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -92,7 +103,8 @@
                 </div>
                 <div class="modal-body">
                     <p>You will need to enter password in order to edit message</p>
-                    <input type="text" class="input-sm"/>
+                    <p class="error hide">Provided password is not valid</p>
+                    <input type="password" id="password" class="input-sm"/>
                     <button type="button" class="btn btn-primary msg-password">Submit</button>
                 </div>
             </div>
@@ -133,16 +145,20 @@
   </div>
 </template>
 
-
-
 <template name="searchQ">
-  <br><br>
-  <h3>3. Now we find out which of your friends might actually care about this message by using some “relevance” terms. Type a few words.</h3>
-  <p>(nobody getting mailed, etc etc.)</p>
-  <div class="row" style="margin-left:0px">
-    <input type="search" class="search-query" value="{{searchQ}}"></input>
-    <button type="submit" class="btn btn-small search-button" type="button"><i class="icon-search"></i></button>
-  </div>
+  <article class="searchq">
+      <h2 style="text-align: center;">Great now lets choose some friends who may been interested in this topic. Try adding a few keywords, for example "art" or "cookies". Something that is specific to the original topic. </h2>
+      <div class="row" style="margin-left:0px">
+          <input type="search" class="search-query input-full" placeholder="Type in a search term" value="{{searchQ}}" />
+          <div class="row">
+              <label class="pull-right" style="margin-right: 13px;">Step 2 of 4</label></div>
+          <div class="row">
+              <button class="btn btn-primary search-button pull-right" style="margin-right: 10px;" type="button">Search</button>
+              <button class="btn btn-default pull-right searchq-to-welcome" style="margin-right: 10px;" type="button">Back</button>
+          </div>
+
+      </div>
+  </article>
 </template>
 
 
@@ -171,9 +187,115 @@
 
 
 
-
-
 <template name="contact_list">
+    <article class="contact_list">
+        <h2>These are your friends interested in <b>{{searchQ}}</b>  </h2>
+        <h2>The people at the top are the most relevant.</h2>
+        <h2>Select people using these handy buttons.</h2>
+        <div class="btn-send-group">
+            <div class="btn-group">
+                <button class="btn btn-success sendToTop15">select the top 15</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success sendToTop30">select the top 30 relevant</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success sendToAll">send to all</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success sendToHandpicked">send to my hand-picked list</button>
+            </div>
+        </div>
+        <h3>Your friends
+            <button class="btn btn-small reload">Reload</button>
+            <button class="btn btn-primary add-all-relevant">Add All Relevant</button>
+            <button class="btn btn-primary add-all">Add All</button>
+        </h3>
+        <input class="gmail-contacts" type="checkbox">Click to get recipients of all your emails (Or it will only recent recipients)</input>
+        <div class="filter">
+            {{#constant}}
+            <div class="input-group">
+          <span class="input-group-addon">
+            <input class="gmail-sent" type="checkbox">Sent in last 90 days
+          </span>
+          <span class="input-group-addon">
+            <input class="gmail-received" type="checkbox">Received in last 90 days
+          </span>
+          <span class="input-group-addon">
+            <input class="gcontact" type="checkbox">On Contact list
+          </span>
+            </div>
+            {{/constant}}
+        </div>
+        <div class="alert alert-warning alert-contact">Warning! Select emails of friends first!</div>
+        <table class="table table-bordered table-hover contacts">
+            <thead>
+            <tr>
+                <th><button class="selectAll btn btn-primary">Select All</button></th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Sent in last 90 days</th>
+                <th>Received in last 90 days</th>
+                <th>On Contact list</th>
+                <th>Relevant{{#if searchQ}}({{searchQ}}){{/if}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each matchedContacts}}
+            <tr class="contact" data-email="{{email}}">
+                <td class="icon"><i></i><span>  {{index}}</span></td>
+                <td>{{name}}</td>
+                <td>{{email}}</td>
+                <td>{{sentMessages}}</td>
+                <td>{{receivedMessages}}</td>
+                <td>{{#if isGContact}}<i class="icon-ok"></i>{{/if}}</td>
+                <td>{{#if isRelevant}}<i class="relevant-contact icon-ok"></i>{{/if}}</td>
+            </tr>
+            {{/each}}
+
+            {{#each unmatchedContacts}}
+            <tr class="contact" data-email="{{email}}">
+                <td class="icon"><i></i><span>  {{index}}</span></td>
+                <td>{{name}}</td>
+                <td>{{email}}</td>
+                <td>{{sentMessages}}</td>
+                <td>{{receivedMessages}}</td>
+                <td>{{#if isGContact}}<i class="icon-ok"></i>{{/if}}</td>
+                <td>{{#if isRelevant}}<i class="relevant-contact icon-ok"></i>{{/if}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        <div class="row">
+            <label class="pull-right" style="margin-right: 13px;">Step 3 of 4</label></div>
+        <div class="row">
+            <button class="btn btn-primary contact-list-to-confirm pull-right" style="margin-right: 10px;" type="button">Next</button>
+            <button class="btn btn-default pull-right contact-list-to-searchq" style="margin-right: 10px;" type="button">Back</button>
+        </div>
+    </article>
+</template>
+
+<template name="confirm">
+    <article class="confirm">
+        <h2 style="text-align: center;">Almost done, please review your selection and click send</h2>
+        <div class="preview">
+            <h4>Subject:</h4>
+            <p class="draft-subject"></p>
+            <h4>Body:</h4>
+            <p class="draft-body"></p>
+            <h4>Send To:</h4>
+            <p class="draft-to"></p>
+        </div>
+        <div class="row">
+            <label class="pull-right" style="margin-right: 13px;">Step 4 of 4</label></div>
+        <div class="row">
+            <button class="btn btn-primary pull-right draft-send" style="margin-right: 10px;" type="button">Send</button>
+            <button class="btn btn-default pull-right confirm-to-contact-list" style="margin-right: 10px;" type="button">Back</button>
+        </div>
+    </article>
+</template>
+
+<template name="contact_list_old">
   <br><br>
   <h3>4. Now pick who gets it from this list of the most relevant people you email! Use one of the green buttons to just quickly send to a few people. </h3>
   <p>(here is the part where we send)</p>

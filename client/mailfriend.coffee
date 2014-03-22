@@ -2,9 +2,13 @@ Template.layout.helpers
   hasLogin: ->
     !!Meteor.user()
   stepIsWelcome: ->
-    console.log Session.get('STEP')
     Session.equals('STEP', "welcome")
-    #Session.get('STEP') || '' == "welcome"
+  stepIsSearchQ: ->
+    Session.equals('STEP', "searchq")
+  stepIsContactList: ->
+    Session.equals('STEP', "contact_list")
+  stepIsConfirm: ->
+    Session.equals('STEP', "confirm")
 
 Template.layout.events
   'click .logout': (e) ->
@@ -18,10 +22,23 @@ Template.welcome.events
     if($(div).attr("contenteditable"))
       return true;
 
-    $(div).attr("contenteditable", true)
+
     $("#defMessageModal").modal("show")
 
-Template.invite_friends.helpers
+  'click .msg-password': (e) ->
+    console.log "test"
+    password = $("#msg-password").val()
+    Meteor.call "checkPassword", Meteor.userId(), password, (data) ->
+      console.log "entered " + data
+      #if data == true
+      $("#original_message").attr("contenteditable", true)
+      $("#defMessageModal").modal("hide")
+  'click .welcome-to-searchq': (e) ->
+    Session.set("ORIG_MESS", $("#original_message").val())
+    Session.set("OWN_MESS", $("#own_message").val())
+    Session.set("STEP", "searchq")
+
+Template.welcome.helpers
   name: ->
     user = Meteor.user()
     if user
@@ -30,7 +47,7 @@ Template.invite_friends.helpers
       ''
 
 
-Template.invite_friends.events
+Template.login.events
   'click .add-google-oauth': (e) ->
     console.log new Date()
     button = $(e.currentTarget)
@@ -69,8 +86,10 @@ Template.searchQ.events
       # , 60*1000
       searchContacts searchQuery, ->
         $(e.target).prop('disabled', false)
+        Session.set('STEP', "contact_list")
 
-
+  'click .searchq-to-welcome': (e) ->
+     Session.set("STEP", "welcome")
 
 searchContacts = (searchQuery, cb) ->
   Meteor.setTimeout ->
@@ -227,7 +246,11 @@ Template.contact_list.events
     console.log 'sendToHandpicked'
     clickSendMessages()
 
+  'click .contact-list-to-confirm': (e) ->
+     Session.set("STEP", "confirm")
 
+  'click .contact-list-to-searchq': (e) ->
+    Session.set("STEP", "searchq")
 
 loadAllGmails = (isLoadAll) ->
   Meteor.setTimeout ->
@@ -248,6 +271,57 @@ Template.contact_list.rendered = ->
   $(this.findAll("tr.contact")).each ->
     if SelectedEmailsHelper.containEmail($(this).data('email'))
       $(this).addClass('info').find('.icon i').addClass('icon-ok')
+
+
+
+Template.confirm.rendered = ->
+  toEmails = Session.get("CONF_DATA")
+  body = Session.get("ORIG_MESS") + Session.get("OWN_MESS")
+  emails = []
+  if toEmails.length
+    emails = toEmails
+  else
+    $('tr.contact.info').each -> emails.push $(this).data('email')
+
+  to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
+  $('.draft-subject').text("Invitation")
+  $('.draft-body').html(body)
+  $('.draft-to').html(to.join(''))
+
+Template.confirm.events
+  'click .confirm-to-contact-list': (e) ->
+    Session.set("STEP", "contact_list")
+
+  'click button.draft-send': (e) ->
+    subject = $('.draft-subject').text()
+    body = $('.draft-body').html()
+    to = []
+    $('#email_draft .draft-to p.email').each -> to.push $(this).text()
+    console.log subject, body, to
+    $('.draft-send').prop('disabled', true)
+    #sharingBody = $('.email-body2').code()
+    sharingBody = body
+    Meteor.call 'sendMail', subject, body, to, (err, result) ->
+      if err
+        console.log err
+      else
+        sharing = Sharings.findOne({type: 'email'})
+        if sharing
+          Sharings.update sharing._id,
+            $set:
+              subject: subject
+              htmlBody: sharingBody
+        else
+          Sharings.insert
+            type: 'email'
+            subject: subject
+            htmlBody: sharingBody
+      console.log 'send mail success'
+      $('.draft-send').prop('disabled', false)
+      $('.draft-close').trigger('click')
+
+
+
 
 
 Template.compose.helpers
@@ -298,8 +372,6 @@ validatePassword = (password) ->
 
 
 Template.compose.events
-
-
   'change .lock-message': (e) ->
     if $(e.currentTarget).prop('checked')
       $(e.currentTarget).siblings('.lock-message-label').text('unlock the message')
@@ -332,23 +404,25 @@ Template.compose.events
 
 
 clickSendMessages = (toEmails=[])->
-  subject = $('.email-subject').val().trim() || "Invitation"
-  body = $('.email-body').code() + $('.email-body2').code() # $('.email-body').html().trim() 
+  #subject = $('.email-subject').val().trim() || "Invitation"
+  subject = "Invitation"
+  #body = $('.email-body').code() + $('.email-body2').code() # $('.email-body').html().trim()
 
-
-  return $('.alert-body').show() unless body
-  return $('.alert-contact').show() unless $('tr.contact.info').length
-  emails = []
-  if toEmails.length
-    emails = toEmails
-  else
-    $('tr.contact.info').each -> emails.push $(this).data('email')
-
-  to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
-  $('#email_draft .draft-subject').text(subject)
-  $('#email_draft .draft-body').html(body)
-  $('#email_draft .draft-to').html(to.join(''))
-  $('#email_draft').modal()
+  Session.set("CONF_DATA", toEmails)
+  Session.set("STEP", "confirm")
+#  return $('.alert-body').show() unless body
+#  return $('.alert-contact').show() unless $('tr.contact.info').length
+#  emails = []
+#  if toEmails.length
+#    emails = toEmails
+#  else
+#    $('tr.contact.info').each -> emails.push $(this).data('email')
+#
+#  to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
+#  $('#email_draft .draft-subject').text(subject)
+#  $('#email_draft .draft-body').html(body)
+#  $('#email_draft .draft-to').html(to.join(''))
+#  $('#email_draft').modal()
 
 
 

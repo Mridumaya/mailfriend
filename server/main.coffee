@@ -51,3 +51,7 @@ Meteor.methods
         console.log err
       else
         syncMail(userId, searchQuery)
+
+  'checkPassword': (userId, password) ->
+    console.log userId + ", " + password
+    return true
