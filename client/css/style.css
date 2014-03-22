@@ -1,5 +1,6 @@
-html{
+html, body{
     font-family: 'Open Sans', sans-serif;
+    height: 100%;
 }
 .brand {
     margin-left: auto;
@@ -9,25 +10,33 @@ html{
 }
 article{
     max-width: 640px;
-    min-height: 600px;
+    min-height: 100%;
     margin-left: auto;
     margin-right: auto;
     position: relative;
 }
 .navbar-default {
     background: #27709b;
-    background: -webkit-linear-gradient(top, #27709b 0, #24688f 100%);
-    background: linear-gradient(to bottom, #27709b 0, #24688f 100%);
     line-height: 69px;
     color: #ffffff;
+}
+.avatar{
+    margin-right: 14px;
 }
 
 .main {
     position:absolute;
-    top:50%;
+    top:40%;
     height:240px;
     margin-top:-120px;
     text-align: center;
+}
+
+a.logout,a.logout:hover  {
+    display: block;
+    height: 15px;
+    line-height: 0px;
+    color: #ffffff;
 }
 
 .main .title {
@@ -43,4 +52,20 @@ article{
 .container.wrapper {
     padding-top: 69px;
     padding-bottom: 69px;
+}
+
+.welcome .original-message {
+    background-color: #dedede;
+    min-height: 250px;
+    border: 1px solid #C2C2C2;
+    font-size: 19px;
+}
+.welcome textarea {
+    min-height: 250px;width: 100%;
+}
+
+footer{
+    background: #27709b;
+    height: 50px;
+    margin-top: -50px;
 }

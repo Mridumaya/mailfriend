@@ -3,33 +3,33 @@
     <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-blue navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="brand">Mail Friend</div>
-        </div>
-    </nav>
     {{> layout}}
-
-    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
-        <div class="container">
-        </div>
-    </nav>
 </body>
 
 
 
 <template name="layout">
- {{#if hasLogin}}
-    <div class="container wrapper">
-      {{> compose}}
-      {{> searchQ}}
-      {{> contact_list}}
-      {{> email_draft}}
-      {{> google_api_modal}}
-    </div>
-    {{else}}
-      {{> invite_friends}}
- {{/if}}
+    <nav class="navbar navbar-default navbar-blue navbar-fixed-top" role="navigation">
+        {{#if hasLogin}}
+            <div class="pull-right avatar">
+                <img src="https://avatars1.githubusercontent.com/u/2167739?s=140" height="44" width="44">
+                <a href="#" class="logout">Logout</a>
+            </div>
+        {{/if}}
+        <div class="container">
+            <div class="brand">Mail Friend</div>
+        </div>
+    </nav>
+     {{#if hasLogin}}
+        <div class="container wrapper">
+          {{#if stepIsWelcome}}
+            {{> welcome}}
+          {{/if}}
+        </div>
+        {{else}}
+          {{> invite_friends}}
+     {{/if}}
+    <footer></footer>
 </template>
 
 
@@ -72,19 +72,33 @@
     </article>
 </template>
 
-<template name="invite_friends_old">
-    <h1 style="color:blue;">Mailfriend</h1>
-
-    <h3>Hey! Mailfriend lets you pass the word to your friends who might actually care.</h3>
-    <br>
-    {{#if hasLogin}}
-    <h3>1. Hello, <span style="color:blue;">{{name}}</span>, Send a message to your friends! <button class="btn btn-small logout">Logout</button></h3>
-    {{else}}
-    <h3>1. Click this <button class="add-google-oauth btn btn-primary">Gmail Oauth</button> button so we can pull up your relevant friends</h3>
-    {{/if}}
-    (nobody is getting mailed, no funny business, promise!)
+<template name="welcome">
+    <article class="welcome">
+        <h1>Welcome [User]</h1>
+        <h2>[Someone] would like you to spread the word about [email title]. Checkout their message</h2>
+        <div class="original-message">
+            This is some existing message that is going to be places here.
+        </div>
+        <h2>Add your own note here before sending</h2>
+        <textarea></textarea>
+        <button class="btn btn-success pull-right">Next</button>
+    </article>
+    <div class="modal fade" id="defMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Message edit</h4>
+                </div>
+                <div class="modal-body">
+                    <p>You will need to enter password in order to edit message</p>
+                    <input type="text" class="input-sm"/>
+                    <button type="button" class="btn btn-primary msg-password">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
-
 
 <template name="compose">
     <button class="btn btn-small logout">Logout</button>

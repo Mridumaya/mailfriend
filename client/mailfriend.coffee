@@ -1,7 +1,25 @@
 Template.layout.helpers
   hasLogin: ->
     !!Meteor.user()
+  stepIsWelcome: ->
+    console.log Session.get('STEP')
+    Session.equals('STEP', "welcome")
+    #Session.get('STEP') || '' == "welcome"
 
+Template.layout.events
+  'click .logout': (e) ->
+    e.preventDefault
+    Meteor.logout()
+    return true
+
+Template.welcome.events
+  'click .original-message': (e) ->
+    div = $(e.currentTarget)
+    if($(div).attr("contenteditable"))
+      return true;
+
+    $(div).attr("contenteditable", true)
+    $("#defMessageModal").modal("show")
 
 Template.invite_friends.helpers
   name: ->
@@ -13,8 +31,6 @@ Template.invite_friends.helpers
 
 
 Template.invite_friends.events
-
-
   'click .add-google-oauth': (e) ->
     console.log new Date()
     button = $(e.currentTarget)
@@ -32,6 +48,7 @@ Template.invite_friends.events
       unless err
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log err if err
+          Session.set("STEP", "welcome")
     )
 
 
@@ -281,10 +298,7 @@ validatePassword = (password) ->
 
 
 Template.compose.events
-  'click .logout': (e) ->
-    e.preventDefault
-    Meteor.logout()
-    return true
+
 
   'change .lock-message': (e) ->
     if $(e.currentTarget).prop('checked')
