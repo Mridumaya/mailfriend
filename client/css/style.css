@@ -4,7 +4,7 @@ html, body{
     font-size: 15px;
 }
 
-input[type=text],input[type=search], textarea {
+input[type=text],input[type=search],input[type=password], textarea {
     border: 1px solid #cecece;
     padding: 8px;
     margin: 5px;
@@ -16,6 +16,11 @@ input[type=text],input[type=search], textarea {
 }
 .input-large {
     width: 85%;
+}
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 label{
@@ -36,6 +41,7 @@ label{
     margin-right: auto;
     text-align: center;
     font-size: 33px;
+    margin-top: 8px;
 }
 article{
     max-width: 640px;
@@ -69,12 +75,12 @@ a.logout,a.logout:hover  {
 }
 
 .main .title {
-    font-size: 40px;
+    font-size: 33px;
 }
 .main .login {
     margin-top: 50px;
-    font-size: 38px;
-    padding: 25px 16px;
+    font-size: 33px;
+    padding: 20px 16px;
     margin-bottom: 100px;
     white-space: normal;
 }
@@ -86,26 +92,28 @@ a.logout,a.logout:hover  {
 
 .welcome {
     margin-top: 50px;
+    text-align: center;
 }
 
 .welcome .original-message {
     background-color: #dedede;
     min-height: 250px;
     border: 1px solid #C2C2C2;
-    font-size: 19px;
+    font-size: 16px;
     padding: 5px;
 }
 .welcome textarea {
     min-height: 250px;width: 100%;
-    font-size: 19px;
+    font-size: 16px;
     padding: 5px;
 }
 
-.welcome .error {
+.error {
     color: #ff0000;
+    margin-left: 5px;
 }
 .searchq{
-    margin-top:100px;
+    margin-top:50px;
 }
 
 .contact_list {
@@ -126,14 +134,45 @@ a.logout,a.logout:hover  {
     margin: 5px;
 }
 
+.contact_list input[type=checkbox]{
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    vertical-align: bottom;
+}
+
+.contact td .glyphicon {
+    float: left;
+}
+.contact td span {
+    float: right;
+    margin-right: 42px;
+}
+
+label.check {
+    cursor: pointer;
+    padding-left: 25px;
+    margin: 5px;
+}
+
+table.contacts td{
+    cursor: pointer;
+}
+
 .confirm {
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 .confirm .preview {
     background-color: #dedede;
     min-height: 250px;
     padding: 10px;
+}
+
+.confirm .success{
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #84F897;
 }
 
 footer{

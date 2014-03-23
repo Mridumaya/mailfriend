@@ -87,6 +87,11 @@ Template.searchQ.events
       searchContacts searchQuery, ->
         $(e.target).prop('disabled', false)
         Session.set('STEP', "contact_list")
+    else
+      $("#sq_error").toggleClass("hidden")
+
+  'keypress .search-query': (e) ->
+     $("#sq_error").addClass("hidden")
 
   'click .searchq-to-welcome': (e) ->
      Session.set("STEP", "welcome")
@@ -171,13 +176,13 @@ Template.contact_list.events
 
   'click .add-all-relevant': (e) ->
     selector = $('tr.contact').find('i.relevant-contact').closest('tr.contact').addClass('info')
-    selector.find('.icon i').addClass('icon-ok')
+    selector.find('.icon i').addClass('glyphicon glyphicon-ok')
     selector.each ->
       SelectedEmailsHelper.selectEmail($(this).data('email'))
 
   'click tr.contact': (e) ->
     console.log $(e.currentTarget).data("email")
-    if $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('icon-ok').hasClass('icon-ok')
+    if $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('glyphicon glyphicon-ok').hasClass('glyphicon glyphicon-ok')
       SelectedEmailsHelper.selectEmail($(e.currentTarget).data('email'))
     else
       SelectedEmailsHelper.unselectEmail($(e.currentTarget).data('email'))
@@ -190,19 +195,19 @@ Template.contact_list.events
     if $(selectAll).toggleClass('selected').hasClass('selected')
       $(selectAll).text('Unselect All')
       selector = $('tr.contact').addClass('info')
-      selector.find('.icon i').addClass('icon-ok')
+      selector.find('.icon i').addClass('glyphicon glyphicon-ok')
       selector.each ->
         SelectedEmailsHelper.selectEmail($(this).data('email'))
     else
       $(selectAll).text('Select All')
       selector = $('tr.contact').removeClass('info')
-      selector.find('.icon i').removeClass('icon-ok')
+      selector.find('.icon i').removeClass('glyphicon glyphicon-ok')
       selector.each ->
         SelectedEmailsHelper.unselectEmail($(this).data('email'))
 
   'click .add-all': (e) ->
     selector = $('tr.contact').addClass('info')
-    selector.find('.icon i').addClass('icon-ok')
+    selector.find('.icon i').addClass('glyphicon glyphicon-ok')
     selector.each ->
       SelectedEmailsHelper.selectEmail($(this).data('email'))
 
@@ -223,21 +228,21 @@ Template.contact_list.events
 
   'click .sendToTop15': (e) ->
     console.log 'sendToTop15'
-    $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
-    $('tr.contact').slice(0,15).addClass('info').find('.icon i').addClass('icon-ok')
+    $('tr.contact').removeClass('info').find('.icon i').removeClass('glyphicon glyphicon-ok')
+    $('tr.contact').slice(0,15).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
     clickSendMessages()
 
 
   'click .sendToTop30': (e) ->
     console.log 'sendToTop30'
-    $('tr.contact').removeClass('info').find('.icon i').removeClass('icon-ok')
-    $('tr.contact').slice(0,30).addClass('info').find('.icon i').addClass('icon-ok')
+    $('tr.contact').removeClass('info').find('.icon i').removeClass('glyphicon glyphicon-ok')
+    $('tr.contact').slice(0,30).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
     clickSendMessages()
 
 
   'click .sendToAll': (e) ->
     console.log 'sendToAll'
-    $('tr.contact').addClass('info').find('.icon i').addClass('icon-ok')
+    $('tr.contact').addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
     clickSendMessages()
 
 
@@ -270,7 +275,7 @@ Template.contact_list.rendered = ->
     $(this.find('.gmail-contacts')).prop('checked', true)
   $(this.findAll("tr.contact")).each ->
     if SelectedEmailsHelper.containEmail($(this).data('email'))
-      $(this).addClass('info').find('.icon i').addClass('icon-ok')
+      $(this).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
 
 
 
@@ -317,6 +322,7 @@ Template.confirm.events
             subject: subject
             htmlBody: sharingBody
       console.log 'send mail success'
+      $(".success").removeClass("hidden")
       $('.draft-send').prop('disabled', false)
       $('.draft-close').trigger('click')
 
