@@ -9,6 +9,14 @@ Template.layout.helpers
     Session.equals('STEP', "contact_list")
   stepIsConfirm: ->
     Session.equals('STEP', "confirm")
+  picture: ->
+    user = Meteor.user()
+    console.log("Hello")
+    console.log(user)
+    if user and user.profile and user.profile.picture
+      return user.profile.picture
+    return 'images/default_user.jpg'
+
 
 Template.layout.events
   'click .logout': (e) ->
@@ -45,7 +53,6 @@ Template.welcome.helpers
       user.profile.name
     else
       ''
-
 
 Template.login.events
   'click .add-google-oauth': (e) ->
