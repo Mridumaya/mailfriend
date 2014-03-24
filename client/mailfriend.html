@@ -12,7 +12,7 @@
     <nav class="navbar navbar-default navbar-blue navbar-fixed-top" role="navigation">
         {{#if hasLogin}}
             <div class="pull-right avatar">
-                <img src="https://avatars1.githubusercontent.com/u/2167739?s=140" height="44" width="44">
+                <img src="{{currentUser.profile.picture}}" height="44" width="44">
                 <a href="#" class="logout">Logout</a>
             </div>
         {{/if}}
@@ -119,7 +119,7 @@
   <p>(nobody is getting mailed, no funny business, promise!)</p>
   <div class="input-prepend">
     <span class="add-on">Email Subject:</span>
-    <input class="span7 email-subject" type="text" placeholder="Invitation" value="{{subject}}"></input>
+    <input class="span7 email-subject" type="text" placeholder="Invitation" value="{{subject}}"/>
   </div>
   <div class="alert alert-warning alert-body">Warning! Please write some text!</div>
   <div class="row">
@@ -374,7 +374,7 @@
           <td>{{receivedMessages}}</td>
           <td>{{sentMessages}}</td>
           <td>{{#if isGContact}}<i class="icon-ok"></i>{{/if}}</td>
-          <td>{{#if isRelevant}}<i class="relevant-contact icon-ok"></i>{{/if}}</th>
+          <td>{{#if isRelevant}}<i class="relevant-contact icon-ok"></i>{{/if}}</td>
         </tr>
       {{/each}}
 
@@ -386,7 +386,7 @@
           <td>{{receivedMessages}}</td>
           <td>{{sentMessages}}</td>
           <td>{{#if isGContact}}<i class="icon-ok"></i>{{/if}}</td>
-          <td>{{#if isRelevant}}<i class="relevant-contact icon-ok"></i>{{/if}}</th>
+          <td>{{#if isRelevant}}<i class="relevant-contact icon-ok"></i>{{/if}}</td>
         </tr>
       {{/each}}
     </tbody>
