@@ -85,13 +85,17 @@
     <article class="welcome">
         <h2>Welcome {{name}}</h2>
         <h4>[Someone] would like you to spread the word about [email title]. Checkout their message</h4>
+        <div class="input-prepend text-left" style="margin-bottom: 10px;">
+            <span class="add-on" style="font-size: 18px;">Email Subject:</span>
+            <input class="subject" id="subject" type="text" placeholder="Invitation" value="">
+        </div>
         <div class="original-message" id="original_message">
             This is some existing message that is going to be places here.
         </div>
         <h4>Add your own note here before sending</h4>
         <textarea id="own_message"></textarea>
         <div class="row">
-            <label class="pull-right" style="margin-right: 13px;">Step 1 of 4</label></div>
+            <label class="pull-right">Step 1 of 4</label></div>
         <button class="btn btn-success pull-right welcome-to-searchq">Next</button>
     </article>
     <div class="modal fade" id="defMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -200,10 +204,10 @@
                 <button class="btn btn-success sendToTop30">select the top 30 relevant</button>
             </div>
             <div class="btn-group">
-                <button class="btn btn-success sendToAll">send to all</button>
+                <button class="btn btn-success sendToAll">select all</button>
             </div>
             <div class="btn-group">
-                <button class="btn btn-success sendToHandpicked">send to my hand-picked list</button>
+                <button class="btn btn-success sendToHandpicked">choose my hand-picked list</button>
             </div>
         </div>
         <h4>Your friends
@@ -287,7 +291,7 @@
             <p class="draft-to"></p>
         </div>
         <div class="row">
-            <label class="pull-right" style="margin-right: 13px;">Step 4 of 4</label></div>
+            <label class="pull-right" style="margin-right: 13px; margin-top: 10px;">Step 4 of 4</label></div>
         <div class="row">
             <button class="btn btn-primary pull-right draft-send" style="margin-right: 10px;" type="button">Send</button>
             <button class="btn btn-default pull-right confirm-to-contact-list" style="margin-right: 10px;" type="button">Back</button>

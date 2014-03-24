@@ -175,6 +175,10 @@ table.contacts td{
     background-color: #84F897;
 }
 
+.confirm .success a {
+    text-decoration: none;
+}
+
 footer{
     background: #27709b;
     height: 50px;

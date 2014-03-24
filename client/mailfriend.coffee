@@ -42,8 +42,9 @@ Template.welcome.events
       $("#original_message").attr("contenteditable", true)
       $("#defMessageModal").modal("hide")
   'click .welcome-to-searchq': (e) ->
-    Session.set("ORIG_MESS", $("#original_message").val())
+    Session.set("ORIG_MESS", $("#original_message").text())
     Session.set("OWN_MESS", $("#own_message").val())
+    Session.set("MAIL_TITLE", $("#subject").val())
     Session.set("STEP", "searchq")
 
 Template.welcome.helpers
@@ -259,6 +260,7 @@ Template.contact_list.events
     clickSendMessages()
 
   'click .contact-list-to-confirm': (e) ->
+     clickSendMessages()
      Session.set("STEP", "confirm")
 
   'click .contact-list-to-searchq': (e) ->
@@ -284,25 +286,33 @@ Template.contact_list.rendered = ->
     if SelectedEmailsHelper.containEmail($(this).data('email'))
       $(this).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
 
+  $(this.find('.gmail-received')).prop('checked', true) if Session.equals('FILTER_GMAIL_RECEIVED', true)
+  $(this.find('.gmail-sent')).prop('checked', true) if Session.equals('FILTER_GMAIL_SENT', true)
+  $(this.find('.gcontact')).prop('checked', true) if Session.equals('FILTER_GCONTACT', true)
+
 
 
 Template.confirm.rendered = ->
-  toEmails = Session.get("CONF_DATA")
+  emails = Session.get("CONF_DATA")
   body = Session.get("ORIG_MESS") + Session.get("OWN_MESS")
-  emails = []
-  if toEmails.length
-    emails = toEmails
-  else
-    $('tr.contact.info').each -> emails.push $(this).data('email')
 
   to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
-  $('.draft-subject').text("Invitation")
+  $('.draft-subject').text(Session.get("MAIL_TITLE") + "Invitation")
   $('.draft-body').html(body)
   $('.draft-to').html(to.join(''))
 
 Template.confirm.events
   'click .confirm-to-contact-list': (e) ->
     Session.set("STEP", "contact_list")
+
+  'click #facebook': (e) ->
+    window.open('https://www.facebook.com/sharer/sharer.php?u=http://mailfriend.meteor.com/', 'facebook-share-dialog', 'width=626,height=436');
+  'click #twitter': (e) ->
+    window.open("http://twitter.com/share?text=" + encodeURIComponent("Check this cool pictures application http://mailfriend.meteor.com/"), 'twitter', "width=575, height=400");
+  'click #google': (e) ->
+    window.open('https://plus.google.com/share?url=http://mailfriend.meteor.com/', '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');
+  'click #linkedin': (e) ->
+    window.open("http://www.linkedin.com/shareArticle?mini=true&url=http://mailfriend.meteor.com/", '', "width=620, height=432");
 
   'click button.draft-send': (e) ->
     subject = $('.draft-subject').text()
@@ -417,28 +427,14 @@ Template.compose.events
 
 
 clickSendMessages = (toEmails=[])->
-  #subject = $('.email-subject').val().trim() || "Invitation"
-  subject = "Invitation"
-  #body = $('.email-body').code() + $('.email-body2').code() # $('.email-body').html().trim()
+  emails = []
+  if toEmails.length
+    emails = toEmails
+  else
+    $('tr.contact.info').each -> emails.push $(this).data('email')
 
-  Session.set("CONF_DATA", toEmails)
+  Session.set("CONF_DATA", emails)
   Session.set("STEP", "confirm")
-#  return $('.alert-body').show() unless body
-#  return $('.alert-contact').show() unless $('tr.contact.info').length
-#  emails = []
-#  if toEmails.length
-#    emails = toEmails
-#  else
-#    $('tr.contact.info').each -> emails.push $(this).data('email')
-#
-#  to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
-#  $('#email_draft .draft-subject').text(subject)
-#  $('#email_draft .draft-body').html(body)
-#  $('#email_draft .draft-to').html(to.join(''))
-#  $('#email_draft').modal()
-
-
-
 
 Template.email_draft.events
   'click button.draft-send': (e) ->
