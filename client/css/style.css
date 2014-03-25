@@ -7,7 +7,7 @@ html, body{
 input[type=text],input[type=search],input[type=password], textarea {
     border: 1px solid #cecece;
     padding: 8px;
-    margin: 5px;
+    margin: 5px 0px;
     font-size: 15px;
 }
 
@@ -130,6 +130,10 @@ a.logout,a.logout:hover  {
     margin-top: 30px;
 }
 
+.contact_list .input-group-addon {
+    border-radius: 0px;
+}
+
 .contact_list .btn-group{
     margin: 5px;
 }
@@ -141,9 +145,10 @@ a.logout,a.logout:hover  {
     vertical-align: bottom;
 }
 
-.contact td .glyphicon {
-    float: left;
+.contact_list table {
+    margin-bottom: 10px;
 }
+
 .contact td span {
     float: right;
     margin-right: 42px;
@@ -157,6 +162,9 @@ label.check {
 
 table.contacts td{
     cursor: pointer;
+}
+.dataTables_wrapper {
+    margin-top: 30px;
 }
 
 .confirm {

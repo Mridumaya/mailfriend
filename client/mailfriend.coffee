@@ -235,8 +235,10 @@ Template.contact_list.events
       SelectedEmailsHelper.selectEmail($(this).data('email'))
 
   'click button.reload': (e) ->
-    $(e.currentTarget).prop('disabled', true)
-    Meteor.call 'loadContacts', Meteor.userId()
+    btn = $(e.currentTarget)
+    btn.prop('disabled', true)
+    Meteor.call 'loadContacts', Meteor.userId(), ->
+      btn.prop('disabled', false)
 
   'change .gmail-contacts': (e) ->
     isLoadAll = $(e.target).prop('checked')
@@ -274,6 +276,13 @@ Template.contact_list.events
     console.log 'sendToHandpicked'
     clickSendMessages()
 
+  'click .edit-search-term': (e) ->
+    searchQuery = $('#s_term').val().trim()
+    if searchQuery
+      searchContacts searchQuery, ->
+        console.log "search query changed"
+        $("#searchTermModal").modal("hide")
+
   'click .contact-list-to-confirm': (e) ->
      clickSendMessages()
      Session.set("STEP", "confirm")
@@ -304,6 +313,14 @@ Template.contact_list.rendered = ->
   $(this.find('.gmail-received')).prop('checked', true) if Session.equals('FILTER_GMAIL_RECEIVED', true)
   $(this.find('.gmail-sent')).prop('checked', true) if Session.equals('FILTER_GMAIL_SENT', true)
   $(this.find('.gcontact')).prop('checked', true) if Session.equals('FILTER_GCONTACT', true)
+  $("#contacts").dataTable({
+    "sDom": "<'row-fluid'l<'span6'>r>t<'row-fluid'<'span4'><'span8'p>>",
+    "sPaginationType": "bootstrap",
+    "iDisplayLength": 25,
+    "aoColumnDefs": [
+      { 'bSortable': false, 'aTargets': [ 0 ] }
+    ]
+  });
 
 
 
