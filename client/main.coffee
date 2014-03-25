@@ -17,17 +17,8 @@ Deps.autorun ->
     console.log 'SUBSCRIBED_SHARINGS: ', new Date
 
 
-
-checkGoogleApi = ->
-  Meteor.call 'checkGoogleApi', (err, result) ->
-    if err
-      console.log 'checkGoogleApi', err
-    else
-      Session.set('GOOGLE_API', !!result)
-
-
-
 Session.setDefault("GOOGLE_API", true)
+
 Meteor.startup ->
-  checkGoogleApi()
+  GoogleAccountChecker.checkGoogleApi()
   SelectedEmails.remove()

@@ -470,6 +470,13 @@ Template.google_api_modal.helpers
     Meteor.absoluteUrl()
 
 
+#checkGoogleApi = ->
+#  Meteor.call 'checkGoogleApi', (err, result) ->
+#    if err
+#      console.log 'checkGoogleApi', err
+#    else
+#      Session.set('GOOGLE_API', !!result)
+
 
 Template.google_api_modal.events
   'keypress .client-id': (e) ->
@@ -485,4 +492,4 @@ Template.google_api_modal.events
       $('.google-api-set').prop('disabled', true)
       Meteor.call 'initGoogleOauth', id, secret, (err) ->
         console.log err if err
-        checkGoogleApi()
+        GoogleAccountChecker.checkGoogleApi()
