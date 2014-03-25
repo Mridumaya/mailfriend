@@ -24,6 +24,23 @@ Template.layout.events
     Meteor.logout()
     return true
 
+
+Template.welcome.helpers
+  name: ->
+    user = Meteor.user()
+    if user
+      user.profile.name
+    else
+      ''
+  own_message: ->
+    return Session.get("OWN_MESS", '')
+
+  mail_title: ->
+    return Session.get("MAIL_TITLE", '')
+
+  orig_message: ->
+    return Session.get("ORIG_MESS", 'This is some exciting message that is going to be placed here')
+
 Template.welcome.events
   'click .original-message': (e) ->
     div = $(e.currentTarget)
@@ -47,13 +64,11 @@ Template.welcome.events
     Session.set("MAIL_TITLE", $("#subject").val())
     Session.set("STEP", "searchq")
 
-Template.welcome.helpers
-  name: ->
-    user = Meteor.user()
-    if user
-      user.profile.name
-    else
-      ''
+
+Template.welcome.rendered = ->
+  Session.setDefault("ORIG_MESS", 'This is some exciting message that is going to be placed here')
+
+
 
 Template.login.events
   'click .add-google-oauth': (e) ->
@@ -468,14 +483,6 @@ Template.email_draft.events
 Template.google_api_modal.helpers
   'domain': ->
     Meteor.absoluteUrl()
-
-
-#checkGoogleApi = ->
-#  Meteor.call 'checkGoogleApi', (err, result) ->
-#    if err
-#      console.log 'checkGoogleApi', err
-#    else
-#      Session.set('GOOGLE_API', !!result)
 
 
 Template.google_api_modal.events

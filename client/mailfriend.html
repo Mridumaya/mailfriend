@@ -94,13 +94,13 @@
 
         <div class="input-prepend text-left" style="margin-bottom: 10px;">
             <span class="add-on" style="font-size: 18px;">Email Subject:</span>
-            <input class="subject" id="subject" type="text" placeholder="Invitation" value="">
+            <input class="subject" id="subject" type="text" placeholder="Invitation" value="{{mail_title}}">
         </div>
         <div class="original-message" id="original_message">
-            This is some existing message that is going to be places here.
+            {{orig_message}}
         </div>
         <h4>Add your own note here before sending</h4>
-        <textarea id="own_message"></textarea>
+        <textarea id="own_message">{{own_message}}</textarea>
 
         <div class="row">
             <label class="pull-right">Step 1 of 4</label></div>
