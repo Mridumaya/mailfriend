@@ -24,6 +24,12 @@ Template.layout.events
     Meteor.logout()
     return true
 
+  'click .container.wrapper': (e) ->
+    clicked = $(e.target)
+    unless clicked.parents().hasClass("multi-select")
+      $(".multi-select .items").hide()
+    return true;
+
 
 Template.welcome.helpers
   name: ->
@@ -255,26 +261,20 @@ Template.contact_list.events
     console.log 'sendToTop15'
     $('tr.contact').removeClass('info').find('.icon i').removeClass('glyphicon glyphicon-ok')
     $('tr.contact').slice(0,15).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
-    clickSendMessages()
+    #clickSendMessages()
 
 
   'click .sendToTop30': (e) ->
     console.log 'sendToTop30'
     $('tr.contact').removeClass('info').find('.icon i').removeClass('glyphicon glyphicon-ok')
     $('tr.contact').slice(0,30).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
-    clickSendMessages()
+    #clickSendMessages()
 
 
   'click .sendToAll': (e) ->
     console.log 'sendToAll'
     $('tr.contact').addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
-    clickSendMessages()
-
-
-
-  'click .sendToHandpicked': (e) ->
-    console.log 'sendToHandpicked'
-    clickSendMessages()
+    #clickSendMessages()
 
   'click .edit-search-term': (e) ->
     searchQuery = $('#s_term').val().trim()
@@ -289,6 +289,11 @@ Template.contact_list.events
 
   'click .contact-list-to-searchq': (e) ->
     Session.set("STEP", "searchq")
+
+  'click .multi-select .header': (e) ->
+    e.preventDefault()
+    console.log "test"
+    $(".multi-select .items").toggle()
 
 loadAllGmails = (isLoadAll) ->
   Meteor.setTimeout ->
