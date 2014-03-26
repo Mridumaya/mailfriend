@@ -279,13 +279,10 @@
             <table id="contacts" class="table table-bordered table-hover contacts">
                 <thead>
                 <tr>
-                    <th>
-                        <button class="selectAll btn btn-primary btn-xs">Select All</button>
-                    </th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Sent in last 90 days</th>
-                    <th>Received in last 90 days</th>
+                    <th style="width: 80px;">Sent in last 90 days</th>
+                    <th style="width: 80px;">Received in last 90 days</th>
                     <th>On Contact list</th>
                     <th>Relevant {{#if searchQ}}({{searchQ}}){{/if}}</th>
                 </tr>
@@ -293,7 +290,6 @@
                 <tbody>
                 {{#each matchedContacts}}
                 <tr class="contact" data-email="{{email}}">
-                    <td class="icon"><i></i><span>  {{index}}</span></td>
                     <td>{{name}}</td>
                     <td>{{email}}</td>
                     <td>{{sentMessages}}</td>
@@ -305,7 +301,6 @@
 
                 {{#each unmatchedContacts}}
                 <tr class="contact" data-email="{{email}}">
-                    <td class="icon"><i></i><span>  {{index}}</span></td>
                     <td>{{name}}</td>
                     <td>{{email}}</td>
                     <td>{{sentMessages}}</td>

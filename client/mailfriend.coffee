@@ -23,7 +23,6 @@ Template.layout.events
     e.preventDefault
     Meteor.logout()
     return true
-
   'click .container.wrapper': (e) ->
     clicked = $(e.target)
     unless clicked.parents().hasClass("multi-select")
@@ -322,9 +321,13 @@ Template.contact_list.rendered = ->
     "sDom": "<'row-fluid'l<'span6'>r>t<'row-fluid'<'span4'><'span8'p>>",
     "sPaginationType": "bootstrap",
     "iDisplayLength": 25,
-    "aoColumnDefs": [
-      { 'bSortable': false, 'aTargets': [ 0 ] }
-    ]
+    "aoColumns": [
+      { sWidth: '10%' },
+      { sWidth: '15%' },
+      { sWidth: '25%' },
+      { sWidth: '25%' },
+      { sWidth: '15%' },
+      { sWidth: '15%' }]
   });
 
 
