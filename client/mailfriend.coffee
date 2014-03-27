@@ -66,14 +66,14 @@ Template.welcome.events
 
 
 Template.welcome.rendered = ->
-  mixpanel.track("Visited Page", { "Page": "Welcome Page"});
+  mixpanel.track("visits step 1 page", { });
   Session.setDefault("ORIG_MESS", 'This is some exciting message that is going to be placed here')
 
 
 
 Template.login.events
   'click .add-google-oauth': (e) ->
-    mixpanel.track("Click Button", { "Button": "LogIn"});
+    mixpanel.track("logs in", { });
     console.log new Date()
     button = $(e.currentTarget)
     $(button).prop('disabled', true)
@@ -94,7 +94,7 @@ Template.login.events
     )
 
 Template.login.rendered = ->
-  mixpanel.track("Visited Page", { "Page": "Login Page"});
+  mixpanel.track("view front page", { });
 
 
 
@@ -105,7 +105,7 @@ Template.searchQ.helpers
 
 
 Template.searchQ.rendered = ->
-  mixpanel.track("Visited Page", { "Page": "SearchQ Page"});
+  mixpanel.track("visits step 2 page", { });
 
 Template.searchQ.events
   'click .search-button': (e) ->
@@ -309,7 +309,7 @@ loadAllGmails = (isLoadAll) ->
 
 
 Template.contact_list.rendered = ->
-  mixpanel.track("Visited Page", { "Page": "ContactList Page"});
+  mixpanel.track("visits step 3 page", { });
   $(this.find('.alert-contact')).hide()
   $(this.find('button.selectAll')).prop('disabled', !Meteor.user())
   if Meteor.user()?.profile?.isLoadAll
@@ -356,7 +356,7 @@ Template.contact_list.rendered = ->
 
 
 Template.confirm.rendered = ->
-  mixpanel.track("Visited Page", { "Page": "Confirm Page"});
+  mixpanel.track("visits step 4 page", { });
   emails = Session.get("CONF_DATA")
   body = Session.get("ORIG_MESS") + Session.get("OWN_MESS")
 
@@ -367,7 +367,7 @@ Template.confirm.rendered = ->
 
 Template.confirm.events
   'click .confirm-to-contact-list': (e) ->
-    mixpanel.track("Click Button", { "Button": "BackFromConfirmPage"});
+    mixpanel.track("click on cancel/back button", { });
     Session.set("STEP", "contact_list")
 
   'click #facebook': (e) ->
@@ -403,7 +403,7 @@ Template.confirm.events
             type: 'email'
             subject: subject
             htmlBody: sharingBody
-        mixpanel.track("Click Button", { "Button": "SendEmail"});
+        mixpanel.track("send email", { });
         console.log 'send mail success'
         $(".success").removeClass("hidden")
         $('.draft-send').prop('disabled', false)
