@@ -29,7 +29,7 @@ Template.welcome.helpers
   name: ->
     user = Meteor.user()
     if user
-      user.profile.name
+      user.profile.name.split(" ")[0]
     else
       ''
   own_message: ->
