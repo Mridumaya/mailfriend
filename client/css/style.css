@@ -128,6 +128,16 @@ a.logout,a.logout:hover  {
 
 .contact_list .btn-send-group{
     margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.chosen-container-multi .chosen-choices {
+    padding: 3px;
+    font-size: 15px;
+}
+
+.chosen-container-multi .chosen-choices li.search-field input[type="text"]{
+    height: inherit !important;
 }
 
 .contact_list .input-group-addon {
@@ -179,6 +189,11 @@ a.logout,a.logout:hover  {
 }
 .contact_list .multi-select .items {
     cursor: pointer;
+}
+
+.chosen-select, .contact_list ul {
+    text-align: left;
+    font-size: 15px;
 }
 
 .contact td span {

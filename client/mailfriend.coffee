@@ -23,11 +23,6 @@ Template.layout.events
     e.preventDefault
     Meteor.logout()
     return true
-  'click .container.wrapper': (e) ->
-    clicked = $(e.target)
-    unless clicked.parents().hasClass("multi-select")
-      $(".multi-select .items").hide()
-    return true;
 
 
 Template.welcome.helpers
@@ -309,14 +304,33 @@ Template.contact_list.rendered = ->
   $(this.find('.alert-contact')).hide()
   $(this.find('button.selectAll')).prop('disabled', !Meteor.user())
   if Meteor.user()?.profile?.isLoadAll
-    $(this.find('.gmail-contacts')).prop('checked', true)
+    $(this.find('.chosen-select option[value="gmail-contacts"]')).prop('selected', true)
+
   $(this.findAll("tr.contact")).each ->
     if SelectedEmailsHelper.containEmail($(this).data('email'))
       $(this).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
 
-  $(this.find('.gmail-received')).prop('checked', true) if Session.equals('FILTER_GMAIL_RECEIVED', true)
-  $(this.find('.gmail-sent')).prop('checked', true) if Session.equals('FILTER_GMAIL_SENT', true)
-  $(this.find('.gcontact')).prop('checked', true) if Session.equals('FILTER_GCONTACT', true)
+  $(this.find('.chosen-select option[value="gmail-received"]')).prop('selected', true) if Session.equals('FILTER_GMAIL_RECEIVED', true)
+  $(this.find('.chosen-select option[value="gmail-sent"]')).prop('selected', true) if Session.equals('FILTER_GMAIL_SENT', true)
+  $(this.find('.chosen-select option[value="gcontact"]')).prop('selected', true) if Session.equals('FILTER_GCONTACT', true)
+
+  $(".chosen-select").chosen().change ->
+    Session.set('FILTER_GMAIL_RECEIVED', false)
+    Session.set('FILTER_GMAIL_SENT', false)
+    Session.set('FILTER_GCONTACT', false)
+    values = $(this).val()
+    gmail_contacts = _.findWhere(values,"gmail-contacts")
+    if gmail_contacts != undefined
+      loadAllGmails(true)
+    else
+      loadAllGmails(false)
+
+    for i of values
+      Session.set('FILTER_GMAIL_RECEIVED', true) if values[i] == "gmail-received"
+      Session.set('FILTER_GMAIL_SENT', true) if values[i] == "gmail-sent"
+      Session.set('FILTER_GCONTACT', true) if values[i] == "gcontact"
+
+
   $("#contacts").dataTable({
     "sDom": "<'row-fluid'l<'span6'>r>t<'row-fluid'<'span4'><'span8'p>>",
     "sPaginationType": "bootstrap",
