@@ -105,7 +105,7 @@ fetchMails = (imapServer, user, box, isSentBox, searchQ = '') ->
 
   if searchQ
     console.log "[SyncMail] 3. search Q: ", searchQ
-    imapServer.search [['BODY', searchQ]], (err, results) ->
+    imapServer.search [['!DRAFT'],['BODY', searchQ]], (err, results) ->
       if err
         console.log('[LoadGmail]: Open InBox error', err)
         do imapServer.end
