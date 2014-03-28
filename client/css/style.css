@@ -74,6 +74,15 @@ a.logout,a.logout:hover  {
     color: #ffffff;
 }
 
+.main2 {
+    position: absolute;
+    top: 50%;
+    height: 40px;
+    margin-top: -20px;
+    text-align: center;
+    width: 100%;
+}
+
 .main .title {
     font-size: 33px;
 }
