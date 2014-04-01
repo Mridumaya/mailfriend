@@ -1,6 +1,8 @@
 Template.layout.helpers
   hasLogin: ->
     !!Meteor.user()
+  stepIsChooseFeature: ->
+     Session.equals("STEP", "feature_select")
   stepIsWelcome: ->
     Session.equals('STEP', "welcome")
   stepIsSearchQ: ->
@@ -70,6 +72,11 @@ Template.welcome.rendered = ->
   Session.setDefault("ORIG_MESS", 'This is some exciting message that is going to be placed here')
 
 
+Template.feature_select.events
+  'click .btn-view-campaign': (e) ->
+    Session.set("STEP", "welcome")
+  'click .btn-view-messages': (e) ->
+    Session.set("STEP", "welcome")
 
 Template.login.events
   'click .add-google-oauth': (e) ->
@@ -90,7 +97,7 @@ Template.login.events
       unless err
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log err if err
-          Session.set("STEP", "welcome")
+          Session.set("STEP", "feature_select")
     )
 
 Template.login.rendered = ->

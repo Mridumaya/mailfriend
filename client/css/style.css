@@ -49,6 +49,7 @@ article{
     margin-left: auto;
     margin-right: auto;
     position: relative;
+    margin-top: 50px;
 }
 .navbar-default {
     background: #27709b;
