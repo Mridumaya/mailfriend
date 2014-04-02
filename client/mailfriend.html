@@ -4,7 +4,11 @@
     <link rel="stylesheet" href="/css/chosen.css">
     <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
     <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables_themeroller.css">
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+    <link href="/css/jquery.tagit.css" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+    <script src="/js/tag-it.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/custom.js"></script>
     <script src="/js/chosen.jquery.js"></script>
     <!-- start Mixpanel --><script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" "); for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]); mixpanel.init("f2ee79182073835b91775c9d8ddbfa92");</script><!-- end Mixpanel -->
@@ -39,8 +43,8 @@
         {{#if stepIsSearchQ}}
         {{> searchQ}}
         {{/if}}
-        {{#if stepIsContactList}}
-        {{> contact_list}}
+        {{#if stepIsNewCampaign}}
+        {{> new_campaign}}
         {{/if}}
         {{#if stepIsConfirm}}
         {{> confirm}}
@@ -98,50 +102,66 @@
 </template>
 
 <template name="feature_select">
-    <article>
-        <button class="btn btn-default btn-lg btn-block">Create a new email campaign</button>
-        <button class="btn btn-default btn-lg btn-block btn-view-campaign">View an existing campaign</button>
-        <button class="btn btn-default btn-lg btn-block btn-view-messages">View incoming messages</button>
-    </article>
-</template>
-
-<template name="welcome">
-    <article class="welcome">
-        <h2>Welcome {{name}}</h2>
-        <h4>[Someone] would like you to spread the word about [email title]. Checkout their message</h4>
-
-        <div class="original-message" id="original_message">
-            {{orig_message}}
+    <div class="row text-center" style="margin-top: 50px;">
+        <h3>Welcome {{name}}</h3>
+    </div>
+    <div class="row feature-select">
+        <div class="col-md-4">
+            <button class="btn btn-default btn-lg btn-block btn-create-campaign">Create a new email campaign</button>
+            <button class="btn btn-default btn-lg btn-block btn-view-campaign">View an existing campaign</button>
+            <button class="btn btn-default btn-lg btn-block btn-view-messages">View incoming messages</button>
         </div>
-        <h4>Add your own note here before sending</h4>
-        <div class="input-prepend text-left" style="margin-bottom: 10px;">
-            <span class="add-on" style="font-size: 18px;">Email Subject:</span>
-            <input style="width: 520px;" class="subject" id="subject" type="text" placeholder="Invitation" value="{{mail_title}}">
-        </div>
-        <textarea id="own_message">{{own_message}}</textarea>
-
-        <div class="row">
-            <label class="pull-right">Step 1 of 4</label></div>
-        <button class="btn btn-success pull-right welcome-to-searchq">Next</button>
-    </article>
-    <div class="modal fade" id="defMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Message edit</h4>
-                </div>
-                <div class="modal-body">
-                    <p>You will need to enter password in order to edit message</p>
-
-                    <p class="error hide">Provided password is not valid</p>
-                    <input type="password" id="password" class="input-sm"/>
-                    <button type="button" class="btn btn-primary msg-password">Submit</button>
-                </div>
+        <div class="col-md-8">
+            <div class="info">
+                <h3 class="text-center">Current status:</h3>
+                <ul>
+                    <li> 5 people forwarded your campaign</li>
+                    <li> you have 3 unread messages</li>
+                    <li> etc </li>
+                </ul>
             </div>
         </div>
     </div>
+
+</template>
+
+<template name="welcome">
+    <!--<article class="welcome">-->
+        <!--<h2>Welcome {{name}}</h2>-->
+        <!--<h4>[Someone] would like you to spread the word about [email title]. Checkout their message</h4>-->
+
+        <!--<div class="original-message" id="original_message">-->
+            <!--{{orig_message}}-->
+        <!--</div>-->
+        <!--<h4>Add your own note here before sending</h4>-->
+        <!--<div class="input-prepend text-left" style="margin-bottom: 10px;">-->
+            <!--<span class="add-on" style="font-size: 18px;">Email Subject:</span>-->
+            <!--<input style="width: 520px;" class="subject" id="subject" type="text" placeholder="Invitation" value="{{mail_title}}">-->
+        <!--</div>-->
+        <!--<textarea id="own_message">{{own_message}}</textarea>-->
+
+        <!--<div class="row">-->
+            <!--<label class="pull-right">Step 1 of 4</label></div>-->
+        <!--<button class="btn btn-success pull-right welcome-to-searchq">Next</button>-->
+    <!--</article>-->
+    <!--<div class="modal fade" id="defMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"-->
+         <!--aria-hidden="true">-->
+        <!--<div class="modal-dialog">-->
+            <!--<div class="modal-content">-->
+                <!--<div class="modal-header">-->
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                    <!--<h4 class="modal-title" id="myModalLabel">Message edit</h4>-->
+                <!--</div>-->
+                <!--<div class="modal-body">-->
+                    <!--<p>You will need to enter password in order to edit message</p>-->
+
+                    <!--<p class="error hide">Provided password is not valid</p>-->
+                    <!--<input type="password" id="password" class="input-sm"/>-->
+                    <!--<button type="button" class="btn btn-primary msg-password">Submit</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 </template>
 
 <template name="compose">
@@ -235,6 +255,31 @@
     </div>
 </template>
 
+<template name="new_campaign">
+    <div class="row" style="margin-top: 50px;">
+        <h3>Create a new campaign</h3>
+    </div>
+    <div class="row new-capaign">
+        <div class="col-md-8">
+            <input style="width: 520px;" class="subject" id="subject" type="text" placeholder="Subject:" value="{{mail_title}}">
+            <textarea id="own_message">{{own_message}}</textarea>
+        </div>
+        <div class="col-md-4">
+            <span>Share this campaign: </span>
+            <a href="http://bit.ly/1fNinNZ">http://bit.ly/1fNinNZ</a>
+            <ul id="tags">
+                <li>test</li>
+                <li>example</li>
+                <li>facebook</li>
+            </ul>
+            <button class="btn btn-default search-tags">Search</button>
+        </div>
+    </div>
+
+    {{#if showContactList}}
+    {{> contact_list}}
+    {{/if}}
+</template>
 
 <template name="contact_list">
     <article class="contact_list">
@@ -255,14 +300,6 @@
                 <button class="btn btn-success add-all-relevant">choose all relevant</button>
             </div>
         </div>
-        <!--<h4>Your friends-->
-            <!--<div class="btn-group">-->
-                <!--<button class="btn btn-default reload">Reload</button>-->
-            <!--</div>-->
-            <!--<div class="btn-group">-->
-                <!--<button class="btn btn-primary add-all">Add All</button>-->
-            <!--</div>-->
-        <!--</h4>-->
         {{#constant}}
          <select data-placeholder="Sort by people I've:" class="chosen-select" multiple style="width: 550px;">
             <option value="gmail-sent">Sent a message to in the last 3 months</option>
@@ -312,15 +349,15 @@
             </table>
         </div>
         <div class="clear"></div>
-        <div class="row">
-            <label class="pull-right" >Step 3 of 4</label></div>
+        <!--<div class="row">-->
+            <!--<label class="pull-right" >Step 3 of 4</label></div>-->
         <div class="row">
             <button class="btn btn-primary contact-list-to-confirm pull-right"
                     type="button">Next
             </button>
-            <button class="btn btn-default pull-right contact-list-to-searchq" style="margin-right: 10px;"
-                    type="button">Back
-            </button>
+            <!--<button class="btn btn-default pull-right contact-list-to-searchq" style="margin-right: 10px;"-->
+                    <!--type="button">Back-->
+            <!--</button>-->
         </div>
         <div class="modal fade" id="searchTermModal" tabindex="-1" role="dialog" aria-labelledby="mySearchTermLabel"
              aria-hidden="true">

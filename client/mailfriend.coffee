@@ -7,8 +7,9 @@ Template.layout.helpers
     Session.equals('STEP', "welcome")
   stepIsSearchQ: ->
     Session.equals('STEP', "searchq")
-  stepIsContactList: ->
-    Session.equals('STEP', "contact_list")
+  stepIsNewCampaign: ->
+    console.log "new capaign"
+    Session.equals('STEP', "new_campaign")
   stepIsConfirm: ->
     Session.equals('STEP', "confirm")
   picture: ->
@@ -72,7 +73,17 @@ Template.welcome.rendered = ->
   Session.setDefault("ORIG_MESS", 'This is some exciting message that is going to be placed here')
 
 
+Template.feature_select.helpers
+  name: ->
+    user = Meteor.user()
+    if user
+      user.profile.name.split(" ")[0]
+    else
+      ''
+
 Template.feature_select.events
+  'click .btn-create-campaign': (e) ->
+    Session.set('STEP', "new_campaign")
   'click .btn-view-campaign': (e) ->
     Session.set("STEP", "welcome")
   'click .btn-view-messages': (e) ->
@@ -124,7 +135,7 @@ Template.searchQ.events
       # , 60*1000
       searchContacts searchQuery, ->
         $(e.target).prop('disabled', false)
-        Session.set('STEP', "contact_list")
+        Session.set('STEP', "new_campaign")
     else
       $("#sq_error").toggleClass("hidden")
 
@@ -199,6 +210,27 @@ Template.contact_list.helpers
     Session.get('searchQ') || ''
 
 
+
+Template.new_campaign.helpers
+  own_message: ->
+    return Session.get("OWN_MESS", '')
+  showContactList: ->
+    console.log "enter list"
+    Session.equals("contact_list", "yes")
+
+Template.new_campaign.events
+  'click .search-tags': (e) ->
+    searchQuery = $("#tags").tagit("assignedTags").join(" ");
+    console.log searchQuery
+
+    searchContacts searchQuery, ->
+      console.log("show list")
+      Session.set("contact_list", "yes")
+
+
+
+Template.new_campaign.rendered = ->
+  $("#tags").tagit()
 
 Template.contact_list.events
   'click .gmail-received': (e) ->

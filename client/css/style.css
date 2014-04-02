@@ -100,6 +100,15 @@ a.logout,a.logout:hover  {
     min-height: 100%;
 }
 
+.feature-select {
+    margin-top: 50px;
+}
+
+.feature-select .info {
+    padding: 20px;
+background-color: #cecece;
+}
+
 .welcome {
     margin-top: 50px;
     text-align: center;
@@ -112,7 +121,7 @@ a.logout,a.logout:hover  {
     font-size: 16px;
     padding: 5px;
 }
-.welcome textarea {
+.welcome textarea, .new-capaign textarea {
     min-height: 250px;width: 100%;
     font-size: 16px;
     padding: 5px;
