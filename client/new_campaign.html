@@ -1,0 +1,23 @@
+<template name="new_campaign">
+    <div class="row" style="margin-top: 50px;">
+        <h3>Create a new campaign</h3>
+    </div>
+    <div class="row new-capaign">
+        <div class="col-md-8">
+            <input style="width: 520px;" class="subject" id="subject" type="text" placeholder="Subject:" value="{{mail_title}}">
+            <textarea id="own_message">{{own_message}}</textarea>
+            <button class="btn btn-primary btn-save-campaign pull-right"> Save</button>
+        </div>
+        <div class="col-md-4">
+            <span>Share this campaign: </span>
+            <a href="http://bit.ly/1fNinNZ">http://bit.ly/1fNinNZ</a>
+            <ul id="tags" style="margin-top: 32px;">
+            </ul>
+            <button class="btn btn-default search-tags">Search</button>
+        </div>
+    </div>
+
+    {{#if showContactList}}
+    {{> contact_list}}
+    {{/if}}
+</template>

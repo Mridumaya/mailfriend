@@ -55,3 +55,12 @@ Meteor.methods
   'checkPassword': (userId, password) ->
     console.log userId + ", " + password
     return true
+
+  'createCampaign':(userId, subject, body, search_tags) ->
+    console.log "inserted server"
+    Campaigns.insert
+      user_id: userId,
+      subject: subject,
+      body: body,
+      search_tags: search_tags,
+      created_at: new Date()
