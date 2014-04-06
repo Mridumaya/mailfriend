@@ -116,20 +116,15 @@ Template.contact_list.events
     console.log 'sendToTop15'
     $('tr.contact').removeClass('info').find('.icon i').removeClass('glyphicon glyphicon-ok')
     $('tr.contact').slice(0,15).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
-#clickSendMessages()
-
 
   'click .sendToTop30': (e) ->
     console.log 'sendToTop30'
     $('tr.contact').removeClass('info').find('.icon i').removeClass('glyphicon glyphicon-ok')
     $('tr.contact').slice(0,30).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
-#clickSendMessages()
-
 
   'click .sendToAll': (e) ->
     console.log 'sendToAll'
     $('tr.contact').addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
-#clickSendMessages()
 
   'click .edit-search-term': (e) ->
     searchQuery = $('#s_term').val().trim()
@@ -139,6 +134,12 @@ Template.contact_list.events
         $("#searchTermModal").modal("hide")
 
   'click .contact-list-to-confirm': (e) ->
+    Session.set("OWN_MESS", $("#own_message").val())
+    Session.set("MAIL_TITLE", $("#subject").val())
+    user = Meteor.user()
+    if user
+      Meteor.call 'createCampaign', user._id, $("#subject").val(),  $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), ->
+        console.log("saved")
     clickSendMessages()
     Session.set("STEP", "confirm")
 

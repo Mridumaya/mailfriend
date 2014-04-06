@@ -162,7 +162,7 @@ Template.confirm.rendered = ->
   body = Session.get("ORIG_MESS") + Session.get("OWN_MESS")
 
   to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
-  $('.draft-subject').text(Session.get("MAIL_TITLE") + "Invitation")
+  $('.draft-subject').text((Session.get("MAIL_TITLE") || "") + "Invitation")
   $('.draft-body').html(body)
   $('.draft-to').html(to.join(''))
 
@@ -184,13 +184,16 @@ Template.confirm.events
     subject = $('.draft-subject').text()
     body = $('.draft-body').html()
     to = []
-    $('#email_draft .draft-to p.email').each -> to.push $(this).text()
+    $('.preview .draft-to p.email').each -> to.push $(this).text()
     console.log subject, body, to
     $('.draft-send').prop('disabled', true)
     #sharingBody = $('.email-body2').code()
     sharingBody = body
+
+
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
       if err
+        console.log "greska"
         console.log err
       else
         sharing = Sharings.findOne({type: 'email'})

@@ -45,8 +45,14 @@ Template.new_campaign.events
     Session.set("MAIL_TITLE", $("#subject").val())
     user = Meteor.user()
     if user
-      Meteor.call 'createCampaign', user._id, $("#subject").val(),  $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), ->
-        console.log("saved")
+      Meteor.call 'createCampaign', user._id, $("#subject").val(),  $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "),(e, campaign_id) ->
+        if(e)
+          console.log "error: "
+          console.log e
+        console.log("saved: ") + campaign_id
+        $.gritter.add
+          title: "Notification"
+          text: "Campaign Saved!"
 
 Template.new_campaign.rendered = ->
   $("#tags").tagit({
