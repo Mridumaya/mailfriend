@@ -159,10 +159,10 @@ searchContacts = (searchQuery, cb) ->
 Template.confirm.rendered = ->
   mixpanel.track("visits step 4 page", { });
   emails = Session.get("CONF_DATA")
-  body = Session.get("ORIG_MESS") + Session.get("OWN_MESS")
+  body = Session.get("OWN_MESS")
 
   to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
-  $('.draft-subject').text((Session.get("MAIL_TITLE") || "") + "Invitation")
+  $('.draft-subject').text(Session.get("MAIL_TITLE") || "Invitation")
   $('.draft-body').html(body)
   $('.draft-to').html(to.join(''))
 
