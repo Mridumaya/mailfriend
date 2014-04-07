@@ -56,6 +56,10 @@ article{
     line-height: 69px;
     color: #ffffff;
 }
+
+.help-inline {
+    color: #a94442;
+}
 .avatar{
     margin-right: 14px;
 }
@@ -91,7 +95,7 @@ a.logout,a.logout:hover  {
     margin-top: 50px;
     font-size: 33px;
     padding: 20px 16px;
-    margin-bottom: 100px;
+    margin-bottom: 20px;
     white-space: normal;
 }
 .container.wrapper {

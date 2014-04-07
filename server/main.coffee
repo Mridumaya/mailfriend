@@ -59,3 +59,15 @@ Meteor.methods
   'createCampaign':(userId, subject, body, search_tags) ->
     console.log "inserted server"
     campaign_id = Campaigns.insert user_id: userId, subject: subject,body: body, search_tags: search_tags, created_at: new Date()
+
+  "create_user": (profile) ->
+    existingUser = Meteor.users.findOne({"username": profile.username})
+    if !existingUser
+      userId = Accounts.createUser(profile)
+    else
+      existingAccount = Meteor.users.findOne({user_ids: existingUser._id})
+      throw new Meteor.Error(403, 'Username already exist.')
+
+    createdUser = Meteor.users.findOne({username: profile.username})
+    return {first_name: profile.profile.first_name, last_name: profile.profile.last_name, email: profile.profile.email, username: profile.username, email: profile.email, userId: createdUser?._id}
+
