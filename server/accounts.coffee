@@ -11,6 +11,8 @@ Accounts.onCreateUser( (options,user)->
   if (result.error)
     throw result.error
 
+  console.log result.data
+
   profile = _.pick(result.data, 'name','given_name','family_name','profile','picture','email','email_verified','birthdate','gender','locale','hd')
 
   user.profile = profile

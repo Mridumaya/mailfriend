@@ -1,9 +1,14 @@
 Deps.autorun ->
   if Meteor.userId()
     Session.set('SUBSCRIBED_CONTACTS', false)
+    Session.set("STEP", "feature_select")
     Meteor.subscribe 'contacts', Meteor.userId(), ->
       console.log 'SUBSCRIBED_CONTACTS: ', Contacts.find({}).count(), new Date()
       Session.set('SUBSCRIBED_CONTACTS', true)
+
+    Meteor.subscribe 'campaigns', Meteor.userId(), ->
+      console.log 'All campaigns'
+
 
   if Session.equals('GOOGLE_API', false)
     $('#google-api-modal')?.modal(backdrop: 'static', keyboard: false)
