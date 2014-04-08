@@ -5,6 +5,8 @@ Template.layout.helpers
     Session.equals("STEP", "register")
   stepIsStandardLogin: ->
     Session.equals("STEP", "standard_login")
+  stepIsEditUser: ->
+    Session.equals("STEP", "edit_user")
   stepIsChooseFeature: ->
      Session.equals("STEP", "feature_select")
   stepIsWelcome: ->
@@ -30,120 +32,9 @@ Template.layout.events
     e.preventDefault
     Meteor.logout()
     return true
-
-
-Template.login.events
-  'click .add-google-oauth': (e) ->
-    mixpanel.track("logs in", { });
-    console.log new Date()
-    button = $(e.currentTarget)
-    $(button).prop('disabled', true)
-    Meteor.loginWithGoogle({
-      requestPermissions: ["https://mail.google.com/", # imap
-                           "https://www.googleapis.com/auth/userinfo.profile", # profile
-                           "https://www.googleapis.com/auth/userinfo.email", # email
-                           "https://www.google.com/m8/feeds/" # contacts
-      ]
-      requestOfflineToken: true
-      forceApprovalPrompt: true
-    }, (err) ->
-      $(button).prop('disabled', false)
-      unless err
-        Meteor.call 'loadContacts', Meteor.userId(), (err) ->
-          console.log err if err
-          Session.set("STEP", "feature_select")
-    )
-  'click #register': (e) ->
-    e.preventDefault()
-    Session.set("STEP", "register")
-  'click .btn-standard-login': (e) ->
-    Session.set("STEP", "standard_login")
-
-Template.login.rendered = ->
-  mixpanel.track("view front page", { });
-
-Template.standard_login.events
-  'click .btn-try-login': (e) ->
-    e.preventDefault()
-    Meteor.loginWithPassword($("#username").val(), $("#password").val(), (err) ->
-      console.log err
-      unless err
-        Meteor.call 'loadContacts', Meteor.userId(), (err) ->
-          console.log err if err
-          Session.set("STEP", "feature_select")
-    )
-
-#Template.standard_login.rendered = ->
-#  $("#frm_register").validate
-#    rules:
-#      username: "required"
-#      password: "required"
-#    errorElement: "span"
-#    errorClass: "help-inline"
-#    highlight: (element) ->
-#      $(element).closest(".form-group").removeClass("has-success").addClass "has-error"
-#      return
-#
-#    unhighlight: (element) ->
-#      $(element).closest(".form-group").removeClass "has-error"
-#      return
-#
-#    submitHandler: (form) ->
-#      Meteor.loginWithPassword($(form).find("#username").val(), $(form).find("#password").val(), (err) ->
-#        console.log err
-#        unless err
-#          Meteor.call 'loadContacts', Meteor.userId(), (err) ->
-#            console.log err if err
-#            Session.set("STEP", "feature_select")
-#      )
-#
-#      return false
-
-Template.register.rendered = ->
-  $("#frm_register").validate
-    rules:
-      username: "required"
-      first_name: "required"
-      last_name: "required"
-      email:
-        required: true
-        email: true
-      password: "required"
-      confirm_password:
-        required: true
-        equalTo: "#password"
-    errorElement: "span"
-    errorClass: "help-inline"
-    highlight: (element) ->
-      $(element).closest(".form-group").removeClass("has-success").addClass "has-error"
-      return
-
-    unhighlight: (element) ->
-      $(element).closest(".form-group").removeClass "has-error"
-      return
-
-    submitHandler: (form) ->
-      profile =
-        profile:
-          first_name: $(form).find("#first_name").val()
-          last_name: $(form).find("#last_name").val()
-          name: $(form).find("#first_name").val() + " " + $(form).find("#last_name").val()
-        email: $(form).find("#email").val()
-        username: $(form).find("#username").val()
-        password: $(form).find("#password").val()
-
-      Meteor.call "create_user", profile, (err, user) ->
-        console.log('[ERROR] create_user:', err) if err
-        if err?.reason == "Username already exist."
-          alert("Username already exists, try again.")
-          return
-        if err?.reason == "Email already exist."
-          alert("Email already exists, try again.")
-          return
-
-        console.log user
-        Session.set("STEP","")
-
+  'click .edit': (e) ->
+    e.preventDefault
+    Session.set("STEP", "edit_user")
 
 
 

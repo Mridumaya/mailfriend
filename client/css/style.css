@@ -53,7 +53,7 @@ article{
 }
 .navbar-default {
     background: #27709b;
-    line-height: 69px;
+    /*line-height: 69px;*/
     color: #ffffff;
 }
 
@@ -72,10 +72,7 @@ article{
     text-align: center;
 }
 
-a.logout,a.logout:hover  {
-    display: block;
-    height: 15px;
-    line-height: 0px;
+.avatar a,a:hover  {
     color: #ffffff;
 }
 
