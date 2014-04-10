@@ -21,8 +21,10 @@ Template.login.events
     )
   'click #register': (e) ->
     e.preventDefault()
+    mixpanel.track("click goto registration button", { });
     Session.set("STEP", "register")
   'click .btn-standard-login': (e) ->
+    mixpanel.track("click goto standard login button", { });
     Session.set("STEP", "standard_login")
 
 Template.login.rendered = ->
@@ -31,12 +33,14 @@ Template.login.rendered = ->
 Template.standard_login.events
   'click .btn-try-login': (e) ->
     e.preventDefault()
+
     Meteor.loginWithPassword($("#email").val(), $("#password").val(), (err) ->
       console.log err
       if err && err.error == 403
         alert(err.reason)
         return
       unless err
+        mixpanel.track("logs in with password", { });
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log err if err
           Session.set("STEP", "feature_select")
@@ -80,6 +84,7 @@ Template.register.rendered = ->
           return
 
         console.log user
+        mixpanel.track("new user", { });
         Session.set("STEP","")
 
 Template.edit_user_info.helpers

@@ -31,7 +31,7 @@ get_entered_tags = (message) ->
 Template.new_campaign.events
   'click .search-tags': (e) ->
     searchQuery = $("#tags").tagit("assignedTags").join(" ");
-
+    mixpanel.track("search tag", { });
     searchContacts searchQuery, ->
       console.log("show list")
       Session.set("contact_list", "yes")

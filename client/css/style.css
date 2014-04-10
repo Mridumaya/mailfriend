@@ -72,7 +72,7 @@ article{
     text-align: center;
 }
 
-.avatar a,a:hover  {
+.avatar a,.avatar a:hover  {
     color: #ffffff;
 }
 

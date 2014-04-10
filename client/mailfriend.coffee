@@ -93,8 +93,10 @@ Template.feature_select.helpers
 
 Template.feature_select.events
   'click .btn-create-campaign': (e) ->
+    mixpanel.track("visit new campaign", { });
     Session.set('STEP', "new_campaign")
   'click .btn-view-campaign': (e) ->
+    mixpanel.track("visit view campaign", { });
     Session.set("STEP", "welcome")
   'click .btn-view-messages': (e) ->
     Session.set("STEP", "welcome")
