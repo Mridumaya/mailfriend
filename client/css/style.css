@@ -6,7 +6,7 @@ html, body{
 
 input[type=text],input[type=search],input[type=password], textarea {
     border: 1px solid #cecece;
-    padding: 8px;
+    padding: 5px 10px;
     margin: 5px 0px;
     font-size: 15px;
 }
@@ -110,6 +110,7 @@ a.logout,a.logout:hover  {
     border: 1px solid #C2C2C2;
     font-size: 16px;
     padding: 5px;
+    text-align: left;
 }
 .welcome textarea {
     min-height: 250px;width: 100%;

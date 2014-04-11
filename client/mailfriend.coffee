@@ -33,13 +33,16 @@ Template.welcome.helpers
     else
       ''
   own_message: ->
-    return Session.get("OWN_MESS", '')
+    ""
 
   mail_title: ->
-    return Session.get("MAIL_TITLE", '')
+    Sharings.findOne(type: 'email')?.subject
 
   orig_message: ->
-    return Session.get("ORIG_MESS", 'This is some exciting message that is going to be placed here')
+    Sharings.findOne(type: 'email')?.htmlBody || ""
+
+  sender: ->
+    Sharings.findOne(type: 'email')?.senderName || "Someone"
 
 Template.welcome.events
   'click .original-message': (e) ->
@@ -52,12 +55,12 @@ Template.welcome.events
 
   'click .msg-password': (e) ->
     console.log "test"
-    password = $("#msg-password").val()
-    Meteor.call "checkPassword", Meteor.userId(), password, (data) ->
-      console.log "entered " + data
-      #if data == true
+    password = $("#password").val()
+    if validatePassword(password)
       $("#original_message").attr("contenteditable", true)
+      $("#original_message").css("background-color", "#ffffff")
       $("#defMessageModal").modal("hide")
+
   'click .welcome-to-searchq': (e) ->
     Session.set("ORIG_MESS", $("#original_message").text())
     Session.set("OWN_MESS", $("#own_message").val())
@@ -358,10 +361,10 @@ Template.contact_list.rendered = ->
 Template.confirm.rendered = ->
   mixpanel.track("visits step 4 page", { });
   emails = Session.get("CONF_DATA")
-  body = Session.get("ORIG_MESS") + Session.get("OWN_MESS")
+  body = (Session.get("ORIG_MESS") || "") + "<br/>" + Session.get("OWN_MESS")
 
   to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
-  $('.draft-subject').text(Session.get("MAIL_TITLE") + "Invitation")
+  $('.draft-subject').text(Session.get("MAIL_TITLE") || "")
   $('.draft-body').html(body)
   $('.draft-to').html(to.join(''))
 
@@ -383,7 +386,7 @@ Template.confirm.events
     subject = $('.draft-subject').text()
     body = $('.draft-body').html()
     to = []
-    $('#email_draft .draft-to p.email').each -> to.push $(this).text()
+    $('.preview .draft-to p.email').each -> to.push $(this).text()
     console.log subject, body, to
     $('.draft-send').prop('disabled', true)
     #sharingBody = $('.email-body2').code()
@@ -398,11 +401,13 @@ Template.confirm.events
             $set:
               subject: subject
               htmlBody: sharingBody
+              senderName: Meteor.user()?.profile?.name || ""
         else
           Sharings.insert
             type: 'email'
             subject: subject
             htmlBody: sharingBody
+            senderName: Meteor.user()?.profile?.name || ""
         mixpanel.track("send email", { });
         console.log 'send mail success'
         $(".success").removeClass("hidden")
@@ -456,7 +461,7 @@ Template.compose.rendered = ->
 
 
 validatePassword = (password) ->
-  password is 'Chapter37'
+  password is 'queens'
 
 
 
