@@ -18,60 +18,37 @@
 </head>
 <body>
 {{> google_api_modal}}
-{{> layout }}
+<!--{{> layout }}-->
+<!--{{> masterLayout}}-->
 </body>
 
-
-<template name="layout">
-
+<template name="masterLayout">
     <nav class="navbar navbar-default navbar-blue navbar-fixed-top" role="navigation">
-        {{#if hasLogin}}
         <div class="pull-right avatar">
             <img src="{{picture}}" height="44" width="44" style="margin-top: 10px; display: block">
             <a href="#" class="logout" title="Logout" style="float: right;"><span class="glyphicon glyphicon-log-out"></span></a>
             <a href="#" class="edit" title="Edit" ><span class="glyphicon glyphicon-edit"></span></a>
         </div>
-        {{/if}}
         <div class="container">
             <div class="brand">Mail Friend</div>
         </div>
     </nav>
-    {{#if hasLogin}}
     <div class="container wrapper">
-        {{#if stepIsChooseFeature}}
-        {{> feature_select}}
-        {{/if}}
-        {{#if stepIsWelcome}}
-        {{> welcome}}
-        {{/if}}
-        {{#if stepIsSearchQ}}
-        {{> searchQ}}
-        {{/if}}
-        {{#if stepIsNewCampaign}}
-        {{> new_campaign}}
-        {{/if}}
-        {{#if stepIsConfirm}}
-        {{> confirm}}
-        {{/if}}
-        {{#if stepIsEditUser}}
-        {{> edit_user_info}}
-        {{/if}}
-
+        {{ > yield}}
     </div>
-    {{else}}
-        {{#if stepIsRegister}}
-        {{> register}}
-        {{else}}
-            {{#if stepIsStandardLogin}}
-            {{> standard_login}}
-            {{else}}
-            {{> login}}
-            {{/if}}
-        {{/if}}
-    {{/if}}
     <footer></footer>
+
 </template>
 
+<template name="masterLogoutLayout">
+    <nav class="navbar navbar-default navbar-blue navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="brand">Mail Friend</div>
+        </div>
+    </nav>
+    {{ > yield}}
+    <footer></footer>
+</template>
 
 <template name="google_api_modal">
     <div id="google-api-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -129,136 +106,6 @@
         </div>
     </div>
 
-</template>
-
-<template name="welcome">
-    <!--<article class="welcome">-->
-        <!--<h2>Welcome {{name}}</h2>-->
-        <!--<h4>[Someone] would like you to spread the word about [email title]. Checkout their message</h4>-->
-
-        <!--<div class="original-message" id="original_message">-->
-            <!--{{orig_message}}-->
-        <!--</div>-->
-        <!--<h4>Add your own note here before sending</h4>-->
-        <!--<div class="input-prepend text-left" style="margin-bottom: 10px;">-->
-            <!--<span class="add-on" style="font-size: 18px;">Email Subject:</span>-->
-            <!--<input style="width: 520px;" class="subject" id="subject" type="text" placeholder="Invitation" value="{{mail_title}}">-->
-        <!--</div>-->
-        <!--<textarea id="own_message">{{own_message}}</textarea>-->
-
-        <!--<div class="row">-->
-            <!--<label class="pull-right">Step 1 of 4</label></div>-->
-        <!--<button class="btn btn-success pull-right welcome-to-searchq">Next</button>-->
-    <!--</article>-->
-    <!--<div class="modal fade" id="defMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"-->
-         <!--aria-hidden="true">-->
-        <!--<div class="modal-dialog">-->
-            <!--<div class="modal-content">-->
-                <!--<div class="modal-header">-->
-                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
-                    <!--<h4 class="modal-title" id="myModalLabel">Message edit</h4>-->
-                <!--</div>-->
-                <!--<div class="modal-body">-->
-                    <!--<p>You will need to enter password in order to edit message</p>-->
-
-                    <!--<p class="error hide">Provided password is not valid</p>-->
-                    <!--<input type="password" id="password" class="input-sm"/>-->
-                    <!--<button type="button" class="btn btn-primary msg-password">Submit</button>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-</template>
-
-<template name="compose">
-    <button class="btn btn-small logout">Logout</button>
-    <br><br>
-
-    <h3>2. This is theoretically the message you are going to send along. Notice your friend already customized it when
-        they sent it to you. Sweet. Edit it a little if you want.</h3>
-
-    <p>(nobody is getting mailed, no funny business, promise!)</p>
-
-    <div class="input-prepend">
-        <span class="add-on">Email Subject:</span>
-        <input class="span7 email-subject" type="text" placeholder="Invitation" value="{{subject}}"/>
-    </div>
-    <div class="alert alert-warning alert-body">Warning! Please write some text!</div>
-    <div class="row">
-        <div class="span8">
-            <div class="summernote email-body">
-            </div>
-        </div>
-        <div class="span8">
-            <div class="summernote email-body2">
-                Write some here<br><br>
-                <a href="{{webUrl}}">Tell your friends</a>
-            </div>
-        </div>
-        <div class="span8">
-            <div class="alert alert-error alert-lock-message hidden">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                Wrong Password!
-            </div>
-            <input class="lock-message" type="checkbox"><span class="lock-message-label">lock the message</span>
-            <input type="password" style="margin-bottom:0px;" class="lock-message-password input-small"
-                   placeholder="Password">
-            <button class="btn btn-small btn-primary lock-message-button">OK</button>
-        </div>
-    </div>
-</template>
-
-<template name="searchQ">
-    <article class="searchq">
-        <h4 style="text-align: center;">Great now lets choose some friends who may been interested in this topic. Try
-            adding a few keywords, for example "art" or "cookies". Something that is specific to the original
-            topic. </h4>
-
-        <div class="row" style="margin-left:0px">
-            <input type="search" class="search-query input-full" placeholder="Type in a search term"
-                   value="{{searchQ}}"/>
-
-            <p id="sq_error" class="error hidden">Please add at least one search term</p>
-
-            <div class="row">
-                <label class="pull-right" >Step 2 of 4</label></div>
-            <div class="row">
-                <button class="btn btn-primary search-button pull-right" type="button">
-                    Search
-                </button>
-                <button class="btn btn-default pull-right searchq-to-welcome" style="margin-right: 10px;" type="button">
-                    Back
-                </button>
-            </div>
-
-        </div>
-    </article>
-</template>
-
-
-<template name="email_draft">
-    <div id="email_draft" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3>Email Content Preview</h3>
-        </div>
-        <div class="modal-body">
-            <h4>Subject:</h4>
-
-            <p class="draft-subject"></p>
-            <h4>Body:</h4>
-
-            <p class="draft-body"></p>
-            <h4>Send To:</h4>
-
-            <p class="draft-to"></p>
-        </div>
-        <div class="modal-footer">
-            <button class="btn draft-close" data-dismiss="modal" aria-hidden="true">Close</button>
-            <button class="btn btn-primary draft-send">Send</button>
-        </div>
-    </div>
 </template>
 
 <template name="confirm">

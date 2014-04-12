@@ -17,16 +17,18 @@ Template.login.events
       unless err
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log err if err
-          Session.set("STEP", "feature_select")
+          Router.go("feature_select")
+          #Session.set("STEP", "feature_select")
     )
   'click #register': (e) ->
     e.preventDefault()
     mixpanel.track("click goto registration button", { });
-    Session.set("STEP", "register")
+    Router.go("register")
+    #Session.set("STEP", "register")
   'click .btn-standard-login': (e) ->
     mixpanel.track("click goto standard login button", { });
-    Session.set("STEP", "standard_login")
-
+    #Session.set("STEP", "standard_login")
+    Router.go("standard_login")
 Template.login.rendered = ->
   mixpanel.track("view front page", { });
 
@@ -43,7 +45,8 @@ Template.standard_login.events
         mixpanel.track("logs in with password", { });
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log err if err
-          Session.set("STEP", "feature_select")
+          #Session.set("STEP", "feature_select")
+          Router.go("feature_select")
     )
 
 Template.register.rendered = ->
@@ -85,7 +88,7 @@ Template.register.rendered = ->
 
         console.log user
         mixpanel.track("new user", { });
-        Session.set("STEP","")
+        Router.go("feature_select")#Session.set("STEP","")
 
 Template.edit_user_info.helpers
   first_name: ->
@@ -93,6 +96,10 @@ Template.edit_user_info.helpers
     return Meteor.user().profile.first_name
   last_name: ->
     return Meteor.user().profile.last_name
+
+Template.edit_user_info.events
+  'click .cancel': ->
+    Router.go("feature_select")
 
 Template.edit_user_info.rendered = ->
   $("#frm_edit").validate
@@ -118,7 +125,7 @@ Template.edit_user_info.rendered = ->
         userId: Meteor.user()._id
 
       Meteor.call "edit_user", profile, (err, user) ->
-        Session.set("STEP", "feature_select")
+        Router.go("feature_select")
 
   $("#frm_password").validate
     rules:
@@ -143,7 +150,7 @@ Template.edit_user_info.rendered = ->
           alert(err.reason)
           return
         else
-          Session.set("STEP", "feature_select")
+          Router.go("feature_select")
       )
 
 

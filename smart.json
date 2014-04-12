@@ -2,6 +2,7 @@
   "packages": {
     "google-contacts": {},
     "font-awesome": {},
-    "bootstrap-3": {}
+    "bootstrap-3": {},
+    "iron-router": "0.7.0"
   }
 }

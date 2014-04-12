@@ -66,14 +66,3 @@ Template.new_campaign.rendered = ->
   _.each(Session.get("search_tags")|| [],(item) ->
     $("#tags").tagit("createTag", item);
   )
-
-searchContacts = (searchQuery, cb) ->
-  Meteor.setTimeout ->
-    if Meteor.user()
-      Meteor.call 'searchContacts', searchQuery, (err) ->
-        Session.set('searchQ', searchQuery)
-        console.log 'searchContact Error: ', err if err
-        cb()
-    else
-      searchContacts(searchQuery)
-  , 500

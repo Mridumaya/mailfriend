@@ -1,23 +1,4 @@
-Template.layout.helpers
-  hasLogin: ->
-    !!Meteor.user()
-  stepIsRegister: ->
-    Session.equals("STEP", "register")
-  stepIsStandardLogin: ->
-    Session.equals("STEP", "standard_login")
-  stepIsEditUser: ->
-    Session.equals("STEP", "edit_user")
-  stepIsChooseFeature: ->
-     Session.equals("STEP", "feature_select")
-  stepIsWelcome: ->
-    Session.equals('STEP', "welcome")
-  stepIsSearchQ: ->
-    Session.equals('STEP', "searchq")
-  stepIsNewCampaign: ->
-    console.log "new capaign"
-    Session.equals('STEP', "new_campaign")
-  stepIsConfirm: ->
-    Session.equals('STEP', "confirm")
+Template.masterLayout.helpers
   picture: ->
     user = Meteor.user()
     console.log("Hello")
@@ -26,61 +7,14 @@ Template.layout.helpers
       return user.profile.picture
     return 'images/default_user.jpg'
 
-
-Template.layout.events
+Template.masterLayout.events
   'click .logout': (e) ->
     e.preventDefault
     Meteor.logout()
     return true
   'click .edit': (e) ->
     e.preventDefault
-    Session.set("STEP", "edit_user")
-
-
-
-Template.welcome.helpers
-  name: ->
-    user = Meteor.user()
-    if user
-      user.profile.name.split(" ")[0]
-    else
-      ''
-  own_message: ->
-    return Session.get("OWN_MESS", '')
-
-  mail_title: ->
-    return Session.get("MAIL_TITLE", '')
-
-  orig_message: ->
-    return Session.get("ORIG_MESS", 'This is some exciting message that is going to be placed here')
-
-Template.welcome.events
-  'click .original-message': (e) ->
-    div = $(e.currentTarget)
-    if($(div).attr("contenteditable"))
-      return true;
-
-
-    $("#defMessageModal").modal("show")
-
-  'click .msg-password': (e) ->
-    console.log "test"
-    password = $("#msg-password").val()
-    Meteor.call "checkPassword", Meteor.userId(), password, (data) ->
-      console.log "entered " + data
-      #if data == true
-      $("#original_message").attr("contenteditable", true)
-      $("#defMessageModal").modal("hide")
-  'click .welcome-to-searchq': (e) ->
-    Session.set("ORIG_MESS", $("#original_message").text())
-    Session.set("OWN_MESS", $("#own_message").val())
-    Session.set("MAIL_TITLE", $("#subject").val())
-    Session.set("STEP", "searchq")
-
-
-Template.welcome.rendered = ->
-  mixpanel.track("visits step 1 page", { });
-  Session.setDefault("ORIG_MESS", 'This is some exciting message that is going to be placed here')
+    Router.go "edit_user_info"
 
 
 Template.feature_select.helpers
@@ -94,42 +28,13 @@ Template.feature_select.helpers
 Template.feature_select.events
   'click .btn-create-campaign': (e) ->
     mixpanel.track("visit new campaign", { });
-    Session.set('STEP', "new_campaign")
-  'click .btn-view-campaign': (e) ->
-    mixpanel.track("visit view campaign", { });
-    Session.set("STEP", "welcome")
-  'click .btn-view-messages': (e) ->
-    Session.set("STEP", "welcome")
+    Router.go "new_campaign"
+#  'click .btn-view-campaign': (e) ->
+#    mixpanel.track("visit view campaign", { });
+#    Session.set("STEP", "welcome")
+#  'click .btn-view-messages': (e) ->
+#    Session.set("STEP", "welcome")
 
-
-
-Template.searchQ.helpers
-  searchQ: ->
-    Session.get('searchQ') || ''
-
-
-Template.searchQ.rendered = ->
-  mixpanel.track("visits step 2 page", { });
-
-Template.searchQ.events
-  'click .search-button': (e) ->
-    searchQuery = $('.search-query').val().trim()
-    if searchQuery
-      $(e.target).prop('disabled', true)
-      # Meteor.setTimeout ->
-      #   $(e.target).prop('disabled', false)
-      # , 60*1000
-      searchContacts searchQuery, ->
-        $(e.target).prop('disabled', false)
-        Session.set('STEP', "new_campaign")
-    else
-      $("#sq_error").toggleClass("hidden")
-
-  'keypress .search-query': (e) ->
-     $("#sq_error").addClass("hidden")
-
-  'click .searchq-to-welcome': (e) ->
-     Session.set("STEP", "welcome")
 
 searchContacts = (searchQuery, cb) ->
   Meteor.setTimeout ->
@@ -145,7 +50,7 @@ searchContacts = (searchQuery, cb) ->
 Template.confirm.rendered = ->
   mixpanel.track("visits step 4 page", { });
   emails = Session.get("CONF_DATA")
-  body = Session.get("OWN_MESS")
+  body = Session.get("OWN_MESS") || ""
 
   to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
   $('.draft-subject').text(Session.get("MAIL_TITLE") || "Invitation")
@@ -155,7 +60,7 @@ Template.confirm.rendered = ->
 Template.confirm.events
   'click .confirm-to-contact-list': (e) ->
     mixpanel.track("click on cancel/back button", { });
-    Session.set("STEP", "new_campaign")
+    Router.go("new_campaign")
 
   'click #facebook': (e) ->
     window.open('https://www.facebook.com/sharer/sharer.php?u=http://mailfriend.meteor.com/', 'facebook-share-dialog', 'width=626,height=436');
@@ -201,113 +106,8 @@ Template.confirm.events
 
 
 
-
-
-Template.compose.helpers
-  webUrl: ->
-    Meteor.absoluteUrl()
-
-
-  subject: ->
-    Sharings.findOne(type: 'email')?.subject
-
-
-
-Template.compose.rendered = ->
-  sharing = Sharings.findOne()
-  if sharing
-    $(this.find('.email-subject')).val(sharing.subject)
-    $(this.find('.email-body2')).html(sharing.htmlBody)
-
-  # $(this.find('.email-subject')).focus() if Meteor.user()
-  $(this.find('.alert-body')).hide()
-  $(this.find('.email-send')).prop('disabled', !Meteor.user())
-  $(this.find('.gmail-received')).prop('checked', true) if Session.equals('FILTER_GMAIL_RECEIVED', true)
-  $(this.find('.gmail-sent')).prop('checked', true) if Session.equals('FILTER_GMAIL_SENT', true)
-  $(this.find('.gcontact')).prop('checked', true) if Session.equals('FILTER_GCONTACT', true)
-
-
-  $(this.findAll('.summernote')).summernote({
-    toolbar: [
-      ['style', ['bold', 'italic', 'underline', 'clear']],
-      ['fontsize', ['fontsize']],
-      ['color', ['color']],
-      ['para', ['ul', 'ol', 'paragraph']],
-      ['insert', ['link']]
-      ['height', ['height']],
-    ]
-  });
-
-  sharing = Sharings.findOne()
-  if sharing?.isLocked
-    $(this.find('.email-body2')).siblings().find(".note-editable").prop("contenteditable", false)
-    $(this.find('.lock-message')).prop('checked', true)
-    $(this.find('.lock-message-label')).text('unlock the message')
-
-
 validatePassword = (password) ->
-  password is 'Chapter37'
-
-
-
-Template.compose.events
-  'change .lock-message': (e) ->
-    if $(e.currentTarget).prop('checked')
-      $(e.currentTarget).siblings('.lock-message-label').text('unlock the message')
-    else
-      $(e.currentTarget).siblings('.lock-message-label').text('lock the message')
-    $('.lock-message-password').focus()
-
-
-
-  'click .lock-message-button': (e) ->
-    isLocked = $(".lock-message").prop('checked')
-    password = $(".lock-message-password").val()
-    htmlBody = $(".email-body2").code()
-    if validatePassword(password) and Meteor.userId()
-      sharing = Sharings.findOne({})
-      options = {
-        $set: 
-          htmlBody: htmlBody
-          isLocked: isLocked
-          lockedByUser: Meteor.userId()
-      }
-      Sharings.update(sharing._id, options)
-    else
-      $(".alert-lock-message").removeClass("hidden")
-      Meteor.setTimeout ->
-        $(".alert-lock-message").addClass("hidden")
-      , 2000
-      console.log 'Password is wrong.'
-
-
-Template.email_draft.events
-  'click button.draft-send': (e) ->
-    subject = $('#email_draft .draft-subject').text()
-    body = $('#email_draft .draft-body').html()
-    to = []
-    $('#email_draft .draft-to p.email').each -> to.push $(this).text()
-    console.log subject, body, to
-    $('.draft-send').prop('disabled', true)
-    sharingBody = $('.email-body2').code()
-    Meteor.call 'sendMail', subject, body, to, (err, result) ->
-      if err
-        console.log err 
-      else
-        sharing = Sharings.findOne({type: 'email'})
-        if sharing
-          Sharings.update sharing._id,
-            $set:
-              subject: subject
-              htmlBody: sharingBody
-        else
-          Sharings.insert
-            type: 'email'
-            subject: subject
-            htmlBody: sharingBody
-      console.log 'send mail success'
-      $('.draft-send').prop('disabled', false)
-      $('.draft-close').trigger('click')
+  password is 'queens'
 
 
 Template.google_api_modal.helpers
@@ -330,3 +130,14 @@ Template.google_api_modal.events
       Meteor.call 'initGoogleOauth', id, secret, (err) ->
         console.log err if err
         GoogleAccountChecker.checkGoogleApi()
+
+@searchContacts = (searchQuery, cb) ->
+  Meteor.setTimeout ->
+    if Meteor.user()
+      Meteor.call 'searchContacts', searchQuery, (err) ->
+        Session.set('searchQ', searchQuery)
+        console.log 'searchContact Error: ', err if err
+        cb()
+    else
+      searchContacts(searchQuery)
+  , 500

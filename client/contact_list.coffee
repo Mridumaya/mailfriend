@@ -141,10 +141,12 @@ Template.contact_list.events
       Meteor.call 'createCampaign', user._id, $("#subject").val(),  $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), ->
         console.log("saved")
     clickSendMessages()
-    Session.set("STEP", "confirm")
+    Router.go("confirm")
+    #Session.set("STEP", "confirm")
 
   'click .contact-list-to-searchq': (e) ->
-    Session.set("STEP", "searchq")
+    Router.go("new_campaign")
+    #Session.set("STEP", "searchq")
 
   'click .multi-select .header': (e) ->
     e.preventDefault()
