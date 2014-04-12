@@ -59,6 +59,13 @@ Meteor.methods
   'createCampaign':(userId, subject, body, search_tags) ->
     console.log "inserted server"
     campaign_id = Campaigns.insert user_id: userId, subject: subject,body: body, search_tags: search_tags, created_at: new Date()
+    return campaign_id
+
+  'updateCampaign':(campaignId, userId, subject, body, search_tags) ->
+    Campaigns.update({ _id: campaignId }, {$set: { user_id: userId, subject: subject, body: body, search_tags: search_tags } })
+
+  'addSentUsersToCampaign':(campaignId, sent_to) ->
+    Campaigns.update({ _id: campaignId }, {$addToSet: { sent_to: { $each: sent_to} } } )
 
   "create_user": (profile) ->
     existingUser = Meteor.users.findOne({"emails.address": profile.email})
@@ -69,7 +76,6 @@ Meteor.methods
     else
       throw new Meteor.Error(403, 'Email already exist.')
 
-    createdUser = Meteor.users.findOne({username: profile.username})
     return {first_name: profile.profile.first_name, last_name: profile.profile.last_name, username: profile.username, email: profile.email, userId: createdUser?._id}
 
   "edit_user": (profile) ->
