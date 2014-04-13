@@ -343,10 +343,10 @@ Template.contact_list.rendered = ->
       Session.set('FILTER_GCONTACT', true) if values[i] == "gcontact"
 
 
-  $("#contacts").dataTable({
+  $("#matched-contacts, #unmatched-contacts").dataTable({
     "sDom": "<'row-fluid'l<'span6'>r>t<'row-fluid'<'span4'><'span8'p>>",
     "sPaginationType": "bootstrap",
-    "iDisplayLength": 25,
+    "iDisplayLength": 10,
     "aoColumns": [
       { sWidth: '10%' },
       { sWidth: '15%' },
@@ -482,7 +482,7 @@ Template.compose.events
     if validatePassword(password) and Meteor.userId()
       sharing = Sharings.findOne({})
       options = {
-        $set: 
+        $set:
           htmlBody: htmlBody
           isLocked: isLocked
           lockedByUser: Meteor.userId()
@@ -518,7 +518,7 @@ Template.email_draft.events
     sharingBody = $('.email-body2').code()
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
       if err
-        console.log err 
+        console.log err
       else
         sharing = Sharings.findOne({type: 'email'})
         if sharing
