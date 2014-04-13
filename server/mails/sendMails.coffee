@@ -50,3 +50,47 @@ Meteor.methods
     transport.close()
 
     Contacts.update({email: {$in: to}, user_id: user._id}, {$inc: {sends: 1}}, multi: true)
+
+  'sendMailUsingMandrill': (subject, body, to) ->
+    #check(subject, String)
+    #check(body, String)
+    #check(to, [String])
+
+    console.log subject
+    console.log body
+    console.log to
+    Mandrill = Meteor.require 'mandrill-api'
+
+    mandrill_client = new Mandrill.Mandrill '_Au4j-G5FADK0MFj_jZPGg'
+    options =
+        "message" :
+            #"html": "<p>Example HTML content</p>"
+            "html": body
+            "text": body
+            "subject": subject
+            "from_email": "message.from_email@example.com"
+            #"from_name": "Example Name"
+            "to":[
+                "email": to
+                #"name": "Recipient Name"
+            ]
+            "headers":
+                "Reply-To": "message.reply@example.com"
+            "important": false
+            "track_opens": null
+            "track_clicks": null
+            "auto_text": null
+        #"async": false
+        #"ip_pool": "Main Pool"
+        #"send_at": "10-10-2013"
+
+    response = Meteor.sync (done) ->
+        mandrill_client.messages.send options, (result) ->
+            console.log(result)
+            done null, result
+        ,(err)->
+            console.log(err)
+            done err, null
+    response.result || response.err
+
+

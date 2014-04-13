@@ -1,3 +1,7 @@
+Accounts.config
+  sendVerificationEmail: true
+  forbidClientAccountCreation: true
+
 Accounts.onCreateUser( (options,user)->
 
   #console.log user

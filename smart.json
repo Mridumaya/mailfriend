@@ -3,6 +3,7 @@
     "google-contacts": {},
     "font-awesome": {},
     "bootstrap-3": {},
-    "iron-router": "0.7.0"
+    "iron-router": "0.7.0",
+    "npm": {}
   }
 }

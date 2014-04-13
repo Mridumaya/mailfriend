@@ -141,3 +141,15 @@ Template.google_api_modal.events
     else
       searchContacts(searchQuery)
   , 500
+
+Handlebars.registerHelper 'errorMessage', (input)->
+  return Session.get "errorMessage"
+
+Handlebars.registerHelper 'isError', (input)->
+    return Session.get "errorMessage" || false
+
+Handlebars.registerHelper 'successMessage', (input)->
+  return Session.get "successMessage"
+
+Handlebars.registerHelper 'isSuccess', (input)->
+    return Session.get "successMessage" || false

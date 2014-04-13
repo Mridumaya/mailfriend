@@ -66,6 +66,21 @@ Meteor.methods
       autoUsername = Meteor.call('build_unique_username_by_email', profile.email)
       profile.username = autoUsername
       userId = Accounts.createUser(profile)
+
+      #Send Verification Mail
+      #Following Line will generate email verification token
+      #It will not send mail as we have set the MAIL_URL env
+      Accounts.sendVerificationEmail userId
+
+      #Get User Details
+      user = Meteor.users.findOne ({_id: userId})
+      body = "Hello " + user.profile.first_name + "<br>"
+      body += "To verify your account email, simply click the link below.<br>"
+      body += Meteor.absoluteUrl() + "verify-email/" + user.services.email.verificationTokens[0].token + "<br>"
+      body += "Thanks<br>"
+
+      subject = "Verify your email address on " + Meteor.absoluteUrl()
+      Meteor.call "sendMailUsingMandrill", subject, body, user.emails[0].address
     else
       throw new Meteor.Error(403, 'Email already exist.')
 
@@ -91,4 +106,3 @@ Meteor.methods
       else
         index = index + 1
         uniqueUsername = username + '_' + index
-

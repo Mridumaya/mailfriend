@@ -1,6 +1,12 @@
 <template name="login">
     <article>
         <div class="main">
+            {{#if isError}}
+            <div class="alert alert-danger">{{errorMessage}}</div>
+            {{/if}}
+            {{#if isSuccess}}
+            <div class="alert alert-success">{{successMessage}}</div>
+            {{/if}}
             <div class="title">Mailfriend lets you pass the word to your friends who might actually care</div>
             <button class="btn btn-success btn-lg btn-block login add-google-oauth">Login with your Gmail account
             </button>
