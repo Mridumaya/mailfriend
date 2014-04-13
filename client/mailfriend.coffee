@@ -348,12 +348,13 @@ Template.contact_list.rendered = ->
     "sPaginationType": "bootstrap",
     "iDisplayLength": 10,
     "aoColumns": [
-      { sWidth: '10%' },
-      { sWidth: '15%' },
-      { sWidth: '25%' },
-      { sWidth: '25%' },
-      { sWidth: '15%' },
-      { sWidth: '15%' }]
+      { sWidth: '6%' },
+      { sWidth: '9%' },
+      { sWidth: '14%' },
+      { sWidth: '24%' },
+      { sWidth: '24%' },
+      { sWidth: '14%' },
+      { sWidth: '14%' }]
   });
 
 
