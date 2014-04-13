@@ -137,12 +137,9 @@ Template.contact_list.events
     Session.set("OWN_MESS", $("#own_message").val())
     Session.set("MAIL_TITLE", $("#subject").val())
     user = Meteor.user()
-    if user
-      Meteor.call 'createCampaign', user._id, $("#subject").val(),  $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), ->
-        console.log("saved")
+    SaveCampaign()
     clickSendMessages()
     Router.go("confirm")
-    #Session.set("STEP", "confirm")
 
   'click .contact-list-to-searchq': (e) ->
     Router.go("new_campaign")
@@ -218,4 +215,3 @@ clickSendMessages = (toEmails=[])->
     $('tr.contact.info').each -> emails.push $(this).data('email')
 
   Session.set("CONF_DATA", emails)
-  Session.set("STEP", "confirm")

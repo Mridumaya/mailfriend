@@ -43,16 +43,8 @@ Template.new_campaign.events
     console.log "save campaign"
     Session.set("OWN_MESS", $("#own_message").val())
     Session.set("MAIL_TITLE", $("#subject").val())
-    user = Meteor.user()
-    if user
-      Meteor.call 'createCampaign', user._id, $("#subject").val(),  $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "),(e, campaign_id) ->
-        if(e)
-          console.log "error: "
-          console.log e
-        console.log("saved: ") + campaign_id
-        $.gritter.add
-          title: "Notification"
-          text: "Campaign Saved!"
+    SaveCampaign()
+      #console.log "campagin: " + campaign_id
 
 Template.new_campaign.rendered = ->
   $("#tags").tagit({
@@ -66,3 +58,21 @@ Template.new_campaign.rendered = ->
   _.each(Session.get("search_tags")|| [],(item) ->
     $("#tags").tagit("createTag", item);
   )
+
+@SaveCampaign = ->
+  user = Meteor.user()
+  if user
+    if Session.get("campaign_id")
+      Meteor.call 'updateCampaign', Session.get("campaign_id"), user._id, $("#subject").val(),  $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "),(e, campaign_id) ->
+        console.log e if e
+        $.gritter.add
+          title: "Notification"
+          text: "Campaign updated!"
+    else
+      Meteor.call 'createCampaign', user._id, $("#subject").val(),  $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "),(e, campaign_id) ->
+        console.log e if e
+        Session.set("campaign_id", campaign_id)
+        $.gritter.add
+          title: "Notification"
+          text: "Campaign Saved!"
+
