@@ -24,7 +24,6 @@ Template.layout.events
     Meteor.logout()
     return true
 
-
 Template.welcome.helpers
   name: ->
     user = Meteor.user()
@@ -119,7 +118,6 @@ Template.searchQ.events
       #   $(e.target).prop('disabled', false)
       # , 60*1000
       searchContacts searchQuery, ->
-        $(e.target).prop('disabled', false)
         Session.set('STEP', "contact_list")
     else
       $("#sq_error").toggleClass("hidden")
@@ -131,10 +129,12 @@ Template.searchQ.events
      Session.set("STEP", "welcome")
 
 searchContacts = (searchQuery, cb) ->
+  $("#loading").show()
   Meteor.setTimeout ->
     if Meteor.user()
       Meteor.call 'searchContacts', searchQuery, (err) ->
         Session.set('searchQ', searchQuery)
+        $("#loading").hide()
         console.log 'searchContact Error: ', err if err
         cb()
     else

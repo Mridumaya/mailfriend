@@ -249,3 +249,20 @@ footer{
     height: 50px;
     margin-top: -50px;
 }
+
+#loading {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    display: none;
+    top: 61px;
+}
+
+#loading > span {
+    background: #D6D7D7;
+    padding: 3px 5px;
+    border: 1px solid white;
+    border-top: none;
+    -webkit-border-radius: 0px 0px 5px 5px;
+    border-radius: 0px 0px 5px 5px;
+}
