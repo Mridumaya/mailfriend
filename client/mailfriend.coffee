@@ -362,7 +362,7 @@ Template.contact_list.rendered = ->
 Template.confirm.rendered = ->
   mixpanel.track("visits step 4 page", { });
   emails = Session.get("CONF_DATA")
-  body = (Session.get("ORIG_MESS") || "") + "<br/>" + Session.get("OWN_MESS")
+  body = Session.get("OWN_MESS") + "<br/>" + (Session.get("ORIG_MESS") || "")
 
   to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
   $('.draft-subject').text(Session.get("MAIL_TITLE") || "")
