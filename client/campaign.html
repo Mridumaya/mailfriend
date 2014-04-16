@@ -1,0 +1,65 @@
+<template name="new_campaign">
+    <div class="row" style="margin-top: 50px;">
+        <div class="col-md-8">
+            <button class="btn back-to-campaign-list"><i class="glyphicon glyphicon-chevron-left"></i> Back to Campaigns</button>
+        </div>
+    </div>
+    <div class="row new-capaign">
+        <div class="col-md-8">
+            <h3>Create a new campaign</h3>
+            <input class="subject col-md-12" id="subject" type="text" placeholder="Subject:" value="{{subject}}">
+            <textarea id="own_message">{{body}}</textarea>
+            <button class="btn btn-primary btn-save-campaign pull-right"> Save</button>
+        </div>
+        <div class="col-md-4">
+            <span>Share this campaign: </span>
+            <a href="http://bit.ly/1fNinNZ">http://bit.ly/1fNinNZ</a>
+            <ul id="tags" style="margin-top: 32px;">
+            </ul>
+            <button class="btn btn-default search-tags">Search</button>
+        </div>
+    </div>
+    {{#if showContactList}}
+    {{> contact_list}}
+    {{/if}}
+</template>
+<template name="list_campaign">
+    <div class="row">
+        <h3>List of Campaigns</h3>
+    </div>
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4 pull-right">
+            <button class="btn btn-default btn-lg btn-block btn-create-campaign"><i class="glyphicon glyphicon-plus"></i> Create a new email campaign</button>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 25px;">
+        <div class="">
+            <div class="row">
+                <table id="matched-contacts" class="table table-striped contacts">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Body</th>
+                            <th>Search tags</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each campaigns}}
+                            <tr>
+                                <td>{{subject}}</td>
+                                <td>{{body}}</td>
+                                <td>{{search_tags}}</td>
+                                <td>
+                                    <button class="edit-campaign btn btn-primary" data-id="{{_id}}"><i class="glyphicon glyphicon-floppy-disk"></i> Edit</button>
+                                    <button class="delete-campaign btn btn-danger" data-id="{{_id}}"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>

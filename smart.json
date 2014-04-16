@@ -4,6 +4,8 @@
     "font-awesome": {},
     "bootstrap-3": {},
     "iron-router": "0.7.0",
-    "npm": {}
+    "npm": {},
+    "trail": {},
+    "iron-router-progress": {}
   }
 }

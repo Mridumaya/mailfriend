@@ -2,18 +2,15 @@
   "meteor": {},
   "dependencies": {
     "basePackages": {
-      "google-contacts": {
-        "version": "0.1.1"
-      },
-      "font-awesome": {
-        "version": "4.0.3"
-      },
-      "bootstrap-3": {
-        "version": "3.1.1-1"
-      },
+      "google-contacts": {},
+      "font-awesome": {},
+      "bootstrap-3": {},
       "iron-router": {
         "version": "0.7.0"
-      }
+      },
+      "npm": {},
+      "trail": {},
+      "iron-router-progress": {}
     },
     "packages": {
       "google-contacts": {
@@ -35,6 +32,21 @@
         "git": "https://github.com/EventedMind/iron-router.git",
         "tag": "v0.7.0",
         "commit": "05f34bc48c4cad9fdaa366c1ddcabe6980232ece"
+      },
+      "npm": {
+        "git": "https://github.com/arunoda/meteor-npm.git",
+        "tag": "v0.2.6",
+        "commit": "177ab6118de5bf8cffb19481343d5762ff7a2aaf"
+      },
+      "trail": {
+        "git": "https://github.com/tbknl/meteor-trail.git",
+        "tag": "v0.1.1",
+        "commit": "34a641c6d610e5d0b1a03d38b3a8853161fd9e0b"
+      },
+      "iron-router-progress": {
+        "git": "https://github.com/Multiply/iron-router-progress.git",
+        "tag": "v0.3.1",
+        "commit": "3f7900feb4bb70a1289b39a1fdcd1f438c0335b3"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

@@ -1,3 +1,8 @@
+Router.configure
+  layoutTemplate: 'masterLayout'
+  notFoundTemplate: 'notFound'
+  loadingTemplate: 'loading'
+
 IR_BeforeHooks =
   isLoggedIn: ->
     unless Meteor.user()
@@ -19,7 +24,6 @@ Router.map ->
             Router.go("login")
   @route "feature_select",
     path: "/",
-    layoutTemplate: "masterLayout",
   @route "login",
     layoutTemplate: "masterLogoutLayout"
   @route "register",
@@ -28,11 +32,14 @@ Router.map ->
     path: "/manual_login",
     layoutTemplate: "masterLogoutLayout"
   @route "edit_user_info",
-    path: "/user_edit",
-    layoutTemplate: "masterLayout"
+    path: "/user/edit",
   @route "new_campaign",
-    path: "/campaign",
-    layoutTemplate: "masterLayout"
+    path: "/campaign/new",
+    data: ->
+      Campaigns.findOne _id: Session.get("campaign_id")  if Session.get("campaign_id")
+  @route "delete_campaign",
+    path: "campaign/delete/:_id",
+  @route "list_campaign",
+    path: "/campaigns"
   @route "confirm",
     path: "/campaign/confirm",
-    layoutTemplate: "masterLayout"

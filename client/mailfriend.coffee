@@ -34,6 +34,8 @@ Template.feature_select.events
 #    Session.set("STEP", "welcome")
 #  'click .btn-view-messages': (e) ->
 #    Session.set("STEP", "welcome")
+  'click .btn-view-campaign': (e) ->
+    Router.go "list_campaign"
 
 
 searchContacts = (searchQuery, cb) ->

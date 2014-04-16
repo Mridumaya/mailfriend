@@ -6,9 +6,12 @@ Template.new_campaign.helpers
     Session.equals("contact_list", "yes")
   searchTags: ->
     Session.get("search_tags") || []
-
   mail_title: ->
     return Session.get("MAIL_TITLE", '')
+
+Template.list_campaign.helpers
+  campaigns: ->
+    return Campaigns.find()
 
 @key_up_delay = 0;
 get_entered_tags = (message) ->
@@ -44,7 +47,23 @@ Template.new_campaign.events
     Session.set("OWN_MESS", $("#own_message").val())
     Session.set("MAIL_TITLE", $("#subject").val())
     SaveCampaign()
+    Router.go 'list_campaign'
       #console.log "campagin: " + campaign_id
+  'click .back-to-campaign-list': (e) ->
+    Router.go '/campaigns'
+
+Template.list_campaign.events
+    'click .delete-campaign': (e)->
+        console.log $(e.currentTarget).attr('data-id')
+        if(confirm('Are you sure?'))
+            Meteor.call 'deleteCampaign', $(e.currentTarget).attr('data-id')
+
+    'click .edit-campaign': (e)->
+        Session.set 'campaign_id', $(e.currentTarget).attr('data-id')
+        Router.go 'new_campaign'
+
+    'click .btn-create-campaign': (e) ->
+        Router.go 'new_campaign'
 
 Template.new_campaign.rendered = ->
   $("#tags").tagit({
@@ -58,6 +77,11 @@ Template.new_campaign.rendered = ->
   _.each(Session.get("search_tags")|| [],(item) ->
     $("#tags").tagit("createTag", item);
   )
+  if Session.get 'campaign_id'
+    Meteor.defer ->
+        message = $('#own_message').val()
+        get_entered_tags(message)
+
 
 @SaveCampaign = ->
   user = Meteor.user()
@@ -76,3 +100,13 @@ Template.new_campaign.rendered = ->
           title: "Notification"
           text: "Campaign Saved!"
 
+@CampaignController = RouteController.extend
+    onBeforeAction:->
+        console.log 'Routes Called'
+    template: 'edit_campign'
+    path: 'campaign/edit/:_id'
+    data:
+        body: ->
+            Campaigns.findOne({_id: this.params._id})
+    run: ->
+        this.render 'new_campaign'
