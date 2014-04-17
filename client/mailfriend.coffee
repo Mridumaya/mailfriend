@@ -49,19 +49,22 @@ Template.welcome.events
     if($(div).attr("contenteditable"))
       return true;
 
-
     $("#defMessageModal").modal("show")
 
   'click .msg-password': (e) ->
     console.log "test"
     password = $("#password").val()
     if validatePassword(password)
-      $("#original_message").attr("contenteditable", true)
-      $("#original_message").css("background-color", "#ffffff")
+      message = $("#original_message").text()
+      $("#original_message").remove()
+      #$("#original_message").attr("contenteditable", true)
+      #$("#original_message").css("background-color", "#ffffff")
+      $('#original-message-holder').html '<textarea id="original_message">' + message + '</textarea>'
+      $('#original_message').wysihtml5({"image":false, "font-styles": false});
       $("#defMessageModal").modal("hide")
 
   'click .welcome-to-searchq': (e) ->
-    Session.set("ORIG_MESS", $("#original_message").text())
+    Session.set("ORIG_MESS", $("#original_message").val())
     Session.set("OWN_MESS", $("#own_message").val())
     Session.set("MAIL_TITLE", $("#subject").val())
     Session.set("STEP", "searchq")
@@ -69,6 +72,7 @@ Template.welcome.events
 
 Template.welcome.rendered = ->
   mixpanel.track("visits step 1 page", { });
+  $('#own_message').wysihtml5({"image":false, "font-styles": false});
   Session.setDefault("ORIG_MESS", 'This is some exciting message that is going to be placed here')
 
 
