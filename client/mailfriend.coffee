@@ -55,7 +55,7 @@ Template.welcome.events
     console.log "test"
     password = $("#password").val()
     if validatePassword(password)
-      message = $("#original_message").text()
+      message = $("#original_message").html()
       $("#original_message").remove()
       #$("#original_message").attr("contenteditable", true)
       #$("#original_message").css("background-color", "#ffffff")
@@ -64,7 +64,7 @@ Template.welcome.events
       $("#defMessageModal").modal("hide")
 
   'click .welcome-to-searchq': (e) ->
-    Session.set("ORIG_MESS", $("#original_message").val())
+    Session.set("ORIG_MESS", $("#original_message").val() || $("#original_message").html())
     Session.set("OWN_MESS", $("#own_message").val())
     Session.set("MAIL_TITLE", $("#subject").val())
     Session.set("STEP", "searchq")
@@ -72,6 +72,7 @@ Template.welcome.events
 
 Template.welcome.rendered = ->
   mixpanel.track("visits step 1 page", { });
+  $("#original_message").html($("#original_message").text())
   $('#own_message').wysihtml5({"image":false, "font-styles": false});
   Session.setDefault("ORIG_MESS", 'This is some exciting message that is going to be placed here')
 
@@ -366,7 +367,9 @@ Template.contact_list.rendered = ->
 Template.confirm.rendered = ->
   mixpanel.track("visits step 4 page", { });
   emails = Session.get("CONF_DATA")
-  body = Session.get("OWN_MESS") + "<br/>" + (Session.get("ORIG_MESS") || "")
+  body = Session.get("OWN_MESS") + "<br/>"
+  body += "<b>Forwarded message</b>" + "<br />"
+  body += (Session.get("ORIG_MESS") || "")
 
   to = _.map emails, (e) -> '<p class="email" style="margin:0 0 0;">' + e + '</p>'
   $('.draft-subject').text(Session.get("MAIL_TITLE") || "")
