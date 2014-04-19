@@ -75,8 +75,7 @@ Template.welcome.rendered = ->
   $("#original_message").html($("#original_message").text())
   $('#own_message').wysihtml5({"image":false, "font-styles": false});
   Session.setDefault("ORIG_MESS", 'This is some exciting message that is going to be placed here')
-
-
+  #$("#own_message").summernote({toolbar: [["style", ["bold", "italic", "underline", "clear"]], ["color", ["color"]],["para", ["ul", "ol", "paragraph"]]]})
 
 Template.login.events
   'click .add-google-oauth': (e) ->
@@ -283,8 +282,19 @@ Template.contact_list.events
 
   'click .sendToAll': (e) ->
     console.log 'sendToAll'
-    $('tr.contact').addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
-    #clickSendMessages()
+    oTable = $('#unmatched-contacts').dataTable()
+    list = oTable.fnGetNodes()
+    count = 
+    i = 0
+    while i < list.length
+      $(list[i++]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
+
+    oTable = $('#matched-contacts').dataTable()
+    list = oTable.fnGetNodes()
+    count = 
+    i = 0
+    while i < list.length
+      $(list[i++]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
 
   'click .edit-search-term': (e) ->
     searchQuery = $('#s_term').val().trim()
@@ -361,6 +371,8 @@ Template.contact_list.rendered = ->
       { sWidth: '14%' },
       { sWidth: '14%' }]
   });
+  
+
 
 
 
