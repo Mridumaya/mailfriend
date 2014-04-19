@@ -362,6 +362,7 @@ Template.contact_list.rendered = ->
     "sDom": "<'row-fluid'l<'span6'>r>t<'row-fluid'<'span4'><'span8'p>>",
     "sPaginationType": "bootstrap",
     "iDisplayLength": 10,
+    "aLengthMenu": [[50, 100, 200, 500, 1000, -1], [50, 100, 200, 500, 1000, "All"]]
     "aoColumns": [
       { sWidth: '6%' },
       { sWidth: '9%' },
