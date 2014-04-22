@@ -134,15 +134,17 @@ Template.searchQ.events
 
 searchContacts = (searchQuery, cb) ->
   #$("#loading").show()
+
   $.blockUI({ message: '<img src="/images/busy.gif" />  Loading...' });
   Meteor.setTimeout ->
     if Meteor.user()
-      Meteor.call 'searchContacts', searchQuery, (err) ->
-        Session.set('searchQ', searchQuery)
-        #$("#loading").hide()
-        $.unblockUI()
-        console.log 'searchContact Error: ', err if err
-        cb()
+      Meteor.call 'searchContacts', searchQuery
+      Session.set('searchQ', searchQuery)
+      #$("#loading").hide()
+
+      #console.log 'searchContact Error: ', err if err
+      $.unblockUI()
+      cb()
     else
       searchContacts(searchQuery)
   , 500
@@ -160,7 +162,6 @@ Template.contact_list.helpers
 
       contacts = Contacts.find(selector).fetch()
       contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
-
       _.map contacts, (c, i) -> _.extend c, {index: i+1}
     else
       []
@@ -176,7 +177,6 @@ Template.contact_list.helpers
     contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
 
     _.map contacts, (c, i) -> _.extend c, {index: i+1}
-
 
   receivedMessages: ->
     @uids?.length || 0
@@ -374,11 +374,9 @@ Template.contact_list.rendered = ->
       { sWidth: '24%' },
       { sWidth: '14%' },
       { sWidth: '14%' }]
+
   });
   
-
-
-
 
 Template.confirm.rendered = ->
   mixpanel.track("visits step 4 page", { });
