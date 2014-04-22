@@ -38,7 +38,7 @@ Template.welcome.helpers
     Sharings.findOne(type: 'email')?.subject
 
   orig_message: ->
-    Sharings.findOne(type: 'email')?.htmlBody || ""
+    Sharings.findOne(type: 'email')?.originalMessage || ""
 
   sender: ->
     Sharings.findOne(type: 'email')?.senderName || "Someone"
@@ -422,12 +422,14 @@ Template.confirm.events
             $set:
               subject: subject
               htmlBody: sharingBody
+              originalMessage: Session.get("ORIG_MESS")
               senderName: Meteor.user()?.profile?.name || ""
         else
           Sharings.insert
             type: 'email'
             subject: subject
             htmlBody: sharingBody
+            originalMessage: Session.get("ORIG_MESS")
             senderName: Meteor.user()?.profile?.name || ""
         mixpanel.track("send email", { });
         console.log 'send mail success'
