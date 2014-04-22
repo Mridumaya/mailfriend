@@ -133,12 +133,14 @@ Template.searchQ.events
      Session.set("STEP", "welcome")
 
 searchContacts = (searchQuery, cb) ->
-  $("#loading").show()
+  #$("#loading").show()
+  $.blockUI({ message: '<img src="/images/busy.gif" />  Loading...' });
   Meteor.setTimeout ->
     if Meteor.user()
       Meteor.call 'searchContacts', searchQuery, (err) ->
         Session.set('searchQ', searchQuery)
-        $("#loading").hide()
+        #$("#loading").hide()
+        $.unblockUI()
         console.log 'searchContact Error: ', err if err
         cb()
     else
@@ -299,9 +301,10 @@ Template.contact_list.events
   'click .edit-search-term': (e) ->
     searchQuery = $('#s_term').val().trim()
     if searchQuery
+      $("#searchTermModal").modal("hide")
       searchContacts searchQuery, ->
         console.log "search query changed"
-        $("#searchTermModal").modal("hide")
+
 
   'click .contact-list-to-confirm': (e) ->
      clickSendMessages()
