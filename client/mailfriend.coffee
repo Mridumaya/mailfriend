@@ -220,6 +220,10 @@ Template.contact_list.events
     selector.each ->
       SelectedEmailsHelper.selectEmail($(this).data('email'))
 
+  'click .clear-all': (e) ->
+    selector = $('tr.contact').removeClass('info')
+    selector.find('.icon i').removeClass('glyphicon glyphicon-ok')
+
   'click tr.contact': (e) ->
     console.log $(e.currentTarget).data("email")
     if $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('glyphicon glyphicon-ok').hasClass('glyphicon glyphicon-ok')
