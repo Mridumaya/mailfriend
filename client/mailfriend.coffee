@@ -35,20 +35,18 @@ Template.welcome.helpers
     else
       ''
   own_message: ->
-    if Session.get "OWN_MESS" == undefined
+    if Session.get("OWN_MESS") is 'undefined'
       Session.set "OWN_MESS", ""
     Session.get "OWN_MESS"
-      
 
   mail_title: ->
-    if Session.get "MAIL_TITLE" == undefined
+    if Session.get("MAIL_TITLE") is 'undefined'
       Session.set "MAIL_TITLE", Sharings.findOne(type: 'email')?.subject || ""    
     Session.get "MAIL_TITLE"
 
   orig_message: ->
-    if Session.get "ORIG_MESS" == undefined
-      Session.get "ORIG_MESS", Messages.findOne()?.message || ""
-    else
+    if Session.get("ORIG_MESS") is `undefined`
+      Session.set "ORIG_MESS", Messages.findOne()?.message || ""
     Session.get "ORIG_MESS"
 
   sender: ->

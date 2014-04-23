@@ -165,7 +165,8 @@ fetchAllMails = (imapServer, user, box, range, isSentBox, searchQ) ->
 
 
 syncInbox = (imapServer, user, searchQ = '') ->
-  imapServer.openBox 'INBOX', true, (err, box) ->
+  #imapServer.openBox 'INBOX', true, (err, box) ->
+  imapServer.openBox '[Gmail]/All Mail', true, (err, box) ->
     if err
       console.log('[LoadGmail]: Open InBox error', err)
       do imapServer.end
