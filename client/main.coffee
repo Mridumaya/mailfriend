@@ -1,4 +1,9 @@
 Deps.autorun ->
+  console.log 'Subscribing to messages.'
+  Meteor.subscribe 'messages', ->
+    console.log 'Messages Subscribed :', new Date
+
+  
   if Meteor.userId()
     Session.set('SUBSCRIBED_CONTACTS', false)
     Session.set('STEP', "welcome")

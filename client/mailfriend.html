@@ -105,7 +105,7 @@
 
         <div id="original-message-holder">
             <div class="original-message" id="original_message">
-                {{orig_message}}
+                {{{orig_message}}}
             </div>
         </div>
         <h4>Add your own note here before sending</h4>
@@ -113,7 +113,7 @@
             <span class="add-on" style="font-size: 18px;">Email Subject:</span>
             <input style="width: 520px;" class="subject" id="subject" type="text" placeholder="Invitation" value="{{mail_title}}">
         </div>
-        <textarea id="own_message">{{own_message}}</textarea>
+        <textarea id="own_message">{{{own_message}}}</textarea>
 
         <div class="row">
             <label class="pull-right">Step 1 of 4</label></div>
@@ -383,15 +383,26 @@
         <h4 style="text-align: center;">Almost done, please review your selection and click send</h4>
 
         <div class="preview">
-            <h4>Subject:</h4>
+            <div class="well well-sm">
+                <h4><strong>Subject:</strong> {{subject}}</h4>
+            </div>
 
-            <p class="draft-subject"></p>
-            <h4>Body:</h4>
+            <div class="well well-sm">
+                <h4><strong>Body:</strong></h4>
+                <p>{{{user_message}}}</p>
 
-            <p class="draft-body"></p>
-            <h4>Send To:</h4>
+                <strong>Forwarded Message</strong><br>
+                <p>{{{forwaded_message}}}</p>
+            </div>
 
-            <p class="draft-to"></p>
+            <div class="well well-sm">
+                <h4><strong>Send To:</strong></h4>
+                <p>
+                    {{#each emails}}
+                        <p class="email" style="margin:0 0 0;">{{email}}</p>
+                    {{/each}}
+                </p>
+            </div>
         </div>
         <div class="row">
             <label class="pull-right" style="margin-right: 13px; margin-top: 10px;">Step 4 of 4</label></div>
