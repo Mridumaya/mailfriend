@@ -133,13 +133,13 @@ searchContacts = (searchQuery, cb) ->
   $.blockUI({ message: '<img src="/images/busy.gif" />  Loading...' });
   Meteor.setTimeout ->
     if Meteor.user()
-      Meteor.call 'searchContacts', searchQuery
-      Session.set('searchQ', searchQuery)
-      #$("#loading").hide()
+      Meteor.call 'searchContacts', searchQuery, (err) ->
+        Session.set('searchQ', searchQuery)
+        #$("#loading").hide()
 
-      #console.log 'searchContact Error: ', err if err
-      $.unblockUI()
-      cb()
+        #console.log 'searchContact Error: ', err if err
+        $.unblockUI()
+        cb()
     else
       searchContacts(searchQuery)
   , 500
