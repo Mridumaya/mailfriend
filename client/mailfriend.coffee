@@ -408,13 +408,12 @@ Template.confirm.events
 
   'click button.draft-send': (e) ->
     subject = Session.get "MAIL_TITLE"
-    body = Session.get "OWN_MESS"
+    body = Session.get("OWN_MESS") + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
     to = Session.get "CONF_DATA"
 
     console.log subject, body, to
     $('.draft-send').prop('disabled', true)
 
-    sharingBody = body
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
       if err
         console.log err
@@ -425,13 +424,13 @@ Template.confirm.events
           Sharings.update sharing._id,
             $set:
               subject: subject
-              htmlBody: sharingBody
+              htmlBody: body
               senderName: Meteor.user()?.profile?.name || ""
         else
           Sharings.insert
             type: 'email'
             subject: subject
-            htmlBody: sharingBody
+            htmlBody: body
             senderName: Meteor.user()?.profile?.name || ""
 
         if message
