@@ -23,9 +23,13 @@ Template.layout.events
     Meteor.logout()
     return true
 
+initialize = true
+
 Template.welcome.rendered = ->
   mixpanel.track("visits step 1 page", { });
-  $('#own_message').wysihtml5({"image":false, "font-styles": false});
+  if(initialize)
+    $('#own_message').wysihtml5({"image":false, "font-styles": false});
+    initialize = false;
 
 Template.welcome.helpers
   name: ->
@@ -225,6 +229,7 @@ Template.contact_list.events
       SelectedEmailsHelper.selectEmail($(e.currentTarget).data('email'))
     else
       SelectedEmailsHelper.unselectEmail($(e.currentTarget).data('email'))
+    console.log SelectedEmailsHelper.selectedEmail().emails
     $('.alert-contact').hide()
 
 
@@ -363,7 +368,7 @@ Template.contact_list.rendered = ->
   $("#matched-contacts, #unmatched-contacts").dataTable({
     "sDom": "<'row-fluid'l<'span6'>r>t<'row-fluid'<'span4'><'span8'p>>",
     "sPaginationType": "bootstrap",
-    "iDisplayLength": 10,
+    "iDisplayLength": 50,
     "aLengthMenu": [[50, 100, 200, 500, 1000, -1], [50, 100, 200, 500, 1000, "All"]]
     "aoColumns": [
       { sWidth: '6%' },
@@ -530,7 +535,8 @@ clickSendMessages = (toEmails=[])->
   if toEmails.length
     emails = toEmails
   else
-    $('tr.contact.info').each -> emails.push $(this).data('email')
+    #$('tr.contact.info').each -> emails.push $(this).data('email')
+    emails = @SelectedEmailsHelper.selectedEmail().emails
 
   Session.set("CONF_DATA", emails)
   Session.set("STEP", "confirm")
