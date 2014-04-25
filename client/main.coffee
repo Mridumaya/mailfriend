@@ -21,5 +21,10 @@ Deps.autorun ->
 Session.setDefault("GOOGLE_API", true)
 
 Meteor.startup ->
+  Meteor.subscribe 'messages', ->
+    console.log 'Messages Subscribed :', new Date
+
+  Session.set "OWN_MESS", ""
+
   GoogleAccountChecker.checkGoogleApi()
   SelectedEmails.remove()

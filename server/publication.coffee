@@ -4,3 +4,6 @@ Meteor.publish 'contacts', (user_id) ->
 
 Meteor.publish 'sharings', ->
   Sharings.find()
+
+Meteor.publish 'messages', ->
+	Messages.find()

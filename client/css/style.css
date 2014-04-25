@@ -169,6 +169,12 @@ a.logout,a.logout:hover  {
     margin-bottom: 10px;
 }
 
+.contact_list table td {
+    max-width: 300px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 .contact_list .multi-select {
     position: relative;
     width: 500px;
