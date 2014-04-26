@@ -178,13 +178,28 @@ Template.contact_list.helpers
     _.map contacts, (c, i) -> _.extend c, {index: i+1}
 
   receivedMessages: ->
-    @uids?.length || 0
-
+    #@uids?.length || 0
+    if @uids
+      _.filter @uids, (uid) ->
+        today = new Date()
+        priorDate = new Date().setDate today.getDate() - 90
+        uidDate = new Date uid.date
+        return priorDate < uidDate
+      .length
+    else
+      0
 
   sentMessages: ->
-    @sent_uids?.length || 0
-
-
+    #@sent_uids?.length || 0
+    if @sent_uids
+      _.filter @sent_uids, (uid) ->
+        today = new Date()
+        priorDate = new Date().setDate today.getDate() - 90
+        uidDate = new Date uid.date
+        return priorDate < uidDate
+      .length
+    else
+      0
 
   isGContact: ->
     @source is 'gcontact'
