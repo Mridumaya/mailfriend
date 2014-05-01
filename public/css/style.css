@@ -250,10 +250,17 @@ table.contacts td{
     text-decoration: none;
 }
 
-footer{
-    background: #27709b;
-    height: 50px;
-    margin-top: -50px;
+/*footer{*/
+    /*background: #27709b;*/
+    /*height: 50px;*/
+    /*margin-top: -50px;*/
+/*}*/
+
+.logo {
+    float: left;
+    width: auto;
+    height: auto;
+    display: block;
 }
 
 #loading {
