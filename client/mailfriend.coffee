@@ -131,7 +131,8 @@ Template.searchQ.events
       # Meteor.setTimeout ->
       #   $(e.target).prop('disabled', false)
       # , 60*1000
-      searchContacts searchQuery, ->
+      SearchStatus.insert {session_id: Meteor.default_connection._lastSessionId}
+      searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
         Session.set('STEP', "contact_list")
     else
       $("#sq_error").toggleClass("hidden")
@@ -142,13 +143,13 @@ Template.searchQ.events
   'click .searchq-to-welcome': (e) ->
      Session.set("STEP", "welcome")
 
-searchContacts = (searchQuery, cb) ->
+searchContacts = (searchQuery, session_id, cb) ->
   #$("#loading").show()
 
   $.blockUI({ message: '<img src="/images/busy.gif" />  Loading...' });
   Meteor.setTimeout ->
     if Meteor.user()
-      Meteor.call 'searchContacts', searchQuery, (err) ->
+      Meteor.call 'searchContacts', searchQuery, session_id, (err) ->
         Session.set('searchQ', searchQuery)
         #$("#loading").hide()
 
@@ -225,7 +226,8 @@ Template.contact_list.helpers
   searchQ: ->
     Session.get('searchQ') || ''
 
-
+  isSearchRunning: ->
+    SearchStatus.find({session_id: Meteor.default_connection._lastSessionId}).count() > 0
 
 Template.contact_list.events
   'click .gmail-received': (e) ->
@@ -332,7 +334,8 @@ Template.contact_list.events
     searchQuery = $('#s_term').val().trim()
     if searchQuery
       $("#searchTermModal").modal("hide")
-      searchContacts searchQuery, ->
+      SearchStatus.insert {session_id: Meteor.default_connection._lastSessionId}
+      searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
         console.log "search query changed"
 
 

@@ -7,3 +7,6 @@ Meteor.publish 'sharings', ->
 
 Meteor.publish 'messages', ->
 	Messages.find()
+
+Meteor.publish 'search_status', ->
+	SearchStatus.find()
