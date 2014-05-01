@@ -1370,7 +1370,7 @@ a.next_button:hover{ background:#0c7373; color: #ffffff;}
 }
 .info_content { width:75%; padding-top: 6px;padding-bottom: 10px;font-family: 'Lato', sans-serif;font-size: 16px;color: #95a0aa; line-height:25px;}
 .edit_button { width:1%; }
-.edit_button a.e_button{ float:right; padding:10px; width:73px; border-radius:6px; background:#d9534f; font-family: 'Lato', sans-serif;font-size: 14px;color: #fff; border:1px solid #d9534f; transition:all 0.5s;-webkit- transition:all 0.5s;-ms- transition:all 0.5s;-o- transition:all 0.5s; margin-right:10px;    text-align:center; }
+.edit_button a.e_button{ float:right; padding:10px; width:73px; border-radius:6px; background:#d9534f; font-family: 'Lato', sans-serif;font-size: 14px;color: #fff; border:1px solid #d9534f; transition:all 0.5s;-webkit-transition:all 0.5s;-ms-transition:all 0.5s;-o-transition:all 0.5s; margin-right:10px;    text-align:center; }
 a.e_button:hover{ background: #fff;color: #d9534f; border:1px solid #d9534f; transition:all 0.5s;  text-align:center; }
 .edit_button a.e_button span.edit{ background:url(../images/edit_sprite.png) no-repeat ;  width:18px; height:18px; float:left; transition:all 0.3s;-webkit-transition:all 0.3s;-o-transition:all 0.3s;-ms-transition:all 0.3s; margin-left:8px;}
 a.e_button:hover > span.edit{ background:url(../images/edit_sprite.png) no-repeat ;  width:18px; height:18px; float:left; background-position:0px  -19px;}
