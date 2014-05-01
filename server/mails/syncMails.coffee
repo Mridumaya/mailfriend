@@ -13,7 +13,7 @@ parseReveivedContacts = (contacts) ->
     nameAndEmail = splitNameAndEmail from
     return {
       from: from
-      uid: c.uid
+      uid: {uid: c.uid, date: c.date}
       email: nameAndEmail.email
       name: nameAndEmail.name
     }
@@ -54,7 +54,7 @@ parseSentContacts = (contacts) ->
     nameAndEmail = splitNameAndEmail from
     return {
       from: from
-      uid: c.uid
+      uid: {uid: c.uid, date: c.date}
       email: nameAndEmail.email
       name: nameAndEmail.name
     }
@@ -137,7 +137,9 @@ fetchAllMails = (imapServer, user, box, range, isSentBox, searchQ) ->
       stream.once 'end', ->
         contact = Imap.parseHeader(buffer)
 
-    msg.once 'attributes', (attrs) -> contact.uid = attrs.uid
+    msg.once 'attributes', (attrs) -> 
+      contact.uid = attrs.uid
+      contact.date = attrs.date
     msg.once 'end', ->
       # console.log contact.to, ' - ', contact.from
       if isSentBox

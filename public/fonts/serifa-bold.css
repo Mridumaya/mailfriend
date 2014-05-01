@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'SerifaRegular';
+    src: url('serifa-bold.eot');
+    src: url('serifa-bold.eot') format('embedded-opentype'),
+         url('serifa-bold.woff') format('woff'),
+         url('serifa-bold.ttf') format('truetype'),
+         url('serifa-bold.svg#SerifaRegular') format('svg');
+}

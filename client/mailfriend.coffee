@@ -15,6 +15,12 @@ Template.layout.helpers
       user.profile.picture
     else
       'images/default_user.jpg'
+  name: ->
+    user = Meteor.user()
+    if user and user.profile and user.profile.given_name
+      user.profile.given_name
+    else
+      'User'
 
 
 Template.layout.events
@@ -23,9 +29,13 @@ Template.layout.events
     Meteor.logout()
     return true
 
+initialize = true
+
 Template.welcome.rendered = ->
   mixpanel.track("visits step 1 page", { });
-  $('#own_message').wysihtml5({"image":false, "font-styles": false});
+  if(initialize)
+    $('#own_message').wysihtml5({"image":false, "font-styles": false});
+    initialize = false;
 
 Template.welcome.helpers
   name: ->
@@ -75,10 +85,12 @@ Template.welcome.events
     Session.set "MAIL_TITLE", $("#subject").val() 
     Session.set "STEP", "searchq" 
 
-Template.login.rendered = ->
+#Template.login.rendered = ->
+Template.home.rendered = ->
   mixpanel.track("view front page", { });
 
-Template.login.events
+#Template.login.events
+Template.home.events
   'click .add-google-oauth': (e) ->
     mixpanel.track("logs in", { });
     console.log new Date()
@@ -99,6 +111,9 @@ Template.login.events
           console.log err if err
           Session.set("STEP", "welcome")
     )
+
+  'click #nav_down': (e) ->
+    $('html, body').animate({scrollTop: $('#content').height()}, 800);
 
 
 Template.searchQ.rendered = ->
@@ -133,13 +148,13 @@ searchContacts = (searchQuery, cb) ->
   $.blockUI({ message: '<img src="/images/busy.gif" />  Loading...' });
   Meteor.setTimeout ->
     if Meteor.user()
-      Meteor.call 'searchContacts', searchQuery
-      Session.set('searchQ', searchQuery)
-      #$("#loading").hide()
+      Meteor.call 'searchContacts', searchQuery, (err) ->
+        Session.set('searchQ', searchQuery)
+        #$("#loading").hide()
 
-      #console.log 'searchContact Error: ', err if err
-      $.unblockUI()
-      cb()
+        #console.log 'searchContact Error: ', err if err
+        $.unblockUI()
+        cb()
     else
       searchContacts(searchQuery)
   , 500
@@ -174,13 +189,28 @@ Template.contact_list.helpers
     _.map contacts, (c, i) -> _.extend c, {index: i+1}
 
   receivedMessages: ->
-    @uids?.length || 0
-
+    #@uids?.length || 0
+    if @uids
+      _.filter @uids, (uid) ->
+        today = new Date()
+        priorDate = new Date().setDate today.getDate() - 90
+        uidDate = new Date uid.date
+        return priorDate < uidDate
+      .length
+    else
+      0
 
   sentMessages: ->
-    @sent_uids?.length || 0
-
-
+    #@sent_uids?.length || 0
+    if @sent_uids
+      _.filter @sent_uids, (uid) ->
+        today = new Date()
+        priorDate = new Date().setDate today.getDate() - 90
+        uidDate = new Date uid.date
+        return priorDate < uidDate
+      .length
+    else
+      0
 
   isGContact: ->
     @source is 'gcontact'
@@ -225,6 +255,7 @@ Template.contact_list.events
       SelectedEmailsHelper.selectEmail($(e.currentTarget).data('email'))
     else
       SelectedEmailsHelper.unselectEmail($(e.currentTarget).data('email'))
+    console.log SelectedEmailsHelper.selectedEmail().emails
     $('.alert-contact').hide()
 
 
@@ -363,7 +394,7 @@ Template.contact_list.rendered = ->
   $("#matched-contacts, #unmatched-contacts").dataTable({
     "sDom": "<'row-fluid'l<'span6'>r>t<'row-fluid'<'span4'><'span8'p>>",
     "sPaginationType": "bootstrap",
-    "iDisplayLength": 10,
+    "iDisplayLength": 50,
     "aLengthMenu": [[50, 100, 200, 500, 1000, -1], [50, 100, 200, 500, 1000, "All"]]
     "aoColumns": [
       { sWidth: '6%' },
@@ -406,7 +437,8 @@ Template.confirm.events
   'click #linkedin': (e) ->
     window.open("http://www.linkedin.com/shareArticle?mini=true&url=http://mailfriend.meteor.com/", '', "width=620, height=432");
 
-  'click button.draft-send': (e) ->
+  'click a.draft-send': (e) ->
+    e.preventDefault()
     subject = Session.get "MAIL_TITLE"
     body = Session.get("OWN_MESS") + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
     to = Session.get "CONF_DATA"
@@ -530,7 +562,8 @@ clickSendMessages = (toEmails=[])->
   if toEmails.length
     emails = toEmails
   else
-    $('tr.contact.info').each -> emails.push $(this).data('email')
+    #$('tr.contact.info').each -> emails.push $(this).data('email')
+    emails = @SelectedEmailsHelper.selectedEmail().emails
 
   Session.set("CONF_DATA", emails)
   Session.set("STEP", "confirm")
