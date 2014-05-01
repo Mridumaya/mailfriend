@@ -349,6 +349,9 @@
 
         <div class="alert alert-warning alert-contact">Warning! Select emails of friends first!</div>
         <div class="row" style="margin-top: 25px;">
+            {{#if isSearchRunning}}
+                <img src="/images/ajax-loader.gif" alt="Loading...">
+            {{/if}}
             <div class="well">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#matched-contacts-tab" data-toggle="tab">Matched Contacts</a></li>

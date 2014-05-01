@@ -59,6 +59,15 @@ parseSentContacts = (contacts) ->
       name: nameAndEmail.name
     }
 
+closeServer = (imapServer, session_id) ->
+  console.log 'Closing imapServer'
+  Fiber = Npm.require("fibers")
+  Fiber ->
+    console.log 'Removing Session id from search status'
+    SearchStatus.remove {session_id: session_id}
+  .run()
+  do imapServer.end
+
 addSentContact = (contacts, user_id) ->
   subContacts = []
   _.each contacts, (c) ->
@@ -91,7 +100,7 @@ addSentContact = (contacts, user_id) ->
     console.log insertContacts.length
   .run()
 
-fetchMails = (imapServer, user, box, isSentBox, searchQ = '') ->
+fetchMails = (imapServer, user, session_id, box, isSentBox, searchQ = '') ->
   # fetch latest 2000 header of mails.
   if user.profile?.isLoadAll
     MAX_MESSAGES = 100*1000
@@ -108,21 +117,20 @@ fetchMails = (imapServer, user, box, isSentBox, searchQ = '') ->
     imapServer.search [['!DRAFT'],['BODY', searchQ]], (err, results) ->
       if err
         console.log('[LoadGmail]: Open InBox error', err)
-        do imapServer.end
+        closeServer imapServer, session_id
         return
       range = results.slice(-MAX_MESSAGES)
       if range.length > 0
         console.log range.length
-        fetchAllMails(imapServer, user, box, range, false, searchQ)
+        fetchAllMails(imapServer, user, session_id, box, range, false, searchQ)
       else
         console.log 'result-range', results, range
+        closeServer imapServer, session_id
   else
     console.log "[SyncMail] 3. fetch message"
-    fetchAllMails(imapServer, user, box, range, isSentBox, searchQ)
+    fetchAllMails(imapServer, user, session_id, box, range, isSentBox, searchQ)
 
-
-
-fetchAllMails = (imapServer, user, box, range, isSentBox, searchQ) ->
+fetchAllMails = (imapServer, user, session_id, box, range, isSentBox, searchQ) ->
   console.log '[SyncMail] 4. fetch ALL message: ', searchQ
   allContacts = []
   f = imapServer.fetch range,
@@ -156,13 +164,13 @@ fetchAllMails = (imapServer, user, box, range, isSentBox, searchQ) ->
     console.log allContacts.length
     if isSentBox
       addSentContact(allContacts, user._id)
-      imapServer.end()
+      closeServer imapServer, session_id
     else
       addContacts(allContacts, user._id, searchQ)
       if searchQ
-        imapServer.end()
+        closeServer imapServer, session_id
       else
-        syncSentBox(imapServer, user) 
+        syncSentBox(imapServer, user, session_id) 
 
 
 
@@ -171,15 +179,12 @@ syncInbox = (imapServer, user, searchQ = '') ->
   imapServer.openBox '[Gmail]/All Mail', true, (err, box) ->
     if err
       console.log('[LoadGmail]: Open InBox error', err)
-      do imapServer.end
+      closeServer imapServer, session_id
       return
     console.log 'total messages in #INBOX: ', box.messages.total, " ", searchQ
-    fetchMails(imapServer, user, box, false, searchQ)
+    fetchMails(imapServer, user, session_id, box, false, searchQ)
 
-
-
-
-syncSentBox = (imapServer, user) ->
+syncSentBox = (imapServer, user, session_id) ->
   imapServer.getBoxes (err, boxes) -> 
     boxname = ''
     _.each boxes['[Gmail]']?.children, (v, k) -> 
@@ -189,15 +194,15 @@ syncSentBox = (imapServer, user) ->
       imapServer.openBox boxname, true, (err, box) ->
         if err
           console.log('[LoadGmail]: Open InBox error', err)
-          imapServer.end()
+          closeServer imapServer, session_id
           return
         console.log "total messages in ##{boxname}: ", box.messages.total
-        fetchMails(imapServer, user, box, true)
+        fetchMails(imapServer, user, session_id, box, true)
     else
     if user.profile?.isLoadAll
-      imapServer.end()
+      closeServer imapServer, session_id
 
-@syncMail = (user_id, searchQ = '') ->
+@syncMail = (user_id, session_id, searchQ = '') ->
   # find user
   user = Meteor.users.findOne 'services.google': {$exists: true}, _id: user_id
   return unless user
@@ -223,7 +228,7 @@ syncSentBox = (imapServer, user) ->
       })
       imapServer.once 'ready', ->
         console.log "[SyncMail-(#{user.services.google.email})] 2. connected imap ", searchQ
-        syncInbox(imapServer, user, searchQ)
+        syncInbox(imapServer, user, session_id, searchQ)
       imapServer.once 'end', -> console.log "[SyncMail-(#{user.services.google.email})] imapServer end!!\n\n"
       imapServer.once 'error', (err) -> console.log "[SyncMail-(#{user.services.google.email})] imapServer error: ", err
       imapServer.connect()
