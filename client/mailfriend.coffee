@@ -15,6 +15,12 @@ Template.layout.helpers
       user.profile.picture
     else
       'images/default_user.jpg'
+  name: ->
+    user = Meteor.user()
+    if user and user.profile and user.profile.given_name
+      user.profile.given_name
+    else
+      'User'
 
 
 Template.layout.events
@@ -79,10 +85,12 @@ Template.welcome.events
     Session.set "MAIL_TITLE", $("#subject").val() 
     Session.set "STEP", "searchq" 
 
-Template.login.rendered = ->
+#Template.login.rendered = ->
+Template.home.rendered = ->
   mixpanel.track("view front page", { });
 
-Template.login.events
+#Template.login.events
+Template.home.events
   'click .add-google-oauth': (e) ->
     mixpanel.track("logs in", { });
     console.log new Date()
@@ -103,6 +111,9 @@ Template.login.events
           console.log err if err
           Session.set("STEP", "welcome")
     )
+
+  'click #nav_down': (e) ->
+    $('html, body').animate({scrollTop: $('#content').height()}, 800);
 
 
 Template.searchQ.rendered = ->
@@ -426,7 +437,8 @@ Template.confirm.events
   'click #linkedin': (e) ->
     window.open("http://www.linkedin.com/shareArticle?mini=true&url=http://mailfriend.meteor.com/", '', "width=620, height=432");
 
-  'click button.draft-send': (e) ->
+  'click a.draft-send': (e) ->
+    e.preventDefault()
     subject = Session.get "MAIL_TITLE"
     body = Session.get("OWN_MESS") + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
     to = Session.get "CONF_DATA"
