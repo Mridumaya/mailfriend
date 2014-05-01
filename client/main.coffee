@@ -17,6 +17,7 @@ Deps.autorun ->
     Session.set('SUBSCRIBED_SHARINGS', true)
     console.log 'SUBSCRIBED_SHARINGS: ', new Date
 
+  Meteor.subscribe 'search_status'
 
 Session.setDefault("GOOGLE_API", true)
 

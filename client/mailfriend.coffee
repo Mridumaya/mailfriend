@@ -125,7 +125,8 @@ Template.searchQ.events
       # Meteor.setTimeout ->
       #   $(e.target).prop('disabled', false)
       # , 60*1000
-      searchContacts searchQuery, ->
+      SearchStatus.insert {session_id: Meteor.default_connection._lastSessionId}
+      searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
         Session.set('STEP', "contact_list")
     else
       $("#sq_error").toggleClass("hidden")
@@ -136,11 +137,11 @@ Template.searchQ.events
   'click .searchq-to-welcome': (e) ->
      Session.set("STEP", "welcome")
 
-searchContacts = (searchQuery, cb) ->
+searchContacts = (searchQuery, session_id, cb) ->
   $("#loading").show()
   Meteor.setTimeout ->
     if Meteor.user()
-      Meteor.call 'searchContacts', searchQuery, (err) ->
+      Meteor.call 'searchContacts', searchQuery, session_id, (err) ->
         Session.set('searchQ', searchQuery)
         $("#loading").hide()
         console.log 'searchContact Error: ', err if err
@@ -202,7 +203,8 @@ Template.contact_list.helpers
   searchQ: ->
     Session.get('searchQ') || ''
 
-
+  isSearchRunning: ->
+    SearchStatus.find({session_id: Meteor.default_connection._lastSessionId}).count() > 0
 
 Template.contact_list.events
   'click .gmail-received': (e) ->
@@ -307,7 +309,8 @@ Template.contact_list.events
   'click .edit-search-term': (e) ->
     searchQuery = $('#s_term').val().trim()
     if searchQuery
-      searchContacts searchQuery, ->
+      SearchStatus.insert {session_id: Meteor.default_connection._lastSessionId}
+      searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
         console.log "search query changed"
         $("#searchTermModal").modal("hide")
 
@@ -369,7 +372,7 @@ Template.contact_list.rendered = ->
   $("#matched-contacts, #unmatched-contacts").dataTable({
     "sDom": "<'row-fluid'l<'span6'>r>t<'row-fluid'<'span4'><'span8'p>>",
     "sPaginationType": "bootstrap",
-    "iDisplayLength": 10,
+    "iDisplayLength": 50,
     "aLengthMenu": [[50, 100, 200, 500, 1000, -1], [50, 100, 200, 500, 1000, "All"]]
     "aoColumns": [
       { sWidth: '6%' },
@@ -380,8 +383,6 @@ Template.contact_list.rendered = ->
       { sWidth: '14%' },
       { sWidth: '14%' }]
   });
-  
-
 
 Template.confirm.helpers 
   subject: ->
@@ -457,19 +458,12 @@ Template.confirm.events
         $('.draft-send').prop('disabled', false)
         $('.draft-close').trigger('click')
 
-
-
-
-
 Template.compose.helpers
   webUrl: ->
     Meteor.absoluteUrl()
 
-
   subject: ->
     Sharings.findOne(type: 'email')?.subject
-
-
 
 Template.compose.rendered = ->
   sharing = Sharings.findOne()
@@ -505,8 +499,6 @@ Template.compose.rendered = ->
 
 validatePassword = (password) ->
   password is 'queens'
-
-
 
 Template.compose.events
   'change .lock-message': (e) ->
