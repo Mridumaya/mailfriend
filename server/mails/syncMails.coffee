@@ -174,7 +174,7 @@ fetchAllMails = (imapServer, user, session_id, box, range, isSentBox, searchQ) -
 
 
 
-syncInbox = (imapServer, user, searchQ = '') ->
+syncInbox = (imapServer, user, session_id, searchQ = '') ->
   #imapServer.openBox 'INBOX', true, (err, box) ->
   imapServer.openBox '[Gmail]/All Mail', true, (err, box) ->
     if err
