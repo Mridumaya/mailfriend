@@ -215,6 +215,12 @@ syncSentBox = (imapServer, user, session_id) ->
   xoauth2gen.getToken (err, token) ->
     if err
       console.error "[SyncMail-(#{user.services.google.email})] get xoauth2gen token error: ", err, xoauth2gen.options.user
+      Fiber = Npm.require("fibers")
+      Fiber ->
+        console.log 'Removing Session id from search status'
+        SearchStatus.remove {session_id: session_id}
+      .run()
+
     else
       console.log "[SyncMail-(#{user.services.google.email})] 1. got xoauth2gen"
       imapServer = new Imap({
@@ -229,6 +235,18 @@ syncSentBox = (imapServer, user, session_id) ->
       imapServer.once 'ready', ->
         console.log "[SyncMail-(#{user.services.google.email})] 2. connected imap ", searchQ
         syncInbox(imapServer, user, session_id, searchQ)
-      imapServer.once 'end', -> console.log "[SyncMail-(#{user.services.google.email})] imapServer end!!\n\n"
-      imapServer.once 'error', (err) -> console.log "[SyncMail-(#{user.services.google.email})] imapServer error: ", err
+      imapServer.once 'end', -> 
+        console.log "[SyncMail-(#{user.services.google.email})] imapServer end!!\n\n"
+        Fiber = Npm.require("fibers")
+        Fiber ->
+          console.log 'Removing Session id from search status'
+          SearchStatus.remove {session_id: session_id}
+        .run()
+      imapServer.once 'error', (err) -> 
+        console.log "[SyncMail-(#{user.services.google.email})] imapServer error: ", err
+        Fiber = Npm.require("fibers")
+        Fiber ->
+          console.log 'Removing Session id from search status'
+          SearchStatus.remove {session_id: session_id}
+        .run()
       imapServer.connect()
