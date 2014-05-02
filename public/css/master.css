@@ -1308,9 +1308,9 @@ table td, table th {
     color: hsl(0, 0%, 100%);
     font-family: 'Lato',sans-serif;
     font-size: 14px;
+    line-height: 30px;
     padding: 5px;
-    width: 30%;
-
+    /*width: 30%; */
 }
 .sent {
     background: url(../images/email_bg.png) no-repeat scroll 91px center #d9534f ;

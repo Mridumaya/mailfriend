@@ -482,11 +482,11 @@
 
             <div class="well well-sm">
                 <h4><strong>Send To:</strong></h4>
-                <p>
+                <div style="height: 200px; overflow-y: scroll;">
                     {{#each emails}}
-                        <p class="email" style="margin:0 0 0;">{{email}}</p>
+                        <span class="email">{{email}}</span>
                     {{/each}}
-                </p>
+                </div>
             </div>
         </div>
         <div class="row">
