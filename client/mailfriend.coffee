@@ -160,6 +160,21 @@ searchContacts = (searchQuery, session_id, cb) ->
       searchContacts(searchQuery)
   , 500
 
+clearAllSelection = () ->
+  SelectedEmailsHelper.unselectAllEmails()
+  oTable = $('#matched-contacts').dataTable()
+  list = oTable.fnGetNodes()
+  count = 
+  i = 0
+  while i < list.length
+    $(list[i++]).removeClass("info").find(".icon i").removeClass "glyphicon glyphicon-ok"
+
+  oTable = $('#unmatched-contacts').dataTable()
+  list = oTable.fnGetNodes()
+  count = 
+  i = 0
+  while i < list.length
+    $(list[i++]).removeClass("info").find(".icon i").removeClass "glyphicon glyphicon-ok"
 
 
 Template.contact_list.helpers
@@ -242,14 +257,20 @@ Template.contact_list.events
     Session.set("FILTER_GCONTACT", $(e.currentTarget).is(":checked"))
 
   'click .add-all-relevant': (e) ->
-    selector = $('tr.contact').find('i.relevant-contact').closest('tr.contact').addClass('info')
-    selector.find('.icon i').addClass('glyphicon glyphicon-ok')
-    selector.each ->
-      SelectedEmailsHelper.selectEmail($(this).data('email'))
+    console.log 'Add all relevant'
+    clearAllSelection()
+    oTable = $('#matched-contacts').dataTable()
+    list = oTable.fnGetNodes()
+    count = 
+    i = 0
+    while i < list.length
+      $(list[i]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
+      SelectedEmailsHelper.selectEmail($(list[i]).data('email'))
+      i++
 
   'click .clear-all': (e) ->
-    selector = $('tr.contact').removeClass('info')
-    selector.find('.icon i').removeClass('glyphicon glyphicon-ok')
+    console.log 'Clear all'
+    clearAllSelection()
 
   'click tr.contact': (e) ->
     console.log $(e.currentTarget).data("email")
@@ -302,17 +323,28 @@ Template.contact_list.events
 
   'click .sendToTop15': (e) ->
     console.log 'sendToTop15'
-    $('tr.contact').removeClass('info').find('.icon i').removeClass('glyphicon glyphicon-ok')
-    $('tr.contact').slice(0,15).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
-    #clickSendMessages()
+    clearAllSelection()
+    oTable = $('#matched-contacts').dataTable()
+    list = oTable.fnGetNodes()
+    count = 
+    i = 0
+    while i < 15
+      $(list[i]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
+      SelectedEmailsHelper.selectEmail($(list[i]).data('email'))
+      i++
 
 
   'click .sendToTop30': (e) ->
     console.log 'sendToTop30'
-    $('tr.contact').removeClass('info').find('.icon i').removeClass('glyphicon glyphicon-ok')
-    $('tr.contact').slice(0,30).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
-    #clickSendMessages()
-
+    clearAllSelection()
+    oTable = $('#matched-contacts').dataTable()
+    list = oTable.fnGetNodes()
+    count = 
+    i = 0
+    while i < 30
+      $(list[i]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
+      SelectedEmailsHelper.selectEmail($(list[i]).data('email'))
+      i++
 
   'click .sendToAll': (e) ->
     console.log 'sendToAll'
@@ -321,14 +353,18 @@ Template.contact_list.events
     count = 
     i = 0
     while i < list.length
-      $(list[i++]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
+      $(list[i]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
+      SelectedEmailsHelper.selectEmail($(list[i]).data('email'))
+      i++
 
     oTable = $('#matched-contacts').dataTable()
     list = oTable.fnGetNodes()
     count = 
     i = 0
     while i < list.length
-      $(list[i++]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
+      $(list[i]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
+      SelectedEmailsHelper.selectEmail($(list[i]).data('email'))
+      i++
 
   'click .edit-search-term': (e) ->
     searchQuery = $('#s_term').val().trim()
