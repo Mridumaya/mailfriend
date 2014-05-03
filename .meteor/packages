@@ -5,6 +5,7 @@
 
 standard-app-packages
 insecure
+preserve-inputs
 email
 jquery
 coffeescript
@@ -18,6 +19,7 @@ google-contacts
 font-awesome
 amplify
 bootstrap-3
+bootstrap3-wysihtml5
 accounts-password
 iron-router
 npm

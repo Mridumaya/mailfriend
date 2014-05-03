@@ -6,7 +6,7 @@ html, body{
 
 input[type=text],input[type=search],input[type=password], textarea {
     border: 1px solid #cecece;
-    padding: 8px;
+    padding: 5px 10px;
     margin: 5px 0px;
     font-size: 15px;
 }
@@ -121,6 +121,7 @@ background-color: #cecece;
     border: 1px solid #C2C2C2;
     font-size: 16px;
     padding: 5px;
+    text-align: left;
 }
 .welcome textarea, .new-capaign textarea {
     min-height: 250px;width: 100%;
@@ -177,6 +178,12 @@ background-color: #cecece;
 
 .contact_list table {
     margin-bottom: 10px;
+}
+
+.contact_list table td {
+    max-width: 300px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .contact_list .multi-select {
@@ -254,8 +261,32 @@ table.contacts td{
     text-decoration: none;
 }
 
-footer{
-    background: #27709b;
-    height: 50px;
-    margin-top: -50px;
+/*footer{*/
+    /*background: #27709b;*/
+    /*height: 50px;*/
+    /*margin-top: -50px;*/
+/*}*/
+
+.logo {
+    float: left;
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+#loading {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    display: none;
+    top: 61px;
+}
+
+#loading > span {
+    background: #D6D7D7;
+    padding: 3px 5px;
+    border: 1px solid white;
+    border-top: none;
+    -webkit-border-radius: 0px 0px 5px 5px;
+    border-radius: 0px 0px 5px 5px;
 }

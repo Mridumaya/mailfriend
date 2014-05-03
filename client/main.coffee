@@ -1,4 +1,9 @@
 Deps.autorun ->
+  console.log 'Subscribing to messages.'
+  Meteor.subscribe 'messages', ->
+    console.log 'Messages Subscribed :', new Date
+
+  
   if Meteor.userId()
     Session.set('SUBSCRIBED_CONTACTS', false)
     #Session.set("STEP", "feature_select")
@@ -21,9 +26,11 @@ Deps.autorun ->
     Session.set('SUBSCRIBED_SHARINGS', true)
     console.log 'SUBSCRIBED_SHARINGS: ', new Date
 
+  Meteor.subscribe 'search_status'
 
 Session.setDefault("GOOGLE_API", true)
 
 Meteor.startup ->
+  Session.set "OWN_MESS", ""
   GoogleAccountChecker.checkGoogleApi()
   SelectedEmails.remove()

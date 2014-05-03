@@ -8,3 +8,9 @@ Meteor.publish 'sharings', ->
 Meteor.publish 'campaigns',(user_id) ->
   if user_id and (user_id is @userId)
     Campaigns.find({user_id: @userId})
+
+Meteor.publish 'messages', ->
+	Messages.find()
+
+Meteor.publish 'search_status', ->
+	SearchStatus.find()

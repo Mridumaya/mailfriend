@@ -1,8 +1,10 @@
 {
-  "packages": {
+  "packages": 
+  {
     "google-contacts": {},
     "font-awesome": {},
     "bootstrap-3": {},
+    "bootstrap3-wysihtml5": {}
     "iron-router": "0.7.0",
     "npm": {},
     "trail": {},
