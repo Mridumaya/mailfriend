@@ -1,4 +1,4 @@
-Template.login.events
+Template.home.events
   'click .add-google-oauth': (e) ->
     mixpanel.track("logs in", { });
     console.log new Date()

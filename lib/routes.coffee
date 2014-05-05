@@ -23,7 +23,8 @@ Router.map ->
                 Session.set( "successMessage", 'Your mail verified successfully.');
             Router.go("login")
   @route "feature_select",
-    path: "/",
+    layoutTemplate: 'masterLayout',
+    path: "/"
   @route "login",
     layoutTemplate: "masterLogoutLayout"
   @route "register",

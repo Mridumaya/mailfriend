@@ -1,13 +1,15 @@
 <head>
-    <title>mailfriend</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/chosen.css">
-    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
-    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables_themeroller.css">
-
+    <title>Welcome to Mailfriend</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Welcome to Mailfriend</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chosen.css">
+    <link rel="stylesheet" href="/css/jquery.gritter.css">
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables_themeroller.css">
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+    <link href="/css/jquery.tagit.css" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
     <link href="/css/master.css" rel="stylesheet" type="text/css">
@@ -16,36 +18,32 @@
     <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
     <![endif]-->
+
+
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+    <script src="/js/tag-it.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/custom.js"></script>
     <script src="/js/chosen.jquery.js"></script>
-    <script src="/js/jquery.blockUI.js"></script>
+    <script src="/js/jquery.gritter.min.js"></script>
     <!-- start Mixpanel --><script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" "); for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]); mixpanel.init("f2ee79182073835b91775c9d8ddbfa92");</script><!-- end Mixpanel -->
 </head>
 <body>
+{{#if isError}}
+<div class="alert alert-danger">{{errorMessage}}</div>
+{{/if}}
+{{#if isSuccess}}
+<div class="alert alert-success">{{successMessage}}</div>
+{{/if}}
 {{> google_api_modal}}
-{{> layout }}
+<!--{{> layout }}-->
+<!--{{> masterLayout}}-->
 </body>
 
-
-<template name="layout">
-    <!--<nav class="navbar navbar-default navbar-blue navbar-fixed-top" role="navigation">-->
-        <!--{{#if hasLogin}}-->
-        <!--<div class="pull-right avatar">-->
-            <!--<img src="{{picture}}" height="44" width="44">-->
-            <!--<a href="#" class="logout">Logout</a>-->
-        <!--</div>-->
-        <!--{{/if}}-->
-        <!--<div class="container">-->
-            <!--<div class="brand">Mail Friend</div>-->
-        <!--</div>-->
-        <!--<div id="loading" style="display: none;">-->
-            <!--<span>loading...</span>-->
-        <!--</div>-->
-    <!--</nav>-->
+<template name="masterLayout">
     {{#if hasLogin}}
     <section class="wrapper">
-        <!--header part start-->
         <header>
             <div class="mobile-header">
                 <h1 class="logo"><a href="#"><img  src="images/logo.png" alt="Mailfriend" title="Mailfriend"></a></h1>
@@ -59,32 +57,25 @@
                 </article>
             </div>
         </header>
-        {{#if stepIsWelcome}}
-        {{> welcome}}
-        {{/if}}
-        {{#if stepIsSearchQ}}
-        {{> searchQ}}
-        {{/if}}
-        {{#if stepIsContactList}}
-        {{> contact_list}}
-        {{/if}}
-        {{#if stepIsConfirm}}
-        {{> confirm}}
-        {{/if}}
+        <div class="container wrapper">
+            {{ > yield}}
+        </div>
     </section>
     {{else}}
     {{> home}}
     {{/if}}
-    <!-- footer part start-->
-    <footer>
-        <div class="home_wrapper">
-            <h1 class="logo"><a href="#"><img src="images/footer_logo.png" alt="Mailfriend"></a></h1>
-            <h2>Copyright &copy; 2014 Reviver. All Rights Reserved. </h2>
-        </div>
-    </footer>
-    <!-- footer part end-->
+    <footer></footer>
 </template>
 
+<template name="masterLogoutLayout">
+    <nav class="navbar navbar-default navbar-blue navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="brand">Mail Friend</div>
+        </div>
+    </nav>
+    {{> home}}
+    <footer></footer>
+</template>
 
 <template name="google_api_modal">
     <div id="google-api-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -166,129 +157,34 @@
     </section>
 </template>
 
-<template name="login">
-    <article>
-        <div class="main">
-            <div class="title">Mailfriend lets you pass the word to your friends who might actually care</div>
-            <button class="btn btn-success btn-lg btn-block login add-google-oauth">Login with your Gmail account
-            </button>
+<template name="feature_select">
+    <div class="row text-center" style="margin-top: 50px;">
+        <h3>Welcome {{name}}</h3>
+    </div>
+    <div class="row feature-select">
+        <div class="col-md-4">
+            <button class="btn btn-default btn-lg btn-block btn-create-campaign">Create a new email campaign</button>
+            <button class="btn btn-default btn-lg btn-block btn-view-campaign">View an existing campaign</button>
+            <button class="btn btn-default btn-lg btn-block btn-view-messages">View incoming messages</button>
         </div>
-    </article>
-</template>
-
-<template name="welcome">
-    <article class="welcome">
-        <h2>Welcome {{name}}</h2>
-        <h4>{{sender}} would like you to spread the word about {{mail_title}}. Checkout their message</h4>
-
-        <div id="original-message-holder">
-            <div class="original-message" id="original_message">
-                {{{orig_message}}}
-            </div>
-        </div>
-        <h4>Add your own note here before sending</h4>
-        <div class="input-prepend text-left" style="margin-bottom: 10px;">
-            <span class="add-on" style="font-size: 18px;">Email Subject:</span>
-            <input style="width: 520px;" class="subject" id="subject" type="text" placeholder="Invitation" value="{{mail_title}}">
-        </div>
-        <textarea id="own_message">{{{own_message}}}</textarea>
-
-        <div class="row">
-            <label class="pull-right">Step 1 of 4</label></div>
-        <a href="#" class="button pull-right welcome-to-searchq">Search for relevant contacts</a>
-    </article>
-    <div class="modal fade" id="defMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Message edit</h4>
-                </div>
-                <div class="modal-body">
-                    <p>You will need to enter password in order to edit message</p>
-
-                    <p class="error hide">Provided password is not valid</p>
-                    <input type="password" id="password" class="input-sm"/>
-                    <a href="#" class="button msg-password">Submit</a>
-                </div>
+        <div class="col-md-8">
+            <div class="info">
+                <h3 class="text-center">Current status:</h3>
+                <ul>
+                    <li> 5 people forwarded your campaign</li>
+                    <li> you have 3 unread messages</li>
+                    <li> etc </li>
+                </ul>
             </div>
         </div>
     </div>
 </template>
 
-<template name="compose">
-    <button class="btn btn-small logout">Logout</button>
-    <br><br>
+<template name="confirm">
+    <article class="confirm">
+        <h4 style="text-align: center;">Almost done, please review your selection and click send</h4>
 
-    <h3>2. This is theoretically the message you are going to send along. Notice your friend already customized it when
-        they sent it to you. Sweet. Edit it a little if you want.</h3>
-
-    <p>(nobody is getting mailed, no funny business, promise!)</p>
-
-    <div class="input-prepend">
-        <span class="add-on">Email Subject:</span>
-        <input class="span7 email-subject" type="text" placeholder="Invitation" value="{{subject}}"/>
-    </div>
-    <div class="alert alert-warning alert-body">Warning! Please write some text!</div>
-    <div class="row">
-        <div class="span8">
-            <div class="summernote email-body">
-            </div>
-        </div>
-        <div class="span8">
-            <div class="summernote email-body2">
-                Write some here<br><br>
-                <a href="{{webUrl}}">Tell your friends</a>
-            </div>
-        </div>
-        <div class="span8">
-            <div class="alert alert-error alert-lock-message hidden">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                Wrong Password!
-            </div>
-            <input class="lock-message" type="checkbox"><span class="lock-message-label">lock the message</span>
-            <input type="password" style="margin-bottom:0px;" class="lock-message-password input-small"
-                   placeholder="Password">
-            <button class="btn btn-small btn-primary lock-message-button">OK</button>
-        </div>
-    </div>
-</template>
-
-<template name="searchQ">
-    <article class="searchq">
-        <h4 style="text-align: center;">Great now lets choose some friends who may been interested in this topic. Try
-            adding a few keywords, for example "art" or "cookies". Something that is specific to the original
-            topic. </h4>
-
-        <div class="row" style="margin-left:0px">
-            <input type="search" class="search-query input-full" placeholder="Type in a search term"
-                   value="{{searchQ}}"/>
-
-            <p id="sq_error" class="error hidden">Please add at least one search term</p>
-
-            <div class="row">
-                <label class="pull-right" >Step 2 of 4</label></div>
-            <div class="row">
-                <a href="#" class="next_button search-button pull-right">Search</a>
-                <a href="#" class="back_button pull-right searchq-to-welcome" style="margin-right: 10px;" >
-                    Back
-                </a>
-            </div>
-
-        </div>
-    </article>
-</template>
-
-
-<template name="email_draft">
-    <div id="email_draft" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3>Email Content Preview</h3>
-        </div>
-        <div class="modal-body">
+        <div class="preview">
             <h4>Subject:</h4>
 
             <p class="draft-subject"></p>
@@ -299,193 +195,14 @@
 
             <p class="draft-to"></p>
         </div>
-        <div class="modal-footer">
-            <button class="btn draft-close" data-dismiss="modal" aria-hidden="true">Close</button>
-            <button class="btn btn-primary draft-send">Send</button>
-        </div>
-    </div>
-</template>
-
-
-<template name="contact_list">
-    <article class="contact_list">
-        <h4>These are your friends interested in: <b style="color: rgb(217, 83, 79);">{{searchQ}}</b> <a style="font-size: 15px;" href="#" data-toggle="modal" data-target="#searchTermModal">edit search term</a></h4>
-        <h4>The people at the top are the most relevant. Select people using these handy buttons.</h4>
-
-        <div class="btn-send-group">
-            <div class="btn-group">
-                <a href="#" class="button sendToTop15">select the top 15</a>
-            </div>
-            <div class="btn-group">
-                <a href="#" class="button sendToTop30">select the top 30 relevant</a>
-            </div>
-            <div class="btn-group">
-                <a href="#" class="button sendToAll">select all</a>
-            </div>
-            <div class="btn-group">
-                <a href="#" class="button add-all-relevant">choose all relevant</a>
-            </div>
-            <div class="btn-group">
-                <a href="#" class="button clear-all">clear all</a>
-            </div>
-        </div>
-        <!--<h4>Your friends-->
-            <!--<div class="btn-group">-->
-                <!--<button class="btn btn-default reload">Reload</button>-->
-            <!--</div>-->
-            <!--<div class="btn-group">-->
-                <!--<button class="btn btn-primary add-all">Add All</button>-->
-            <!--</div>-->
-        <!--</h4>-->
-        {{#constant}}
-         <select data-placeholder="Sort by people I've:" class="chosen-select" multiple style="width: 550px;">
-            <option value="gmail-sent">Sent a message to in the last 3 months</option>
-            <option value="gmail-received">Received a message from the last 3 months</option>
-            <option value="gcontact">Added to my contact list</option>
-            <option value="gmail-contacts">Click to get recipients of all your emails (Or it will only recent recipients)</option>
-        </select>
-
-        {{/constant}}
-
-        <div class="alert alert-warning alert-contact">Warning! Select emails of friends first!</div>
-        <div class="row" style="margin-top: 25px;">
-            {{#if isSearchRunning}}
-                <img src="/images/ajax-loader.gif" alt="Loading...">
-            {{/if}}
-            <div class="well">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#matched-contacts-tab" data-toggle="tab">Matched Contacts</a></li>
-                    <li><a href="#unmatched-contacts-tab" data-toggle="tab">Unmatched Contacts</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="matched-contacts-tab">
-                        <div class="row">
-                            <table id="matched-contacts" class="table table-bordered table-hover contacts">
-                                <thead>
-                                <tr>
-                                    <th style="width: 32px"></th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th style="width: 80px;">Sent in last 90 days</th>
-                                    <th style="width: 80px;">Received in last 90 days</th>
-                                    <th>On Contact list</th>
-                                    <th>Relevant {{#if searchQ}}({{searchQ}}){{/if}}</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    {{#each matchedContacts}}
-                                        <tr class="contact" data-email="{{email}}">
-                                            <td class="icon" ><i></i></td>
-                                            <td>{{name}}</td>
-                                            <td>{{email}}</td>
-                                            <td>{{sentMessages}}</td>
-                                            <td>{{receivedMessages}}</td>
-                                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
-                                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
-                                        </tr>
-                                    {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="unmatched-contacts-tab">
-                        <div class="row">
-                            <table id="unmatched-contacts" class="table table-bordered table-hover contacts">
-                                <thead>
-                                <tr>
-                                    <th style="width: 32px"></th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th style="width: 80px;">Sent in last 90 days</th>
-                                    <th style="width: 80px;">Received in last 90 days</th>
-                                    <th>On Contact list</th>
-                                    <th>Relevant {{#if searchQ}}({{searchQ}}){{/if}}</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    {{#each unmatchedContacts}}
-                                        <tr class="contact" data-email="{{email}}">
-                                            <td class="icon" ><i></i></td>
-                                            <td>{{name}}</td>
-                                            <td>{{email}}</td>
-                                            <td>{{sentMessages}}</td>
-                                            <td>{{receivedMessages}}</td>
-                                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
-                                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
-                                        </tr>
-                                    {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="clear"></div>
-        <div class="row">
-            <label class="pull-right" >Step 3 of 4</label></div>
-        <div class="row">
-            <a href="#" class="button contact-list-to-confirm pull-right">Preview email
-            </a>
-            <a href="#" class="back_button pull-right contact-list-to-searchq" style="margin-right: 10px;">Back
-            </a>
-
-        </div>
-        <div class="row text-right">
-            <div style="font-size: 12px;">no mail will be sent</div>
-        </div>
-        <div class="modal fade" id="searchTermModal" tabindex="-1" role="dialog" aria-labelledby="mySearchTermLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="mySearchTermLabel">Edit search term</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Please add or change search term</p>
-                        <input type="text" id="s_term" value="{{searchQ}}" />
-                        <a href="#" class="button edit-search-term">Change</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </article>
-</template>
-
-<template name="confirm">
-    <article class="confirm">
-        <h4 style="text-align: center;">Almost done, please review your selection and click send</h4>
-
-        <div class="preview">
-            <div class="well well-sm">
-                <h4><strong>Subject:</strong> {{subject}}</h4>
-            </div>
-
-            <div class="well well-sm">
-                <h4><strong>Body:</strong></h4>
-                <p>{{{user_message}}}</p>
-
-                <strong>Forwarded Message</strong><br>
-                <p>{{{forwaded_message}}}</p>
-            </div>
-
-            <div class="well well-sm">
-                <h4><strong>Send To:</strong></h4>
-                <div style="height: 200px; overflow-y: scroll;">
-                    {{#each emails}}
-                        <span class="email">{{email}}</span>
-                    {{/each}}
-                </div>
-            </div>
-        </div>
         <div class="row">
             <label class="pull-right" style="margin-right: 13px; margin-top: 10px;">Step 4 of 4</label></div>
         <div class="row">
-            <a href="#" class="next_button pull-right draft-send" style="margin-right: 10px;">Send</a>
-            <a href="#" class="back_button pull-right confirm-to-contact-list" style="margin-right: 10px;">Back</a>
+            <button class="btn btn-primary pull-right draft-send" style="margin-right: 10px;" type="button">Send
+            </button>
+            <button class="btn btn-default pull-right confirm-to-contact-list" style="margin-right: 10px;"
+                    type="button">Back
+            </button>
         </div>
         <div class="row text-center success hidden">
             <h4>Your email has been sent!</h4>
@@ -496,8 +213,8 @@
                     <img src="/images/facebook_icon.png">
                 </a>
                 <a id="twitter" href="#" class="active">
-                </a>
                     <img src="/images/twitter_icon.png">
+                </a>
                 <a id="google" href="#" class="active">
                     <img src="/images/google_icon.png">
                 </a>
@@ -509,14 +226,20 @@
     </article>
 </template>
 
-<template name="notfound">
+<template name="notFound">
     <article>
         <div class="main2">
             <h1>404 - Page Not Found</h1>
         </div>
     </article>
 </template>
-
+<template name="loading">
+    <article>
+        <div class="main2">
+            <h1>Loading</h1>
+        </div>
+    </article>
+</template>
 <template name="error">
     <article>
         <div class="main2">
