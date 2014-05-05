@@ -6,11 +6,12 @@
 
 
   selectEmail: (email) ->
-    emailModel = @selectedEmail()
-    if emailModel
-      SelectedEmails.update(emailModel._id, {$addToSet: {emails: email}})
-    else
-      SelectedEmails.insert({emails: [email]})
+    if email isnt undefined
+      emailModel = @selectedEmail()
+      if emailModel
+        SelectedEmails.update(emailModel._id, {$addToSet: {emails: email}})
+      else
+        SelectedEmails.insert({emails: [email]})
 
 
 
@@ -32,6 +33,12 @@
     emailModel = @selectedEmail()
     if emailModel
       SelectedEmails.update emailModel._id, {$pullAll: {emails: emails}}
+
+  unselectAllEmails: () ->
+    emailModel = @selectedEmail()
+    if emailModel
+      #SelectedEmails.update emailModel._id, {$pullAll}
+      SelectedEmails.update emailModel._id, {$set: {emails: []}}
 
   containEmail: (email) ->
     emailModel = @selectedEmail()
