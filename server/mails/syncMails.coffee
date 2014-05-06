@@ -21,7 +21,6 @@ parseReveivedContacts = (contacts) ->
 addContacts = (contacts, user_id, searchQ) ->
   console.log "addContacts: ", contacts.length, " searchQ: ", searchQ
   parsedContacts = parseReveivedContacts(contacts)
-    # console.log contacts
   groupedContacts = _.groupBy parsedContacts, (c) -> c.email
   insertContacts = _.map groupedContacts, (v, k) ->
     return {
@@ -36,15 +35,16 @@ addContacts = (contacts, user_id, searchQ) ->
     dbContacts = Contacts.find({user_id: user_id}, {fields: {uids: true}}).fetch()
     existEmails = _.pluck dbContacts, 'email'
     contacts = _.filter insertContacts, (c) -> !_.contains(existEmails, c.email)
-    _.each contacts, (c)->
-      Contacts.update {email: c.email, user_id: user_id},
-        {
-          $set: {uids: c.uids}
-          $addToSet: {searchQ: searchQ}
-        },
-        (err, num) ->
-          console.log err if err
-          Contacts.insert(_.extend(c, {user_id: user_id, searchQ: [searchQ]})) unless num
+    if contacts isnt null
+      _.each contacts, (c)->
+        Contacts.update {email: c.email, user_id: user_id},
+          {
+            $set: {uids: c.uids}
+            $addToSet: {searchQ: searchQ}
+          },
+          (err, num) ->
+            console.log err if err
+            Contacts.insert(_.extend(c, {user_id: user_id, searchQ: [searchQ]})) unless num
     console.log insertContacts.length
   .run()
 
@@ -70,9 +70,10 @@ closeServer = (imapServer, session_id) ->
 
 addSentContact = (contacts, user_id) ->
   subContacts = []
-  _.each contacts, (c) ->
-    if c.to.length is 1
-      subContacts.push c
+  if contacts isnt null
+    _.each contacts, (c) ->
+      if c.to.length is 1
+        subContacts.push c
   console.log contacts.length, ':', subContacts.length
   parsedContacts = parseSentContacts subContacts
   groupedContacts = _.groupBy parsedContacts, (c) -> c.email
@@ -89,14 +90,15 @@ addSentContact = (contacts, user_id) ->
     dbContacts = Contacts.find({user_id: user_id}, {fields: {sent_uids: true}}).fetch()
     existEmails = _.pluck dbContacts, 'email'
     contacts = _.filter insertContacts, (c) -> !_.contains(existEmails, c.email)
-    _.each contacts, (c)->
-      Contacts.update {email: c.email, user_id: user_id},
-        {
-          $set: {sent_uids: c.sent_uids}
-        },
-        (err, num) ->
-          console.log err if err
-          Contacts.insert(_.extend(c, {user_id: user_id})) unless num
+    if contacts isnt null
+      _.each contacts, (c)->
+        Contacts.update {email: c.email, user_id: user_id},
+          {
+            $set: {sent_uids: c.sent_uids}
+          },
+          (err, num) ->
+            console.log err if err
+            Contacts.insert(_.extend(c, {user_id: user_id})) unless num
     console.log insertContacts.length
   .run()
 
@@ -207,9 +209,11 @@ syncSentBox = (imapServer, user, session_id) ->
   user = Meteor.users.findOne 'services.google': {$exists: true}, _id: user_id
   return unless user
   console.log user.services.google.email
+  console.log Meteor.settings.google.api
+  console.log Meteor.settings.google.secret
   xoauth2gen = XOauth2.createXOAuth2Generator
                 user: user.services.google.email
-                clientId: Meteor.settings.google.id
+                clientId: Meteor.settings.google.api
                 clientSecret: Meteor.settings.google.secret
                 refreshToken: user.services.google.refreshToken
   xoauth2gen.getToken (err, token) ->
@@ -220,7 +224,6 @@ syncSentBox = (imapServer, user, session_id) ->
         console.log 'Removing Session id from search status'
         SearchStatus.remove {session_id: session_id}
       .run()
-
     else
       console.log "[SyncMail-(#{user.services.google.email})] 1. got xoauth2gen"
       imapServer = new Imap({

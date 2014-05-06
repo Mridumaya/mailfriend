@@ -1,1 +1,1 @@
-meteor --settings server/settings.json
+NODE_OPTIONS='--debug' meteor --settings server/settings.json

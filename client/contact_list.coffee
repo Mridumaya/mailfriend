@@ -1,20 +1,24 @@
 Template.contact_list.helpers
   matchedContacts: ->
+    console.log 'Matched Contacts'
     if Session.get('searchQ')
       selector = {}
       _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
       _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
       _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
       _.extend(selector, {searchQ: Session.get('searchQ')})
-
       contacts = Contacts.find(selector).fetch()
-      contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
 
-      _.map contacts, (c, i) -> _.extend c, {index: i+1}
+      if contacts isnt undefined
+        contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
+        _.map contacts, (c, i) -> _.extend c, {index: i+1}
+      else
+        []
     else
       []
 
   unmatchedContacts: ->
+    console.log 'Unmatched Contacts'
     selector = {}
     _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
     _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
@@ -22,10 +26,12 @@ Template.contact_list.helpers
     _.extend(selector, {searchQ: {$ne: Session.get('searchQ')}}) if Session.get('searchQ')
 
     contacts = Contacts.find(selector).fetch()
-    contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
 
-    _.map contacts, (c, i) -> _.extend c, {index: i+1}
-
+    if contacts isnt undefined
+      contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
+      _.map contacts, (c, i) -> _.extend c, {index: i+1}
+    else
+      []
 
   receivedMessages: ->
     @uids?.length || 0
@@ -44,6 +50,13 @@ Template.contact_list.helpers
 
   searchQ: ->
     Session.get('searchQ') || ''
+
+  isSearchRunning: ->
+    searchStatus = SearchStatus.find({session_id: Meteor.default_connection._lastSessionId})
+    if searchStatus isnt null
+      searchStatus.count() > 0
+    else
+      false
 
 
 Template.contact_list.events
@@ -129,7 +142,7 @@ Template.contact_list.events
   'click .edit-search-term': (e) ->
     searchQuery = $('#s_term').val().trim()
     if searchQuery
-      searchContacts searchQuery, ->
+      searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
         console.log "search query changed"
         $("#searchTermModal").modal("hide")
 

@@ -17,54 +17,88 @@
                 <button class="btn btn-success add-all-relevant">choose all relevant</button>
             </div>
         </div>
-        {{#constant}}
         <select data-placeholder="Sort by people I've:" class="chosen-select" multiple style="width: 550px;">
             <option value="gmail-sent">Sent a message to in the last 3 months</option>
             <option value="gmail-received">Received a message from the last 3 months</option>
             <option value="gcontact">Added to my contact list</option>
             <option value="gmail-contacts">Click to get recipients of all your emails (Or it will only recent recipients)</option>
         </select>
-
-        {{/constant}}
-
         <div class="alert alert-warning alert-contact">Warning! Select emails of friends first!</div>
-        <div class="row">
-            <table id="contacts" class="table table-bordered table-hover contacts">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th style="width: 80px;">Sent in last 90 days</th>
-                    <th style="width: 80px;">Received in last 90 days</th>
-                    <th>On Contact list</th>
-                    <th>Relevant {{#if searchQ}}({{searchQ}}){{/if}}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#each matchedContacts}}
-                <tr class="contact" data-email="{{email}}">
-                    <td>{{name}}</td>
-                    <td>{{email}}</td>
-                    <td>{{sentMessages}}</td>
-                    <td>{{receivedMessages}}</td>
-                    <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
-                    <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
-                </tr>
-                {{/each}}
-
-                {{#each unmatchedContacts}}
-                <tr class="contact" data-email="{{email}}">
-                    <td>{{name}}</td>
-                    <td>{{email}}</td>
-                    <td>{{sentMessages}}</td>
-                    <td>{{receivedMessages}}</td>
-                    <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
-                    <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
-                </tr>
-                {{/each}}
-                </tbody>
-            </table>
+        <div class="row" style="margin-top: 25px;">
+            {{#if isSearchRunning}}
+                <img src="/images/ajax-loader.gif" alt="Loading...">
+            {{/if}}
+            <div class="well">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#matched-contacts-tab" data-toggle="tab">Matched Contacts</a></li>
+                    <li><a href="#unmatched-contacts-tab" data-toggle="tab">Unmatched Contacts</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="matched-contacts-tab">
+                        <div class="row">
+                            <table id="matched-contacts" class="table table-bordered table-hover contacts">
+                                <thead>
+                                <tr>
+                                    <th style="width: 32px"></th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th style="width: 80px;">Sent in last 90 days</th>
+                                    <th style="width: 80px;">Received in last 90 days</th>
+                                    <th>On Contact list</th>
+                                    <th>Relevant {{#if searchQ}}({{searchQ}}){{/if}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each matchedContacts}}
+                                        <tr class="contact" data-email="{{email}}">
+                                            <td class="icon" ><i></i></td>
+                                            <td>{{name}}</td>
+                                            <td>{{email}}</td>
+                                            <td>{{sentMessages}}</td>
+                                            <td>{{receivedMessages}}</td>
+                                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="unmatched-contacts-tab">
+                        <div class="row">
+                            <table id="unmatched-contacts" class="table table-bordered table-hover contacts">
+                                <thead>
+                                <tr>
+                                    <th style="width: 32px"></th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th style="width: 80px;">Sent in last 90 days</th>
+                                    <th style="width: 80px;">Received in last 90 days</th>
+                                    <th>On Contact list</th>
+                                    <th>Relevant {{#if searchQ}}({{searchQ}}){{/if}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each unmatchedContacts}}
+                                        <tr class="contact" data-email="{{email}}">
+                                            <td class="icon" ><i></i></td>
+                                            <td>{{name}}</td>
+                                            <td>{{email}}</td>
+                                            <td>{{sentMessages}}</td>
+                                            <td>{{receivedMessages}}</td>
+                                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+
         <div class="clear"></div>
         <!--<div class="row">-->
         <!--<label class="pull-right" >Step 3 of 4</label></div>-->

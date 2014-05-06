@@ -1,39 +1,6 @@
-#Template.layout.helpers
-#  hasLogin: ->
-#    !!Meteor.user()
-#  stepIsWelcome: ->
-#    Session.equals('STEP', "welcome")
-#  stepIsSearchQ: ->
-#    Session.equals('STEP', "searchq")
-#  stepIsContactList: ->
-#    Session.equals('STEP', "contact_list")
-#  stepIsConfirm: ->
-#    Session.equals('STEP', "confirm")
-#  picture: ->
-#    user = Meteor.user()
-#    if user and user.profile and user.profile.picture
-#      user.profile.picture
-#    else
-#      'images/default_user.jpg'
-#  name: ->
-#    user = Meteor.user()
-#    if user and user.profile and user.profile.given_name
-#      user.profile.given_name
-#    else
-#      'User'
-
-
-#Template.layout.events
-#  'click .logout': (e) ->
-#    e.preventDefault
-#    Meteor.logout()
-#    return true
-
 Template.masterLayout.helpers
   picture: ->
     user = Meteor.user()
-    console.log("Hello")
-    console.log(user)
     if user and user.profile and user.profile.picture
       return user.profile.picture
     return 'images/default_user.jpg'
@@ -49,6 +16,8 @@ Template.masterLayout.events
     e.preventDefault
     Router.go "edit_user_info"
 
+
+
 Template.feature_select.helpers
   name: ->
     user = Meteor.user()
@@ -61,75 +30,12 @@ Template.feature_select.events
   'click .btn-create-campaign': (e) ->
     mixpanel.track("visit new campaign", { });
     Router.go "new_campaign"
-#  'click .btn-view-campaign': (e) ->
-#    mixpanel.track("visit view campaign", { });
-#    Session.set("STEP", "welcome")
-#  'click .btn-view-messages': (e) ->
-#    Session.set("STEP", "welcome")
   'click .btn-view-campaign': (e) ->
     Router.go "list_campaign"
 
-initialize = true
-
-#Template.welcome.rendered = ->
-#  mixpanel.track("visits step 1 page", { });
-#  if(initialize)
-#    $('#own_message').wysihtml5({"image":false, "font-styles": false});
-#    initialize = false;
-#
-#Template.welcome.helpers
-#  name: ->
-#    user = Meteor.user()
-#    if user
-#      user.profile.name.split(" ")[0]
-#    else
-#      ''
-#  own_message: ->
-#    if Session.get("OWN_MESS") is 'undefined'
-#      Session.set "OWN_MESS", ""
-#    Session.get "OWN_MESS"
-#
-#  mail_title: ->
-#    if Session.get("MAIL_TITLE") is 'undefined'
-#      Session.set "MAIL_TITLE", Sharings.findOne(type: 'email')?.subject || ""    
-#    Session.get "MAIL_TITLE"
-#
-#  orig_message: ->
-#    if Session.get("ORIG_MESS") is `undefined`
-#      Session.set "ORIG_MESS", Messages.findOne()?.message || ""
-#    Session.get "ORIG_MESS"
-#
-#  sender: ->
-#    Sharings.findOne(type: 'email')?.senderName || "Someone"
-#
-#Template.welcome.events
-#  'click .original-message': (e) ->
-#    div = $(e.currentTarget)
-#    if($(div).attr("contenteditable"))
-#      return true;
-#    $("#defMessageModal").modal("show")
-#
-#  'click .msg-password': (e) ->
-#    console.log "test"
-#    password = $("#password").val()
-#    if validatePassword(password)
-#      message = $("#original_message").html()
-#      $("#original_message").remove()
-#      $('#original-message-holder').html '<textarea id="original_message">' + message + '</textarea>'
-#      $('#original_message').wysihtml5({"image":false, "font-styles": false});
-#      $("#defMessageModal").modal("hide")
-#
-#  'click .welcome-to-searchq': (e) ->
-#    Session.set "ORIG_MESS", $("#original_message").val() || $("#original_message").html()
-#    Session.set "OWN_MESS", $("#own_message").val() 
-#    Session.set "MAIL_TITLE", $("#subject").val() 
-#    Session.set "STEP", "searchq" 
-
-#Template.login.rendered = ->
 Template.home.rendered = ->
   mixpanel.track("view front page", { });
 
-#Template.login.events
 Template.home.events
   'click .add-google-oauth': (e) ->
     mixpanel.track("logs in", { });
@@ -157,51 +63,6 @@ Template.home.events
 
   'click #nav_down': (e) ->
     $('html, body').animate({scrollTop: $('#content').height()}, 800);
-
-
-#Template.searchQ.rendered = ->
-#  mixpanel.track("visits step 2 page", { });
-
-#Template.searchQ.helpers
-#  searchQ: ->
-#    Session.get('searchQ') || ''
-
-#Template.searchQ.events
-#  'click .search-button': (e) ->
-#    searchQuery = $('.search-query').val().trim()
-#    if searchQuery
-#      $(e.target).prop('disabled', true)
-#      # Meteor.setTimeout ->
-#      #   $(e.target).prop('disabled', false)
-#      # , 60*1000
-#      SearchStatus.insert {session_id: Meteor.default_connection._lastSessionId}
-#      searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
-#        Session.set('STEP', "contact_list")
-#    else
-#      $("#sq_error").toggleClass("hidden")
-
-#  'keypress .search-query': (e) ->
-#     $("#sq_error").addClass("hidden")
-
-#  'click .searchq-to-welcome': (e) ->
-#     Session.set("STEP", "welcome")
-
-searchContacts = (searchQuery, session_id, cb) ->
-  #$("#loading").show()
-
-  $.blockUI({ message: '<img src="/images/busy.gif" />  Loading...' });
-  Meteor.setTimeout ->
-    if Meteor.user()
-      Meteor.call 'searchContacts', searchQuery, session_id, (err) ->
-        Session.set('searchQ', searchQuery)
-        #$("#loading").hide()
-
-        #console.log 'searchContact Error: ', err if err
-        $.unblockUI()
-        cb()
-    else
-      searchContacts(searchQuery)
-  , 500
 
 clearAllSelection = () ->
   SelectedEmailsHelper.unselectAllEmails()

@@ -35,7 +35,7 @@ Template.new_campaign.events
   'click .search-tags': (e) ->
     searchQuery = $("#tags").tagit("assignedTags").join(" ");
     mixpanel.track("search tag", { });
-    searchContacts searchQuery, ->
+    searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
       console.log("show list")
       Session.set("contact_list", "yes")
   'keyup #own_message': (e) ->
@@ -48,7 +48,6 @@ Template.new_campaign.events
     Session.set("MAIL_TITLE", $("#subject").val())
     SaveCampaign()
     Router.go 'list_campaign'
-      #console.log "campagin: " + campaign_id
   'click .back-to-campaign-list': (e) ->
     Router.go '/campaigns'
 
@@ -65,7 +64,12 @@ Template.list_campaign.events
     'click .btn-create-campaign': (e) ->
         Router.go 'new_campaign'
 
+initialize = true
 Template.new_campaign.rendered = ->
+  if(initialize)
+    #$('#own_message').wysihtml5({"image":false, "font-styles": false});
+    initialize = false;
+
   $("#tags").tagit({
     afterTagAdded: (event,ui)->
       Session.set("search_tags", $("#tags").tagit("assignedTags"))
@@ -99,6 +103,17 @@ Template.new_campaign.rendered = ->
         $.gritter.add
           title: "Notification"
           text: "Campaign Saved!"
+
+@searchContacts = (searchQuery, session_id, cb) ->
+  if Meteor.user()
+    Meteor.call 'searchContacts', searchQuery, session_id, (err) ->
+      Session.set('searchQ', searchQuery)
+      console.log 'Search Contact err : ' + err
+      do cb
+
+      #$("#loading").hide()
+      #console.log 'searchContact Error: ', err if err
+      #$.unblockUI()
 
 @CampaignController = RouteController.extend
     onBeforeAction:->
