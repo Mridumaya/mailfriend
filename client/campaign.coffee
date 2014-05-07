@@ -42,6 +42,11 @@ Template.new_campaign.events
     message = $(e.currentTarget).val()
     get_entered_tags(message)
 
+  'change #own_message': () ->
+    console.log 'Testing'
+    #message = $(e.currentTarget).val()
+    #get_entered_tags(message)
+
   'click .btn-save-campaign': (e) ->
     console.log "save campaign"
     Session.set("OWN_MESS", $("#own_message").val())
@@ -67,7 +72,35 @@ Template.list_campaign.events
 initialize = true
 Template.new_campaign.rendered = ->
   if(initialize)
-    #$('#own_message').wysihtml5({"image":false, "font-styles": false});
+    #$("#own_message").wysihtml5 events:
+    #  load: ->
+    #    console.log "Loaded!"
+    #    return
+    #
+    #  change: ->
+    #    console.log "Changed"
+    #    return
+
+    #$("#own_message").wysihtml5
+    #  "image": false
+    #  "font-styles": false
+    #,
+    #  "events":
+    #    change: (e) ->
+    #      console.log 'Testing'
+    #      message = $(e.currentTarget).val()
+    #      get_entered_tags message
+    #      return
+    $("#own_message").wysihtml5
+      image: false
+      "font-styles": false
+      events:
+        change: () ->
+          message = $("#own_message").val()
+          get_entered_tags message
+          return
+
+
     initialize = false;
 
   $("#tags").tagit({
@@ -106,6 +139,8 @@ Template.new_campaign.rendered = ->
 
 @searchContacts = (searchQuery, session_id, cb) ->
   if Meteor.user()
+    SearchStatus.insert {session_id: session_id}
+    console.log SearchStatus.findOne()
     Meteor.call 'searchContacts', searchQuery, session_id, (err) ->
       Session.set('searchQ', searchQuery)
       console.log 'Search Contact err : ' + err

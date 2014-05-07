@@ -9,7 +9,7 @@ Template.contact_list.helpers
       _.extend(selector, {searchQ: Session.get('searchQ')})
       contacts = Contacts.find(selector).fetch()
 
-      if contacts isnt undefined
+      if contacts isnt undefined and contacts isnt null
         contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
         _.map contacts, (c, i) -> _.extend c, {index: i+1}
       else
@@ -27,7 +27,7 @@ Template.contact_list.helpers
 
     contacts = Contacts.find(selector).fetch()
 
-    if contacts isnt undefined
+    if contacts isnt undefined and contacts isnt null
       contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
       _.map contacts, (c, i) -> _.extend c, {index: i+1}
     else
@@ -47,11 +47,14 @@ Template.contact_list.helpers
     if Session.get('searchQ')
       (@name.indexOf(Session.get('searchQ')) isnt -1) || _.contains((@searchQ || []), Session.get('searchQ'))
 
-
   searchQ: ->
     Session.get('searchQ') || ''
 
   isSearchRunning: ->
+    SearchStatus.find({session_id: Meteor.default_connection._lastSessionId}).count() > 0
+
+  isSearchRunning1: ->
+    console.log 'Calling isSearchRunning'
     searchStatus = SearchStatus.find({session_id: Meteor.default_connection._lastSessionId})
     if searchStatus isnt null
       searchStatus.count() > 0
@@ -171,7 +174,6 @@ loadAllGmails = (isLoadAll) ->
     else
       loadAllGmails(isLoadAll)
   , 500
-
 
 
 Template.contact_list.rendered = ->
