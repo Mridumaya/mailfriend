@@ -10,3 +10,6 @@ Meteor.publish 'messages', ->
 
 Meteor.publish 'search_status', ->
 	SearchStatus.find()
+
+Meteor.publish 'user_messages', (email) ->
+	UserMessages.find({email: email})

@@ -5,7 +5,8 @@
       "google-contacts": {},
       "font-awesome": {},
       "bootstrap-3": {},
-      "bootstrap3-wysihtml5": {}
+      "bootstrap3-wysihtml5": {},
+      "handlebar-helpers": {}
     },
     "packages": {
       "google-contacts": {
@@ -23,11 +24,15 @@
         "tag": "v3.1.1-1",
         "commit": "63dd38968828bb8963636df93e9a1c45e2dfe67e"
       },
-      
       "bootstrap3-wysihtml5": {
         "git": "https://github.com/andreioprisan/meteor-bootstrap3-wysihtml5.git",
         "tag": "v0.3.3",
         "commit": "251d564c3eb5b5b7a89a3e3e63f58633e0816332"
+      },
+      "handlebar-helpers": {
+        "git": "https://github.com/raix/Meteor-handlebar-helpers.git",
+        "tag": "v0.1.1",
+        "commit": "0b407ab65e7c1ebd53d71aef0de2e2c1d21a597c"
       }
     }
   }

@@ -45,12 +45,28 @@ Template.welcome.helpers
     else
       ''
   own_message: ->
-    if Session.get("OWN_MESS") is 'undefined'
-      Session.set "OWN_MESS", ""
+    console.log Session.get "OWN_MESS"
+
+    if Session.get("OWN_MESS") is undefined || Session.get("OWN_MESS") is ""
+      if Meteor.user() isnt null
+        message = UserMessages.findOne({email: Meteor.user().profile.email})
+        if message isnt undefined
+          Session.set "OWN_MESS", message.htmlBody
+
+    if Session.get("OWN_MESS") is undefined
+        Session.set "OWN_MESS", ""
+
     Session.get "OWN_MESS"
 
   mail_title: ->
-    if Session.get("MAIL_TITLE") is 'undefined'
+    console.log Session.get "MAIL_TITLE"
+    if Session.get("OWN_MESS") is undefined || Session.get("OWN_MESS") is ""
+      if Meteor.user() isnt null
+        message = UserMessages.findOne({email: Meteor.user().profile.email})
+        if message isnt undefined
+          Session.set "MAIL_TITLE", message.subject
+
+    if Session.get("MAIL_TITLE") is undefined
       Session.set "MAIL_TITLE", Sharings.findOne(type: 'email')?.subject || ""    
     Session.get "MAIL_TITLE"
 
@@ -82,8 +98,23 @@ Template.welcome.events
   'click .welcome-to-searchq': (e) ->
     Session.set "ORIG_MESS", $("#original_message").val() || $("#original_message").html()
     Session.set "OWN_MESS", $("#own_message").val() 
-    Session.set "MAIL_TITLE", $("#subject").val() 
-    Session.set "STEP", "searchq" 
+    Session.set "MAIL_TITLE", $("#subject").val()
+
+    if Meteor.user() isnt undefined
+      #Save Message
+      message = UserMessages.findOne({email: Meteor.user().profile.email})
+      if message
+        UserMessages.update message._id,
+          $set:
+            subject: Session.get "MAIL_TITLE"
+            htmlBody: Session.get "OWN_MESS"
+      else
+        UserMessages.insert
+          email: Meteor.user().profile.email
+          subject: Session.get "MAIL_TITLE"
+          htmlBody: Session.get "OWN_MESS"
+
+    Session.set "STEP", "searchq"
 
 #Template.login.rendered = ->
 Template.home.rendered = ->

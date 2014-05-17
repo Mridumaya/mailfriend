@@ -3,10 +3,13 @@ Deps.autorun ->
   Meteor.subscribe 'messages', ->
     console.log 'Messages Subscribed :', new Date
 
-  
+  if Meteor.user() isnt null && Meteor.user().profile isnt undefined
+    Meteor.subscribe 'user_messages', Meteor.user().profile.email
+
   if Meteor.userId()
     Session.set('SUBSCRIBED_CONTACTS', false)
     Session.set('STEP', "welcome")
+
     Meteor.subscribe 'contacts', Meteor.userId(), ->
       console.log 'SUBSCRIBED_CONTACTS: ', Contacts.find({}).count(), new Date()
       Session.set('SUBSCRIBED_CONTACTS', true)
