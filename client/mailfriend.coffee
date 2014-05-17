@@ -102,9 +102,9 @@ Template.welcome.events
 
     if Meteor.user() isnt undefined
       #Save Message
-      message = UserMessages.findOne({email: Meteor.user().profile.email})
+      userMessage = UserMessages.findOne({email: Meteor.user().profile.email})
       if message
-        UserMessages.update message._id,
+        UserMessages.update userMessage._id,
           $set:
             subject: Session.get "MAIL_TITLE"
             htmlBody: Session.get "OWN_MESS"
@@ -113,6 +113,17 @@ Template.welcome.events
           email: Meteor.user().profile.email
           subject: Session.get "MAIL_TITLE"
           htmlBody: Session.get "OWN_MESS"
+
+      message = Messages.findOne()
+      if message
+        Messages.update message._id,
+          $set:
+            message: Session.get("ORIG_MESS")
+      else
+        Messages.insert
+          message: Session.get("ORIG_MESS")
+          password: 'queens'
+          created_at: new Date()
 
     Session.set "STEP", "searchq"
 
