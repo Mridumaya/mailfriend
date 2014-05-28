@@ -23,6 +23,14 @@ input[type=text],input[type=search],input[type=password], textarea {
     margin-right: 0px;
 }
 
+.mt60 {
+    margin-top: 60px;
+}
+
+.mt80 {
+    margin-top: 80px;
+}
+
 label{
     display: block;
     font-weight: normal;
@@ -289,4 +297,9 @@ table.contacts td{
     border-top: none;
     -webkit-border-radius: 0px 0px 5px 5px;
     border-radius: 0px 0px 5px 5px;
+}
+
+#tags {
+    border-radius: 4px;
+    margin-top: 32px;
 }
