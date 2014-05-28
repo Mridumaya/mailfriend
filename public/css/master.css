@@ -443,7 +443,7 @@ a span.my_inbox {
 .more_info_part ul li a h1 span {font-family: 'Lato', sans-serif;color:#333645; font-size:20px; font-weight:normal; text-transform:uppercase; transition:all 0.3s;}
 /*.more_info_part ul li a:hover >  h1 { color:#38a6a6;}
 .more_info_part ul li a:hover >  h1 span { color:#333645;}*/
-.more_info_part ul li a:hover > .write { background-position:0 -140px;}
+.more_info_part ul li a:hover > .write { background-position:1px -140px;}
 .more_info_part ul li a:hover > .search { background-position:-142px -139px;}
 .more_info_part ul li a:hover > .send_it { background-position:-295px -142px;}
 .explore_buttton { width:200px; margin:0 auto; position:relative;}
