@@ -1,8 +1,8 @@
-Template.home.events
-  'click .add-google-oauth': (e) ->
+googleOauthOpen = (ev) ->
+    ev.preventDefault()
     mixpanel.track("logs in", { });
     console.log new Date()
-    button = $(e.currentTarget)
+    button = $(ev.currentTarget)
     $(button).prop('disabled', true)
     Meteor.loginWithGoogle({
       requestPermissions: ["https://mail.google.com/", # imap
@@ -20,19 +20,52 @@ Template.home.events
           Router.go("feature_select")
           #Session.set("STEP", "feature_select")
     )
-  'click #register': (e) ->
-    e.preventDefault()
+
+
+registerOpen = (ev) ->
+    ev.preventDefault()
     mixpanel.track("click goto registration button", { });
     Router.go("register")
     #Session.set("STEP", "register")
-  'click .btn-standard-login': (e) ->
+
+
+manualLoginOpen = (ev) ->
+    ev.preventDefault()
     mixpanel.track("click goto standard login button", { });
-    #Session.set("STEP", "standard_login")
-    Router.go("standard_login")
+    Router.go("manual_login")
+    #Session.set("STEP", "manual_login")
+
+
+# home template events
+Template.home.events
+  'click .add-google-oauth': (e) ->
+    googleOauthOpen(e)
+
+  'click .register': (e) ->
+    registerOpen(e)
+
+  'click .btn-standard-login': (e) ->
+    manualLoginOpen(e)
+
+
 Template.login.rendered = ->
   mixpanel.track("view front page", { });
 
-Template.standard_login.events
+
+# login template events
+Template.login.events
+  'click .add-google-oauth': (e) ->
+    googleOauthOpen(e)
+
+  'click .register': (e) ->
+    registerOpen(e)
+
+  'click .btn-standard-login': (e) ->
+    manualLoginOpen(e)
+
+
+# manual login template events
+Template.manual_login.events
   'click .btn-try-login': (e) ->
     e.preventDefault()
 

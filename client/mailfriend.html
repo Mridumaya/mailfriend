@@ -46,8 +46,8 @@
     <section class="wrapper">
         <header>
             <div class="mobile-header">
-                <h1 class="logo"><a href="#"><img  src="images/logo.png" alt="Mailfriend" title="Mailfriend"></a></h1>
-                <h1 class="logo_2"><a href="#"><img  src="images/logo_2.png" alt="Mailfriend" title="Mailfriend"></a></h1>
+                <h1 class="logo"><a href="#"><img src="images/logo.png" alt="Mailfriend" title="Mailfriend"></a></h1>
+                <h1 class="logo_2"><a href="#"><img src="images/logo_2.png" alt="Mailfriend" title="Mailfriend"></a></h1>
                 <article class="user_pic">
                     <ul>
                         <li><img src="{{picture}}" alt="user_pic" title="user_pic" height="44" width="44"></li>
@@ -68,7 +68,7 @@
 </template>
 
 <template name="masterLogoutLayout">
-    {{> home}}
+    {{> yield}}
     <footer></footer>
 </template>
 
@@ -110,13 +110,13 @@
     <section id="content" class="header_part">
         <div class="home_wrapper">
             <div class="header_part_top">
-                <h1 class="home_logo"> <a href="#" ><img src="images/Home_logo.png" alt="MailFriend"></a></h1>
+                <h1 class="home_logo"><a href="{{pathFor 'home'}}"><img src="images/Home_logo.png" alt="MailFriend"></a></h1>
                 <div class="manubar">
                     <ul>
-                        <li> <a href="#">FAQ</a> </li>
-                        <li> <a href="#">About</a> </li>
-                        <li> <a href="#">Login</a> </li>
-                        <li> <a href="#" class="active">Sign up</a> </li>
+                        <li><a href="{{pathFor 'faq'}}" class="nav-faq">FAQ</a></li>
+                        <li><a href="{{pathFor 'about'}}" class="nav-about">About</a></li>
+                        <li><a href="{{pathFor 'login'}}" class="nav-login">Login</a></li>
+                        <li><a href="#" class="nav-sign-up active register">Sign up</a></li>
                     </ul>
                 </div>
                 <div class="header_part_2">
@@ -150,6 +150,18 @@
             <a href="#" class="button add-google-oauth">Login with your Gmail account</a>
         </div>
     </section>
+</template>
+
+<template name="faq">
+    <div class="row text-center" style="margin-top: 50px;color:white;">
+        <h3>FAQ</h3>
+    </div>
+</template>
+
+<template name="about">
+    <div class="row text-center" style="margin-top: 50px;color:white;">
+        <h3>About</h3>
+    </div>
 </template>
 
 <template name="feature_select">
