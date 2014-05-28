@@ -70,6 +70,7 @@ Template.list_campaign.events
         Router.go 'new_campaign'
 
 initialize = true
+
 Template.new_campaign.rendered = ->
   if(initialize)
     #$("#own_message").wysihtml5 events:
@@ -91,6 +92,7 @@ Template.new_campaign.rendered = ->
     #      message = $(e.currentTarget).val()
     #      get_entered_tags message
     #      return
+
     $("#own_message").wysihtml5
       image: false
       "font-styles": false
@@ -99,7 +101,6 @@ Template.new_campaign.rendered = ->
           message = $("#own_message").val()
           get_entered_tags message
           return
-
 
     initialize = false;
 
