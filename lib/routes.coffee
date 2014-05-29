@@ -63,7 +63,7 @@ Router.map ->
   @route "new_campaign",
     path: "/campaign/new",
     data: ->
-      Campaigns.findOne _id: Session.get("campaign_id")  if Session.get("campaign_id")
+      Campaigns.findOne _id: Session.get("campaign_id") if Session.get("campaign_id")
 
   @route "delete_campaign",
     path: "campaign/delete/:_id",

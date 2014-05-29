@@ -14,22 +14,33 @@ Template.list_campaign.helpers
     return Campaigns.find()
 
 @key_up_delay = 0;
-get_entered_tags = (message) ->
-  if(@key_up_delay)
+getEnteredTags = () ->
+  if (@key_up_delay)
     clearTimeout @key_up_delay
+
+  message = $('#own_message').val()
+
   @key_up_delay = setTimeout(->
     $("#tags").tagit("assignedTags")
     re = /(?:^|\W)#(\w+)(?!\w)/g
     match
     tags = new Array()
 
+    # clear tags
     $("#tags").tagit("removeAll")
+
+    # add predefined tags 
+    searchTags = $('#campaign-tags').val().split(' ')
+    _.each(searchTags || [],(item) ->
+      $("#tags").tagit("createTag", item)
+    )
+
     while (match = re.exec(message))
       $("#tags").tagit("createTag", match[1]);
       tags.push match[1]
 
     Session.set("search_tags", tags)
-  , 500)
+  , 1000)
 
 Template.new_campaign.events
   'click .search-tags': (e) ->
@@ -38,14 +49,10 @@ Template.new_campaign.events
     searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
       console.log("show list")
       Session.set("contact_list", "yes")
-  'keyup #own_message': (e) ->
-    message = $(e.currentTarget).val()
-    get_entered_tags(message)
 
-  'change #own_message': () ->
-    console.log 'Testing'
-    #message = $(e.currentTarget).val()
-    #get_entered_tags(message)
+  'click .tagit-close': (e) ->
+    addedTags = $("#tags").tagit("assignedTags").join(" ")
+    $('#campaign-tags').val(addedTags)
 
   'click .btn-save-campaign': (e) ->
     console.log "save campaign"
@@ -53,72 +60,70 @@ Template.new_campaign.events
     Session.set("MAIL_TITLE", $("#subject").val())
     SaveCampaign()
     Router.go 'list_campaign'
+
   'click .back-to-campaign-list': (e) ->
-    Router.go '/campaigns'
+    Router.go 'list_campaign'
+
+  'click .back-to-feature-select': (e) ->
+    Router.go 'feature_select'
 
 Template.list_campaign.events
-    'click .delete-campaign': (e)->
-        console.log $(e.currentTarget).attr('data-id')
-        if(confirm('Are you sure?'))
-            Meteor.call 'deleteCampaign', $(e.currentTarget).attr('data-id')
+  'click .delete-campaign': (e)->
+      console.log $(e.currentTarget).attr('data-id')
+      if(confirm('Are you sure?'))
+          Meteor.call 'deleteCampaign', $(e.currentTarget).attr('data-id')
 
-    'click .edit-campaign': (e)->
-        Session.set 'campaign_id', $(e.currentTarget).attr('data-id')
-        Router.go 'new_campaign'
+  'click .edit-campaign': (e)->
+      Session.set 'campaign_id', $(e.currentTarget).attr('data-id')
+      Router.go 'new_campaign'
 
-    'click .btn-create-campaign': (e) ->
-        Router.go 'new_campaign'
+  'click .btn-create-campaign': (e) ->
+      delete Session.keys['campaign_id']
+      Router.go 'new_campaign'
 
 initialize = true
-
 Template.new_campaign.rendered = ->
-  if(initialize)
-    #$("#own_message").wysihtml5 events:
-    #  load: ->
-    #    console.log "Loaded!"
-    #    return
-    #
-    #  change: ->
-    #    console.log "Changed"
-    #    return
-
-    #$("#own_message").wysihtml5
-    #  "image": false
-    #  "font-styles": false
-    #,
-    #  "events":
-    #    change: (e) ->
-    #      console.log 'Testing'
-    #      message = $(e.currentTarget).val()
-    #      get_entered_tags message
-    #      return
+  if (initialize)
+    messageLength = 0
+    interval = 0
 
     $("#own_message").wysihtml5
       image: false
       "font-styles": false
       events:
-        change: () ->
-          message = $("#own_message").val()
-          get_entered_tags message
-          return
+        focus: () ->
+          interval = setInterval(->
+            tmpLength = $('#own_message').val().length
+            if (tmpLength isnt messageLength)
+              messageLength = tmpLength
+              
+              getEnteredTags()
+              return
+          ,100)
 
-    initialize = false;
+        blur: () ->
+          clearInterval interval
+
+    # initialize = false;
 
   $("#tags").tagit({
     afterTagAdded: (event,ui)->
       Session.set("search_tags", $("#tags").tagit("assignedTags"))
-      Session.set("searchQ", $("#tags").tagit("assignedTags").join(" "))
+      addedTags = $("#tags").tagit("assignedTags").join(" ")
+      Session.set("searchQ", addedTags)
+      $('#campaign-tags').val(addedTags)
+
     afterTagRemoved: (event,ui)->
       Session.set("search_tags", $("#tags").tagit("assignedTags"))
       Session.set("searchQ", $("#tags").tagit("assignedTags").join(" "))
   })
-  _.each(Session.get("search_tags")|| [],(item) ->
-    $("#tags").tagit("createTag", item);
-  )
+
   if Session.get 'campaign_id'
-    Meteor.defer ->
-        message = $('#own_message').val()
-        get_entered_tags(message)
+    getEnteredTags()
+
+    # Meteor.defer ->
+      # message = $('#own_message').val()
+      # getEnteredTags(message)
 
 
 @SaveCampaign = ->

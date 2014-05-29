@@ -1,7 +1,11 @@
 <template name="new_campaign">
     <div class="row mt80">
         <div class="col-md-8">
+            {{#if _id}}
             <button class="btn back-to-campaign-list"><i class="glyphicon glyphicon-chevron-left"></i> Back to Campaigns</button>
+            {{else}}
+            <button class="btn back-to-feature-select"><i class="glyphicon glyphicon-chevron-left"></i> Back to Start page</button>
+            {{/if}}
         </div>
     </div>
     <div class="row new-capaign">
@@ -9,11 +13,12 @@
             <h3>Create a new campaign</h3>
             <input class="subject col-sm-12 col-md-12 col-lg-12" id="subject" type="text" placeholder="Subject:" value="{{subject}}">
             <textarea id="own_message">{{body}}</textarea>    
-            <button class="btn btn-primary btn-save-campaign pull-right"> Save</button>
+            <button class="btn btn-primary btn-save-campaign pull-right">Save</button>
         </div>
         <div class="col-md-4">
-            <span>Share this campaign: </span>
+            <span>Share this campaign:</span>
             <a href="http://bit.ly/1fNinNZ" target="_blank">http://bit.ly/1fNinNZ</a>
+            <input type="hidden" value="{{search_tags}}" id="campaign-tags">
             <ul id="tags"></ul>
             <button class="btn btn-default search-tags">Search</button>
         </div>
@@ -30,7 +35,9 @@
     <div class="row">
         <div class="col-md-8"></div>
         <div class="col-md-4 pull-right">
-            <button class="btn btn-default btn-lg btn-block btn-create-campaign"><i class="glyphicon glyphicon-plus"></i> Create a new email campaign</button>
+            <button class="btn btn-default btn-lg btn-block btn-create-campaign">
+                <i class="glyphicon glyphicon-plus"></i> Create a new email campaign
+            </button>
         </div>
     </div>
     <div class="row" style="margin-top: 25px;">

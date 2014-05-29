@@ -303,3 +303,11 @@ table.contacts td{
     border-radius: 4px;
     margin-top: 32px;
 }
+
+#tags li {
+    background-color: none !important;
+}
+
+.search-tags {
+    margin-top: 10px;
+}
