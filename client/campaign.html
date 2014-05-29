@@ -11,14 +11,14 @@
     <div class="row new-capaign">
         <div class="col-md-8">
             <h3>Create a new campaign</h3>
-            <input class="subject col-sm-12 col-md-12 col-lg-12" id="subject" type="text" placeholder="Subject:" value="{{subject}}">
-            <textarea id="own_message">{{body}}</textarea>    
+            <input class="subject col-sm-12 col-md-12 col-lg-12" id="subject" type="text" placeholder="Subject:" value="{{#if _id}}{{subject}}{{/if}}">
+            <textarea id="own_message">{{#if _id}}{{body}}{{/if}}</textarea>    
             <button class="btn btn-primary btn-save-campaign pull-right">Save</button>
         </div>
         <div class="col-md-4">
             <span>Share this campaign:</span>
             <a href="http://bit.ly/1fNinNZ" target="_blank">http://bit.ly/1fNinNZ</a>
-            <input type="hidden" value="{{search_tags}}" id="campaign-tags">
+            <input type="hidden" value="{{#if _id}}{{search_tags}}{{/if}}" id="campaign-tags">
             <ul id="tags"></ul>
             <button class="btn btn-default search-tags">Search</button>
         </div>

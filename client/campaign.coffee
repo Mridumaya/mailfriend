@@ -70,7 +70,7 @@ Template.new_campaign.events
 Template.list_campaign.events
   'click .delete-campaign': (e)->
       console.log $(e.currentTarget).attr('data-id')
-      if(confirm('Are you sure?'))
+      if (confirm('Are you sure?'))
           Meteor.call 'deleteCampaign', $(e.currentTarget).attr('data-id')
 
   'click .edit-campaign': (e)->
@@ -78,6 +78,7 @@ Template.list_campaign.events
       Router.go 'new_campaign'
 
   'click .btn-create-campaign': (e) ->
+      mixpanel.track("visit new campaign", { });
       delete Session.keys['campaign_id']
       Router.go 'new_campaign'
 

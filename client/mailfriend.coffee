@@ -17,6 +17,10 @@ Template.masterLayout.events
     Router.go "edit_user_info"
 
 
+Template.feature_select.rendered = ->
+  $('#manual-login-dialog').modal('hide')
+  $('#login-dialog').modal('hide')
+  $('#register-dialog').modal('hide')
 
 Template.feature_select.helpers
   name: ->
@@ -29,7 +33,9 @@ Template.feature_select.helpers
 Template.feature_select.events
   'click .btn-create-campaign': (e) ->
     mixpanel.track("visit new campaign", { });
+    delete Session.keys['campaign_id']
     Router.go "new_campaign"
+
   'click .btn-view-campaign': (e) ->
     Router.go "list_campaign"
 
@@ -303,12 +309,12 @@ clickSendMessages = (toEmails=[])->
 #      $('.draft-close').trigger('click')
 
 
-Template.google_api_modal.helpers
+Template.google_api_dialog.helpers
   'domain': ->
     Meteor.absoluteUrl()
 
 
-Template.google_api_modal.events
+Template.google_api_dialog.events
   'keypress .client-id': (e) ->
     $('.client-secret').focus() if e.which is 13
 
@@ -323,3 +329,4 @@ Template.google_api_modal.events
       Meteor.call 'initGoogleOauth', id, secret, (err) ->
         console.log err if err
         GoogleAccountChecker.checkGoogleApi()
+        $('#google-api-modal').modal('hide');

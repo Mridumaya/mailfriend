@@ -28,15 +28,15 @@ Router.map ->
     template: "home",
     path: "/home"
 
-  @route "login",
-    layoutTemplate: "masterLogoutLayout",
-    template: "login",
-    path: "/login"
+  # @route "login",
+  #   layoutTemplate: "masterLogoutLayout",
+  #   template: "login",
+  #   path: "/login"
 
-  @route "register",
-    layoutTemplate: "masterLogoutLayout",
-    template: "register",
-    path: "/register"
+  # @route "register",
+  #   layoutTemplate: "masterLogoutLayout",
+  #   template: "register",
+  #   path: "/register"
 
   @route "about",
     layoutTemplate: "masterLogoutLayout",
@@ -48,10 +48,10 @@ Router.map ->
     template: "faq",
     path: "/faq"
 
-  @route "manual_login",
-    layoutTemplate: "masterLogoutLayout",
-    template: "manual_login",
-    path: "/manual_login"
+  # @route "manual_login",
+  #   layoutTemplate: "masterLogoutLayout",
+  #   template: "manual_login",
+  #   path: "/manual_login"
 
   @route "feature_select",
     layoutTemplate: 'masterLayout',

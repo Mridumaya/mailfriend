@@ -36,7 +36,11 @@
 {{#if isSuccess}}
 <div class="alert alert-success">{{successMessage}}</div>
 {{/if}}
-{{> google_api_modal}}
+
+{{> google_api_dialog}}
+{{> login_dialog}}
+{{> register_dialog}}
+{{> manual_login_dialog}}
 <!--{{> layout }}-->
 <!--{{> masterLayout}}-->
 </body>
@@ -72,9 +76,8 @@
     <footer></footer>
 </template>
 
-<template name="google_api_modal">
-    <div id="google-api-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
+<template name="google_api_dialog">
+    <div id="google-api-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -115,7 +118,7 @@
                     <ul>
                         <li><a href="{{pathFor 'faq'}}" class="nav-faq">FAQ</a></li>
                         <li><a href="{{pathFor 'about'}}" class="nav-about">About</a></li>
-                        <li><a href="{{pathFor 'login'}}" class="nav-login">Login</a></li>
+                        <li><a href="#" class="nav-login" data-target="#login-dialog" data-toggle="modal">Login</a></li>
                         <li><a href="#" class="nav-sign-up active register">Sign up</a></li>
                     </ul>
                 </div>
@@ -252,6 +255,7 @@
         </div>
     </article>
 </template>
+
 <template name="loading">
     <article>
         <div class="main2">
@@ -259,6 +263,7 @@
         </div>
     </article>
 </template>
+
 <template name="error">
     <article>
         <div class="main2">
