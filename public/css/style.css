@@ -23,6 +23,14 @@ input[type=text],input[type=search],input[type=password], textarea {
     margin-right: 0px;
 }
 
+.mt10 {
+    margin-top: 10px;
+}
+
+.mt30 {
+    margin-top: 30px;
+}
+
 .mt60 {
     margin-top: 60px;
 }
@@ -37,6 +45,10 @@ input[type=text],input[type=search],input[type=password], textarea {
 
 .mrm8 {
     margin-right: -8px;
+}
+
+.mlm14 {
+    margin-left: -14px;
 }
 
 label{

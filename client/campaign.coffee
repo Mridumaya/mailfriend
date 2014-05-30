@@ -82,6 +82,9 @@ Template.list_campaign.events
       delete Session.keys['campaign_id']
       Router.go 'new_campaign'
 
+  'click .back-to-feature-select': (e) ->
+    Router.go 'feature_select'      
+
 initialize = true
 Template.new_campaign.rendered = ->
   if (initialize)
