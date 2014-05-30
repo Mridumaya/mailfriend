@@ -318,7 +318,6 @@ Template.google_api_dialog.events
   'keypress .client-id': (e) ->
     $('.client-secret').focus() if e.which is 13
 
-
   'click .google-api-set': (e) ->
     id = $('.client-id').val().trim()
     secret = $('.client-secret').val().trim()
@@ -329,4 +328,4 @@ Template.google_api_dialog.events
       Meteor.call 'initGoogleOauth', id, secret, (err) ->
         console.log err if err
         GoogleAccountChecker.checkGoogleApi()
-        $('#google-api-modal').modal('hide');
+        # $('#google-api-modal').modal('hide');

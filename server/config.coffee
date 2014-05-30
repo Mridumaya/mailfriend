@@ -1,14 +1,14 @@
 @GlobalConfiguration = {
     init: ->
         if(Meteor.settings != undefined)
-            console.log 'Starting server with following settings'
+            Meteor.log.info 'Starting server with following settings'
             console.log Meteor.settings
 
         Meteor.log.info 'Calling GlobalConfiguration init.'
         this.initGoogleOauth()
 
     initGoogleOauth: ->
-        if(!this.checkGoogleApi() && Meteor.settings.google != undefined )
+        if(!this.checkGoogleApi() && Meteor.settings.google != undefined)
             Meteor.log.info 'Setting Google API keys.'
             ServiceConfiguration.configurations.remove service: "google"
             ServiceConfiguration.configurations.insert
@@ -25,8 +25,8 @@
 }
 
 Meteor.methods
-    checkGoogleApi: ->
+    checkGoogleApi: () ->
         GlobalConfiguration.checkGoogleApi()
 
-    initGoogleOauth: ->
+    initGoogleOauth: () ->
         GlobalConfiguration.initGoogleOauth()
