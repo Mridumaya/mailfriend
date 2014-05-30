@@ -151,7 +151,6 @@ Template.register_dialog.rendered = ->
 
 Template.edit_user_info.helpers
   first_name: ->
-    console.log Meteor.user().profile.first_name
     return Meteor.user().profile.first_name
   last_name: ->
     return Meteor.user().profile.last_name

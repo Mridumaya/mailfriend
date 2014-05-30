@@ -4,6 +4,13 @@ Template.masterLayout.helpers
     if user and user.profile and user.profile.picture
       return user.profile.picture
     return 'images/default_user.jpg'
+
+  fname: ->
+    return Meteor.user().profile.first_name
+
+  lname: ->
+    return Meteor.user().profile.last_name
+
   hasLogin: ->
     !!Meteor.user()
 
@@ -12,7 +19,8 @@ Template.masterLayout.events
     e.preventDefault
     Meteor.logout()
     return true
-  'click .edit': (e) ->
+
+  'click .edit-user-info': (e) ->
     e.preventDefault
     Router.go "edit_user_info"
 

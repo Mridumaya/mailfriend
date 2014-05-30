@@ -54,9 +54,15 @@
                 <h1 class="logo_2"><a href="{{pathFor 'feature_select'}}"><img src="images/logo_2.png" alt="Mailfriend" title="Mailfriend"></a></h1>
                 <article class="user_pic">
                     <ul>
-                        <li><img src="{{picture}}" alt="user_pic" title="user_pic" height="44" width="44"></li>
-                        <li><a href="#"> {{name}} </a></li>
-                        <li class="bg_none"><a href="#" class="logout"><img src="images/logout_pic.png" alt="logout" title="logout"></a></li>
+                        <li>
+                            <img src="{{picture}}" alt="user_pic" title="user_pic" height="44" width="44">
+                        </li>
+                        <li>
+                            <a href="#" class="edit-user-info">{{fname}} {{lname}}</a>
+                        </li>
+                        <li class="bg_none">
+                            <a href="#" class="logout"><img src="images/logout_pic.png" alt="Sign out" title="Sign out"></a>
+                        </li>
                     </ul>
                 </article>
             </div>
@@ -220,11 +226,8 @@
         <div class="row">
             <label class="pull-right" style="margin-right: 13px; margin-top: 10px;">Step 4 of 4</label></div>
         <div class="row">
-            <button class="btn btn-primary pull-right draft-send" style="margin-right: 10px;" type="button">Send
-            </button>
-            <button class="btn btn-default pull-right confirm-to-contact-list" style="margin-right: 10px;"
-                    type="button">Back
-            </button>
+            <button class="btn btn-primary pull-right draft-send" style="margin-right: 10px;" type="button">Send</button>
+            <button class="btn btn-default pull-right confirm-to-contact-list" style="margin-right: 10px;" type="button">Back</button>
         </div>
         <div class="row text-center success hidden">
             <h4>Your email has been sent!</h4>
