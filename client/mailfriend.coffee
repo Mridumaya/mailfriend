@@ -24,6 +24,9 @@ Template.masterLayout.events
     e.preventDefault
     Router.go "edit_user_info"
 
+  'click .back-to-feature-select': (e) ->
+    Router.go 'feature_select'    
+
 
 Template.feature_select.rendered = ->
   $('#manual-login-dialog').modal('hide')
