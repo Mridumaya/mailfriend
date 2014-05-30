@@ -24,9 +24,9 @@
         !!googleSettings
 }
 
-Meteor.methodsz
-    # checkGoogleApi: () ->
-    #     GlobalConfiguration.checkGoogleApi() # temporarily commented out, have to find solution how to load settings on startup
+Meteor.methods
+    checkGoogleApi: () ->
+        GlobalConfiguration.checkGoogleApi()
 
-    # initGoogleOauth: () ->
-    #     GlobalConfiguration.initGoogleOauth() # temporarily commented out, have to find solution how to load settings on startup
+    initGoogleOauth: () ->
+        GlobalConfiguration.initGoogleOauth()
