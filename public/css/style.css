@@ -372,3 +372,16 @@ table.contacts td{
 #register-dialog .modal-footer {
     padding-top: 0 !important;
 }
+
+.edit-campaign {
+    margin-right: 10px;
+}
+
+#matched-contacts {
+    background-color: #fefefe;
+    border-radius: 5px
+}
+
+#matched-contacts tbody td {
+    vertical-align: middle;
+}
