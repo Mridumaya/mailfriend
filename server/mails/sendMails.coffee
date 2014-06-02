@@ -6,15 +6,22 @@ Meteor.methods
     check(body, String)
     check(to, [String])
 
+    # console.log subject
+    # console.log body
+    # console.log to
+
     user = Meteor.users.findOne({_id: @userId, 'services.google': {$exists: true}})
     throw new Meteor.Error '404', "sendMail user not found" unless user
 
-    email = user.services.google.email
+    # console.log Meteor.settings.google.api
+    # console.log Meteor.settings.google.secret
+
+    from = user.services.google.email
     transportOptions = {
         auth: {
             XOAuth2: {
-                user: email,
-                clientId: Meteor.settings.google.id,
+                user: from,
+                clientId: Meteor.settings.google.api,
                 clientSecret: Meteor.settings.google.secret,
                 refreshToken: user.services.google.refreshToken,
                 accessToken: Meteor.settings.google.accessToken,
@@ -22,7 +29,9 @@ Meteor.methods
             }
         }
     }
-    console.log 'send mail to ', to.join(';')
+    # console.log 'send mail to ', to.join(';')
+    # console.log transportOptions
+
     transport = Nodemailer.createTransport "Gmail", transportOptions
 
     from = "#{user.services.google.name} <#{from}>"
@@ -37,6 +46,8 @@ Meteor.methods
         subject: subject
         html: body
         generateTextFromHTML: true
+
+      # console.log mailOptions
 
       transport.sendMail mailOptions, (error, responseStatus)->
         if(!error)
