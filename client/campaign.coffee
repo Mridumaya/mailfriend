@@ -46,9 +46,11 @@ Template.new_campaign.events
   'click .search-tags': (e) ->
     searchQuery = $("#tags").tagit("assignedTags").join(" ");
     mixpanel.track("search tag", { });
+    searchLoader('show');
     searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
       console.log("show list")
       Session.set("contact_list", "yes")
+      searchLoader('hide');
 
   'click .tagit-close': (e) ->
     addedTags = $("#tags").tagit("assignedTags").join(" ")
@@ -128,6 +130,14 @@ Template.new_campaign.rendered = ->
     # Meteor.defer ->
       # message = $('#own_message').val()
       # getEnteredTags(message)
+
+
+@searchLoader= (action) ->
+  loader = $('#search-loader')
+  if action is 'show'
+    loader.removeClass('hidden')
+  else if action is 'hide'
+    loader.addClass('hidden')
 
 
 @SaveCampaign = ->

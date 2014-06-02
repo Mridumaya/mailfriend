@@ -462,7 +462,7 @@ hr { background:url(../images/hr_bg.png) repeat-x; float:left; width:100%; heigh
 .ie7 .home_mail_content .button { margin-left:20px; margin-bottom:110px !important;}
 footer { width:100%;background:#333645; float:left; margin-top: -75px; height: 75px; }
 .ie7 footer { margin-top:110px;}
-footer .logo { margin:22px 0 22px 0;  }
+footer .logo { margin:20px 0 20px 0;  }
 .ie7 footer .logo { margin:22px 0 22px 0;  }
 footer h2 { float:right; margin-top:33px;  color:#ced3d7;font-family: 'Lato', sans-serif;font-size:12px;  }
 .ie7 footer h2 { margin-top:10px;}

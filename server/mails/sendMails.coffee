@@ -42,6 +42,9 @@ Meteor.methods
         if(!error)
           console.log(responseStatus.message) # response from the server
           console.log(responseStatus.messageId) # Message-ID value used
+        else
+          console.log error
+
         onComplete(error, responseStatus)
 
       return future

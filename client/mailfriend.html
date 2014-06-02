@@ -58,7 +58,7 @@
                             <img src="{{picture}}" alt="user_pic" title="user_pic" height="44" width="44">
                         </li>
                         <li>
-                            <a href="#" class="edit-user-info">{{fname}} {{lname}}</a>
+                            <a href="#" class="edit-user-info">{{fullname}}</a>
                         </li>
                         <li class="bg_none">
                             <a href="#" class="logout"><img src="images/logout_pic.png" alt="Sign out" title="Sign out"></a>
@@ -74,12 +74,23 @@
     {{else}}
     {{> home}}
     {{/if}}
-    <footer></footer>
+    
+    {{> footer}}
 </template>
 
 <template name="masterLogoutLayout">
     {{> yield}}
-    <footer></footer>
+
+    {{> footer}}
+</template>
+
+<template name="footer">
+    <footer>
+        <div class="home_wrapper">
+            <h1 class="logo"><a href="#"><img src="images/footer_logo.png" alt="Mailfriend"></a></h1>
+            <h2>Copyright &copy; 2014 Reviver. All Rights Reserved.</h2>
+        </div>
+    </footer>
 </template>
 
 <template name="google_api_dialog">
@@ -214,17 +225,18 @@
 
         <div class="preview">
             <h4>Subject:</h4>
+            <p class="draft-subject">{{subject}}</p>
 
-            <p class="draft-subject"></p>
             <h4>Body:</h4>
+            <p class="draft-body">{{user_message}}</p>
 
-            <p class="draft-body"></p>
             <h4>Send To:</h4>
-
-            <p class="draft-to"></p>
+            <p class="draft-to">{{emails}}</p>
         </div>
+
         <div class="row">
-            <label class="pull-right" style="margin-right: 13px; margin-top: 10px;">Step 4 of 4</label></div>
+            <label class="pull-right" style="margin-right: 13px; margin-top: 10px;">Step 4 of 4</label>
+        </div>
         <div class="row">
             <button class="btn btn-primary pull-right draft-send" style="margin-right: 10px;" type="button">Send</button>
             <button class="btn btn-default pull-right confirm-to-contact-list" style="margin-right: 10px;" type="button">Back</button>

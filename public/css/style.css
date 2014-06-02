@@ -385,3 +385,8 @@ table.contacts td{
 #matched-contacts tbody td {
     vertical-align: middle;
 }
+
+#search-loader {
+    margin-top: 9px;
+    margin-left: 10px
+}

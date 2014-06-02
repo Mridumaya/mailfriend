@@ -5,11 +5,8 @@ Template.masterLayout.helpers
       return user.profile.picture
     return 'images/default_user.jpg'
 
-  fname: ->
-    return Meteor.user().profile.first_name
-
-  lname: ->
-    return Meteor.user().profile.last_name
+  fullname: ->
+    return Meteor.user().profile.name
 
   hasLogin: ->
     !!Meteor.user()
@@ -137,33 +134,43 @@ Template.confirm.rendered = ->
 Template.confirm.helpers 
   subject: ->
     Session.get "MAIL_TITLE" || ""
+
   forwaded_message: ->
     Session.get "ORIG_MESS" || ""
+
   user_message: ->
     Session.get "OWN_MESS" || ""
+
   emails: ->
     to = []
     $(Session.get "CONF_DATA").each (index, value) -> 
-      to.push {'email': value}
-    to
+      to.push value
+    emails = to.join(', ')
+    emails
+
 
 Template.confirm.events
   'click .confirm-to-contact-list': (e) ->
-    mixpanel.track("click on cancel/back button", { });
-    Session.set("STEP", "contact_list")
+    mixpanel.track("click on cancel/back button", { })
+    window.history.back()
+    # Session.set("STEP", "contact_list")
+  
   'click #facebook': (e) ->
     window.open('https://www.facebook.com/sharer/sharer.php?u=http://mailfriend.meteor.com/', 'facebook-share-dialog', 'width=626,height=436');
+  
   'click #twitter': (e) ->
     window.open("http://twitter.com/share?text=" + encodeURIComponent("Check this cool pictures application http://mailfriend.meteor.com/"), 'twitter', "width=575, height=400");
+  
   'click #google': (e) ->
     window.open('https://plus.google.com/share?url=http://mailfriend.meteor.com/', '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');
+  
   'click #linkedin': (e) ->
     window.open("http://www.linkedin.com/shareArticle?mini=true&url=http://mailfriend.meteor.com/", '', "width=620, height=432");
 
-  'click a.draft-send': (e) ->
+  'click .draft-send': (e) ->
     e.preventDefault()
     subject = Session.get "MAIL_TITLE"
-    body = Session.get("OWN_MESS") + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
+    body = Session.get "OWN_MESS" # + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
     to = Session.get "CONF_DATA"
 
     console.log subject, body, to
