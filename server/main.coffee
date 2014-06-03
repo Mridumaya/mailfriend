@@ -6,7 +6,9 @@ Meteor.methods
     Meteor.users.update userId, {$set: {'profile.isLoadAll': isLoadAll}}, (err, num) ->
       syncMail(userId) if isLoadAll and !err
 
-  searchContacts: (searchQuery, session_id, userId = '') ->
+
+
+  'searchContacts': (searchQuery, session_id, userId = '') ->
     userId = userId || @userId
     Meteor.users.update userId, {$addToSet: {'profile.searchQuerys': searchQuery}}, (err, num) ->
       if err

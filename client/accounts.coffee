@@ -1,81 +1,44 @@
-googleOauthOpen = (ev) ->
-  ev.preventDefault()
-  mixpanel.track("logs in", { });
-  console.log new Date()
-  button = $(ev.currentTarget)
-  $(button).prop('disabled', true)
-  Meteor.loginWithGoogle({
-    requestPermissions: ["https://mail.google.com/", # imap
-                         "https://www.googleapis.com/auth/userinfo.profile", # profile
-                         "https://www.googleapis.com/auth/userinfo.email", # email
-                         "https://www.google.com/m8/feeds/" # contacts
-    ]
-    requestOfflineToken: true
-    forceApprovalPrompt: true
-  }, (err) ->
-    $(button).prop('disabled', false)
-    unless err
-      Meteor.call 'loadContacts', Meteor.userId(), (err) ->
-        console.log err if err
-        Router.go("feature_select")
-        #Session.set("STEP", "feature_select")
-  )
-
-
-registerOpen = (ev) ->
-  ev.preventDefault()
-  $('#login-dialog').modal('hide')
-  mixpanel.track("click goto registration button", { });
-  $('#register-dialog').modal('show')
-  # Router.go("register")
-  # Session.set("STEP", "register")
-
-
-manualLoginOpen = (ev) ->
-  ev.preventDefault()
-  $('#login-dialog').modal('hide')
-  mixpanel.track("click goto standard login button", { });
-  $('#manual-login-dialog').modal('show')
-  # Router.go("manual_login")
-  #Session.set("STEP", "manual_login")
-
-
-# home template events
 Template.home.events
   'click .add-google-oauth': (e) ->
-    googleOauthOpen(e)
-
-  'click .register': (e) ->
-    registerOpen(e)
-
+    mixpanel.track("logs in", { });
+    console.log new Date()
+    button = $(e.currentTarget)
+    $(button).prop('disabled', true)
+    Meteor.loginWithGoogle({
+      requestPermissions: ["https://mail.google.com/", # imap
+                           "https://www.googleapis.com/auth/userinfo.profile", # profile
+                           "https://www.googleapis.com/auth/userinfo.email", # email
+                           "https://www.google.com/m8/feeds/" # contacts
+      ]
+      requestOfflineToken: true
+      forceApprovalPrompt: true
+    }, (err) ->
+      $(button).prop('disabled', false)
+      unless err
+        Meteor.call 'loadContacts', Meteor.userId(), (err) ->
+          console.log err if err
+          Router.go("feature_select")
+          #Session.set("STEP", "feature_select")
+    )
+  'click #register': (e) ->
+    e.preventDefault()
+    mixpanel.track("click goto registration button", { });
+    Router.go("register")
+    #Session.set("STEP", "register")
   'click .btn-standard-login': (e) ->
-    manualLoginOpen(e)
-
-
-Template.login_dialog.rendered = ->
+    mixpanel.track("click goto standard login button", { });
+    #Session.set("STEP", "standard_login")
+    Router.go("standard_login")
+Template.login.rendered = ->
   mixpanel.track("view front page", { });
 
-
-# login template events
-Template.login_dialog.events
-  'click .add-google-oauth': (e) ->
-    googleOauthOpen(e)
-
-  'click .register': (e) ->
-    registerOpen(e)
-
-  'click .btn-standard-login': (e) ->
-    manualLoginOpen(e)
-
-
-# manual login template events
-Template.manual_login_dialog.events
+Template.standard_login.events
   'click .btn-try-login': (e) ->
     e.preventDefault()
 
-    Meteor.loginWithPassword($("#login-email").val(), $("#login-password").val(), (err) ->
+    Meteor.loginWithPassword($("#email").val(), $("#password").val(), (err) ->
       console.log err
-      if err && (err.error == 403 or err.error == 400)
+      if err && err.error == 403
         alert(err.reason)
         return
       unless err
@@ -86,13 +49,7 @@ Template.manual_login_dialog.events
           Router.go("feature_select")
     )
 
-
-Template.register_dialog.events
-  'click .add-google-oauth': (e) ->
-    googleOauthOpen(e)
-
-
-Template.register_dialog.rendered = ->
+Template.register.rendered = ->
   $("#frm_register").validate
     rules:
       first_name: "required"
@@ -125,32 +82,17 @@ Template.register_dialog.rendered = ->
 
       Meteor.call "create_user", profile, (err, user) ->
         console.log('[ERROR] create_user:', err) if err
-        
         if err?.reason == "Email already exist."
           alert("Email already exists, try again.")
           return
 
-        # console.log user
+        console.log user
         mixpanel.track("new user", { });
-
-        Meteor.loginWithPassword($(form).find("#email").val(), $(form).find("#password").val(), (err) ->
-          # console.log err
-          if err && err.error == 403
-            alert(err.reason)
-            return
-          unless err
-            mixpanel.track("logs in with password", { });
-            Meteor.call 'loadContacts', Meteor.userId(), (err) ->
-              # console.log err if err
-              #Session.set("STEP", "feature_select")
-              Router.go("feature_select")
-        )
-
-        Router.go("feature_select")
-        # Session.set("STEP","")
+        Router.go("feature_select")#Session.set("STEP","")
 
 Template.edit_user_info.helpers
   first_name: ->
+    console.log Meteor.user().profile.first_name
     return Meteor.user().profile.first_name
   last_name: ->
     return Meteor.user().profile.last_name
