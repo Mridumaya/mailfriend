@@ -1,90 +1,143 @@
-<template name="login">
-    <article>
-        <div class="main">
-            {{#if isError}}
-            <div class="alert alert-danger">{{errorMessage}}</div>
-            {{/if}}
-            {{#if isSuccess}}
-            <div class="alert alert-success">{{successMessage}}</div>
-            {{/if}}
-            <div class="title">Mailfriend lets you pass the word to your friends who might actually care</div>
-            <button class="btn btn-success btn-lg btn-block login add-google-oauth">Login with your Gmail account
-            </button>
-            <div class="row">
-                <button class="btn btn-default btn-standard-login">Standard Login</button>
-                <a href="#" id="register"> Register</a>
+<template name="login_dialog">
+    <div id="login-dialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="login-dialog-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">Mailfriend lets you pass the word to your friends who might actually care</h3>
+                </div>
+                <div class="modal-body">
+                    {{#if isError}}
+                    <div class="alert alert-danger">{{errorMessage}}</div>
+                    {{/if}}
+                    {{#if isSuccess}}
+                    <div class="alert alert-success">{{successMessage}}</div>
+                    {{/if}}
+                    <button class="btn btn-success btn-lg btn-block login add-google-oauth">Login with your Gmail account</button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default btn-standard-login">Standard Login</button>
+                    <button class="btn btn-default register">Register</button>
+                </div>
             </div>
         </div>
-    </article>
+    </div>
 </template>
 
-<template name="register">
-    <article style="margin-top: 110px;">
-        <h3>Registration</h3>
-        <fieldset>
-            <form id="frm_register" class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="first_name">First Name</label>
-                    <div class="col-sm-7">
-                        <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First Name"/>
-                    </div>
+<template name="register_dialog">
+    <div id="register-dialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="register-dialog-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">Registration</h3>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="last_name">Last Name</label>
-                    <div class="col-sm-7">
-                        <input type="text" id="last_name" name="last_name"  class="form-control" placeholder="Last Name"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="email">Email</label>
-                    <div class="col-sm-7">
-                        <input type="text" id="email" name="email" class="form-control" placeholder="Email"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="password">Password</label>
-                    <div class="col-sm-7">
-                        <input type="password" id="password" name="password" class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="confirm_password">Confirm Password</label>
-                    <div class="col-sm-7">
-                        <input type="password" id="confirm_password" name="confirm_password"  class="form-control"/>
-                    </div>
-                </div>
-                <div class="col-sm-9">
-                    <button type="submit" class="btn btn-primary pull-right">Register</button>
-                </div>
-            </form>
-        </fieldset>
-    </article>
+                <fieldset>
+                    <form id="frm_register" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="first_name">First Name</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First Name"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="last_name">Last Name</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="last_name" name="last_name"  class="form-control" placeholder="Last Name"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="email">Email</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="email" name="email" class="form-control" placeholder="Email"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="password">Password</label>
+                                <div class="col-sm-7">
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="Password"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="confirm_password">Confirm Password</label>
+                                <div class="col-sm-7">
+                                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirm Password"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success login add-google-oauth pull-right">Or register with your Gmail account</button>
+                            <button type="submit" class="btn btn-primary pull-right mr10">Register</button>
+                        </div>
+                    </form>
+                </fieldset>
+            </div>
+        </div>
+    </div>
 </template>
 
+<template name="manual_login_dialog">
+    <div id="manual-login-dialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manual-login-dialog-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">Login</h3>
+                </div>
+                <fieldset>
+                    <form id="frm_login" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="login-email">Email</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="login-email" name="login-email" class="form-control" placeholder="Email"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="login-password">Password</label>
+                                <div class="col-sm-9">
+                                    <input type="password" id="login-password" name="login-password" class="form-control" placeholder="Password"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-primary pull-right btn-try-login">Login</a>
+                        </div>
+                    </form>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</template>
 
 <template name="edit_user_info">
-    <div style="margin-top: 40px;">
-        <h2 class="text-center">User information</h2>
+    <div class="row mt80">
+        <div class="col-md-8">
+            <button class="btn back-to-feature-select"><i class="glyphicon glyphicon-chevron-left"></i> Back to Home Screen</button>
+        </div>
+    </div>    
+    <div class="row">
         <div class="row">
             <div class="col-md-6">
                 <h3>Update info</h3>
                 <fieldset>
                     <form id="frm_edit" class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="first_name">First Name</label>
-                            <div class="col-sm-7">
+                            <label class="col-sm-3 control-label" for="first_name">First Name</label>
+                            <div class="col-sm-6">
                                 <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First Name" value="{{first_name}}"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="last_name">Last Name</label>
-                            <div class="col-sm-7">
+                            <label class="col-sm-3 control-label" for="last_name">Last Name</label>
+                            <div class="col-sm-6">
                                 <input type="text" id="last_name" name="last_name"  class="form-control" placeholder="Last Name" value="{{last_name}}"/>
                             </div>
                         </div>
                         <div class="col-sm-9">
                             <button type="submit" class="btn btn-primary pull-right">Update</button>
-                            <button type="button" class="btn btn-default pull-right cancel" style="margin-right: 10px;">Cancel</button> &nbsp;&nbsp;
+                            <button type="button" class="btn btn-default pull-right cancel" style="margin-right: 10px;">Cancel</button>
                         </div>
                     </form>
                 </fieldset>
@@ -94,20 +147,20 @@
                 <fieldset>
                     <form id="frm_password" class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="old_password">Old Password</label>
-                            <div class="col-sm-7">
+                            <label class="col-sm-3 control-label" for="old_password">Old Password</label>
+                            <div class="col-sm-6">
                                 <input type="password" id="old_password" name="old_password" class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="new_password">New Password</label>
-                            <div class="col-sm-7">
+                            <label class="col-sm-3 control-label" for="new_password">New Password</label>
+                            <div class="col-sm-6">
                                 <input type="password" id="new_password" name="new_password" class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="confirm_password">Confirm Password</label>
-                            <div class="col-sm-7">
+                            <label class="col-sm-3 control-label" for="confirm_password">Confirm Password</label>
+                            <div class="col-sm-6">
                                 <input type="password" id="confirm_password" name="confirm_password"  class="form-control"/>
                             </div>
                         </div>
@@ -120,29 +173,4 @@
             </div>
         </div>
     </div>
-</template>
-
-<template name="standard_login">
-    <article style="margin-top: 110px;">
-        <h3>Login</h3>
-        <fieldset>
-            <form id="frm_login" class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="email">Email</label>
-                    <div class="col-sm-7">
-                        <input type="text" id="email" name="email" class="form-control" placeholder="Email"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="password">Password</label>
-                    <div class="col-sm-7">
-                        <input type="password" id="password" name="password" class="form-control"/>
-                    </div>
-                </div>
-                <div class="col-sm-9">
-                    <a href="#" class="btn btn-primary pull-right btn-try-login">Login</a>
-                </div>
-            </form>
-        </fieldset>
-    </article>
 </template>

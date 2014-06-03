@@ -23,6 +23,34 @@ input[type=text],input[type=search],input[type=password], textarea {
     margin-right: 0px;
 }
 
+.mt10 {
+    margin-top: 10px;
+}
+
+.mt30 {
+    margin-top: 30px;
+}
+
+.mt60 {
+    margin-top: 60px;
+}
+
+.mt80 {
+    margin-top: 80px;
+}
+
+.mr10 {
+    margin-right: 10px;
+}
+
+.mrm8 {
+    margin-right: -8px;
+}
+
+.mlm14 {
+    margin-left: -14px;
+}
+
 label{
     display: block;
     font-weight: normal;
@@ -85,16 +113,6 @@ article{
     width: 100%;
 }
 
-.main .title {
-    font-size: 33px;
-}
-.main .login {
-    margin-top: 50px;
-    font-size: 33px;
-    padding: 20px 16px;
-    margin-bottom: 20px;
-    white-space: normal;
-}
 .container.wrapper {
     padding-top: 69px;
     padding-bottom: 69px;
@@ -291,6 +309,84 @@ table.contacts td{
     border-radius: 0px 0px 5px 5px;
 }
 
-span.cyan{color: #37a8a6;}
-.gray-190{color: #bbbbbb;}
-.custom-red{color: #d9544f;}
+#tags {
+    border-radius: 4px;
+    margin-top: 40px;
+    min-height: 31px;
+    padding: 0 2px 2px 2px;
+    border: 1px solid #CECECE;
+}
+
+#tags li {
+    font-size: 14px;
+    height: 25px;
+    margin: 2px 2px 0 0;
+}
+
+.search-tags {
+    margin-top: 10px;
+}
+
+#login-dialog .modal-header h3 {
+    text-align: center;
+    width: 90%;
+    margin: 0 auto;
+}
+
+#login-dialog .modal-dialog {
+    width: 800px;
+}
+
+#login-dialog .modal-title {
+    font-size: 33px;
+}
+
+#login-dialog .login {
+    margin-top: 30px;
+    font-size: 33px;
+    padding: 20px 16px;
+    margin-bottom: 20px;
+    white-space: normal;
+}
+
+#register-dialog .modal-header,
+#register-dialog .modal-footer,
+#manual-login-dialog .modal-header,
+#manual-login-dialog .modal-footer,
+#login-dialog .modal-header,
+#login-dialog .modal-footer {
+    margin-top: 0 !important;
+    border: none;
+}
+
+#manual-login-dialog .modal-dialog {
+    width: 450px !important;
+}
+
+#register-dialog .modal-body,
+#manual-login-dialog .modal-body {
+    padding: 0 20px !important;
+}
+
+#manual-login-dialog .modal-footer,
+#register-dialog .modal-footer {
+    padding-top: 0 !important;
+}
+
+.edit-campaign {
+    margin-right: 10px;
+}
+
+#matched-contacts {
+    background-color: #fefefe;
+    border-radius: 5px
+}
+
+#matched-contacts tbody td {
+    vertical-align: middle;
+}
+
+#search-loader {
+    margin-top: 9px;
+    margin-left: 10px
+}

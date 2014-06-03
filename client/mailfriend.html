@@ -35,7 +35,11 @@
 {{#if isSuccess}}
 <div class="alert alert-success">{{successMessage}}</div>
 {{/if}}
-{{> google_api_modal}}
+
+{{> google_api_dialog}}
+{{> login_dialog}}
+{{> register_dialog}}
+{{> manual_login_dialog}}
 <!--{{> layout }}-->
 <!--{{> masterLayout}}-->
 </body>
@@ -45,13 +49,19 @@
     <section class="wrapper">
         <header>
             <div class="mobile-header">
-                <h1 class="logo"><a href="#"><img  src="images/logo.png" alt="Mailfriend" title="Mailfriend"></a></h1>
-                <h1 class="logo_2"><a href="#"><img  src="images/logo_2.png" alt="Mailfriend" title="Mailfriend"></a></h1>
+                <h1 class="logo"><a href="{{pathFor 'feature_select'}}"><img src="images/logo.png" alt="Mailfriend" title="Mailfriend"></a></h1>
+                <h1 class="logo_2"><a href="{{pathFor 'feature_select'}}"><img src="images/logo_2.png" alt="Mailfriend" title="Mailfriend"></a></h1>
                 <article class="user_pic">
                     <ul>
-                        <li><img src="{{picture}}" alt="user_pic" title="user_pic" height="44" width="44"></li>
-                        <li><a href="#"> {{name}} </a></li>
-                        <li class="bg_none"><a href="#" class="logout"><img src="images/logout_pic.png" alt="logout" title="logout"></a></li>
+                        <li>
+                            <img src="{{picture}}" alt="user_pic" title="user_pic" height="44" width="44">
+                        </li>
+                        <li>
+                            <a href="#" class="edit-user-info">{{fullname}}</a>
+                        </li>
+                        <li class="bg_none">
+                            <a href="#" class="logout"><img src="images/logout_pic.png" alt="Sign out" title="Sign out"></a>
+                        </li>
                     </ul>
                 </article>
             </div>
@@ -63,17 +73,27 @@
     {{else}}
     {{> home}}
     {{/if}}
-    <footer></footer>
+    
+    {{> footer}}
 </template>
 
 <template name="masterLogoutLayout">
-    {{> home}}
-    <footer></footer>
+    {{> yield}}
+
+    {{> footer}}
 </template>
 
-<template name="google_api_modal">
-    <div id="google-api-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
+<template name="footer">
+    <footer>
+        <div class="home_wrapper">
+            <h1 class="logo"><a href="#"><img src="images/footer_logo.png" alt="Mailfriend"></a></h1>
+            <h2>Copyright &copy; 2014 Reviver. All Rights Reserved.</h2>
+        </div>
+    </footer>
+</template>
+
+<template name="google_api_dialog">
+    <div id="google-api-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -82,19 +102,19 @@
                 <div class="modal-body">
                     <div class="input-prepend">
                         <span class="add-on">Client id:</span>
-                        <input class="span4 client-id" type="text" placeholder="id">
+                        <input style="width:400px;" class="span4 client-id" type="text" placeholder="id">
                     </div>
                     <div class="input-prepend">
                         <span class="add-on">Client secret:</span>
-                        <input class="span4 client-secret" type="text" placeholder="secret">
+                        <input style="width:400px;" class="span4 client-secret" type="text" placeholder="secret">
                     </div>
                     <div class="input-prepend">
                         <span class="add-on">Redirect URIs</span>
-                        <input class="span4" disabled placeholder="{{domain}}_oauth/google?close">
+                        <input style="width:400px;" class="span5" disabled placeholder="{{domain}}_oauth/google?close">
                     </div>
                     <div class="input-prepend">
                         <span class="add-on">Javascript Origins</span>
-                        <input class="span4" disabled placeholder="{{domain}}">
+                        <input style="width:400px;" class="span5" disabled placeholder="{{domain}}">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -109,13 +129,13 @@
     <section id="content" class="header_part">
         <div class="home_wrapper">
             <div class="header_part_top">
-                <h1 class="home_logo"> <a href="#" ><img src="images/Home_logo.png" alt="MailFriend"></a></h1>
+                <h1 class="home_logo"><a href="{{pathFor 'home'}}"><img src="images/Home_logo.png" alt="MailFriend"></a></h1>
                 <div class="manubar">
                     <ul>
-                        <li> <a href="#">FAQ</a> </li>
-                        <li> <a href="#">About</a> </li>
-                        <li> <a href="#">Login</a> </li>
-                        <li> <a href="#" class="active">Sign up</a> </li>
+                        <li><a href="{{pathFor 'faq'}}" class="nav-faq">FAQ</a></li>
+                        <li><a href="{{pathFor 'about'}}" class="nav-about">About</a></li>
+                        <li><a href="#" class="nav-login" data-target="#login-dialog" data-toggle="modal">Login</a></li>
+                        <li><a href="#" class="nav-sign-up active register">Sign up</a></li>
                     </ul>
                 </div>
                 <div class="header_part_2">
@@ -133,26 +153,50 @@
     <section class="more_info_part">
         <div class="home_wrapper">
             <ul>
-                <li> <a href="#"> <span class="main_bg write"></span>
-                    <h1>Write <br>
-                        <span>message</span></h1>
-                </a> </li>
-                <li> <a href="#"> <span class="main_bg search"></span>
-                    <h1>search <br>
-                        <span>for relavant friends</span></h1>
-                </a> </li>
-                <li> <a href="#"> <span class="main_bg send_it"></span>
-                    <h1>send it <br>
-                        <span>off people who care</span></h1>
-                </a> </li>
+                <li>
+                    <a> 
+                        <span class="main_bg write"></span>
+                        <h1>Write <br>
+                            <span>message</span>
+                        </h1>
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <span class="main_bg search"></span>
+                        <h1>search <br>
+                            <span>for relavant friends</span>
+                        </h1>
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <span class="main_bg send_it"></span>
+                        <h1>send it <br>
+                            <span>off people who care</span>
+                        </h1>
+                    </a>
+                </li>
             </ul>
             <a href="#" class="button add-google-oauth">Login with your Gmail account</a>
         </div>
     </section>
 </template>
 
+<template name="faq">
+    <div class="row text-center mt60" style="color:white;">
+        <h3>FAQ</h3>
+    </div>
+</template>
+
+<template name="about">
+    <div class="row text-center mt60" style="color:white;">
+        <h3>About</h3>
+    </div>
+</template>
+
 <template name="feature_select">
-    <div class="row text-center" style="margin-top: 50px;">
+    <div class="row text-center mt60">
         <h3>Welcome {{name}}</h3>
     </div>
     <div class="row feature-select">
@@ -180,23 +224,21 @@
 
         <div class="preview">
             <h4>Subject:</h4>
+            <p class="draft-subject">{{subject}}</p>
 
-            <p class="draft-subject"></p>
             <h4>Body:</h4>
+            <p class="draft-body">{{user_message}}</p>
 
-            <p class="draft-body"></p>
             <h4>Send To:</h4>
+            <p class="draft-to">{{emails}}</p>
+        </div>
 
-            <p class="draft-to"></p>
+        <div class="row">
+            <label class="pull-right" style="margin-right: 13px; margin-top: 10px;">Step 4 of 4</label>
         </div>
         <div class="row">
-            <label class="pull-right" style="margin-right: 13px; margin-top: 10px;">Step 4 of 4</label></div>
-        <div class="row">
-            <button class="btn btn-primary pull-right draft-send" style="margin-right: 10px;" type="button">Send
-            </button>
-            <button class="btn btn-default pull-right confirm-to-contact-list" style="margin-right: 10px;"
-                    type="button">Back
-            </button>
+            <button class="btn btn-primary pull-right draft-send" style="margin-right: 10px;" type="button">Send</button>
+            <button class="btn btn-default pull-right confirm-to-contact-list" style="margin-right: 10px;" type="button">Back</button>
         </div>
         <div class="row text-center success hidden">
             <h4>Your email has been sent!</h4>
@@ -227,6 +269,7 @@
         </div>
     </article>
 </template>
+
 <template name="loading">
     <article>
         <div class="main2">
@@ -234,6 +277,7 @@
         </div>
     </article>
 </template>
+
 <template name="error">
     <article>
         <div class="main2">

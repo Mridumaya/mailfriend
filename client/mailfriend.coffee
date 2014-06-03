@@ -4,6 +4,10 @@ Template.masterLayout.helpers
     if user and user.profile and user.profile.picture
       return user.profile.picture
     return 'images/default_user.jpg'
+
+  fullname: ->
+    return Meteor.user().profile.name
+
   hasLogin: ->
     !!Meteor.user()
 
@@ -12,11 +16,19 @@ Template.masterLayout.events
     e.preventDefault
     Meteor.logout()
     return true
-  'click .edit': (e) ->
+
+  'click .edit-user-info': (e) ->
     e.preventDefault
     Router.go "edit_user_info"
 
+  'click .back-to-feature-select': (e) ->
+    Router.go 'feature_select'    
 
+
+Template.feature_select.rendered = ->
+  $('#manual-login-dialog').modal('hide')
+  $('#login-dialog').modal('hide')
+  $('#register-dialog').modal('hide')
 
 Template.feature_select.helpers
   name: ->
@@ -29,7 +41,9 @@ Template.feature_select.helpers
 Template.feature_select.events
   'click .btn-create-campaign': (e) ->
     mixpanel.track("visit new campaign", { });
+    delete Session.keys['campaign_id']
     Router.go "new_campaign"
+
   'click .btn-view-campaign': (e) ->
     Router.go "list_campaign"
 
@@ -120,33 +134,43 @@ Template.confirm.rendered = ->
 Template.confirm.helpers 
   subject: ->
     Session.get "MAIL_TITLE" || ""
+
   forwaded_message: ->
     Session.get "ORIG_MESS" || ""
+
   user_message: ->
     Session.get "OWN_MESS" || ""
+
   emails: ->
     to = []
     $(Session.get "CONF_DATA").each (index, value) -> 
-      to.push {'email': value}
-    to
+      to.push value
+    emails = to.join(', ')
+    emails
+
 
 Template.confirm.events
   'click .confirm-to-contact-list': (e) ->
-    mixpanel.track("click on cancel/back button", { });
-    Session.set("STEP", "contact_list")
+    mixpanel.track("click on cancel/back button", { })
+    window.history.back()
+    # Session.set("STEP", "contact_list")
+  
   'click #facebook': (e) ->
     window.open('https://www.facebook.com/sharer/sharer.php?u=http://mailfriend.meteor.com/', 'facebook-share-dialog', 'width=626,height=436');
+  
   'click #twitter': (e) ->
     window.open("http://twitter.com/share?text=" + encodeURIComponent("Check this cool pictures application http://mailfriend.meteor.com/"), 'twitter', "width=575, height=400");
+  
   'click #google': (e) ->
     window.open('https://plus.google.com/share?url=http://mailfriend.meteor.com/', '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');
+  
   'click #linkedin': (e) ->
     window.open("http://www.linkedin.com/shareArticle?mini=true&url=http://mailfriend.meteor.com/", '', "width=620, height=432");
 
-  'click a.draft-send': (e) ->
+  'click .draft-send': (e) ->
     e.preventDefault()
     subject = Session.get "MAIL_TITLE"
-    body = Session.get("OWN_MESS") + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
+    body = Session.get "OWN_MESS" # + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
     to = Session.get "CONF_DATA"
 
     console.log subject, body, to
@@ -303,15 +327,14 @@ clickSendMessages = (toEmails=[])->
 #      $('.draft-close').trigger('click')
 
 
-Template.google_api_modal.helpers
+Template.google_api_dialog.helpers
   'domain': ->
     Meteor.absoluteUrl()
 
 
-Template.google_api_modal.events
+Template.google_api_dialog.events
   'keypress .client-id': (e) ->
     $('.client-secret').focus() if e.which is 13
-
 
   'click .google-api-set': (e) ->
     id = $('.client-id').val().trim()
@@ -323,3 +346,4 @@ Template.google_api_modal.events
       Meteor.call 'initGoogleOauth', id, secret, (err) ->
         console.log err if err
         GoogleAccountChecker.checkGoogleApi()
+        # $('#google-api-modal').modal('hide');

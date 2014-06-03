@@ -22,7 +22,7 @@ Meteor.methods
 
     opts =
         email: user.services.google.email
-        consumerKey: Meteor.settings.google.id
+        consumerKey: Meteor.settings.google.api
         consumerSecret: Meteor.settings.google.secret
         token: user.services.google.accessToken
         refreshToken: user.services.google.refreshToken
