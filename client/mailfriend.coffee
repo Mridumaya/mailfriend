@@ -11,6 +11,7 @@ Template.masterLayout.helpers
   hasLogin: ->
     !!Meteor.user()
 
+
 Template.masterLayout.events
   'click .logout': (e) ->
     e.preventDefault
@@ -24,11 +25,21 @@ Template.masterLayout.events
   'click .back-to-feature-select': (e) ->
     Router.go 'feature_select'    
 
+  'click .btn-create-campaign': (e) ->
+    mixpanel.track("visit new campaign", { });
+    delete Session.keys['campaign_id']
+    Router.go "new_campaign"
+
+  'click .btn-view-campaign': (e) ->
+    mixpanel.track("visit campaign list", { });
+    Router.go "list_campaign"
+
 
 Template.feature_select.rendered = ->
   $('#manual-login-dialog').modal('hide')
   $('#login-dialog').modal('hide')
   $('#register-dialog').modal('hide')
+
 
 Template.feature_select.helpers
   name: ->
@@ -42,9 +53,12 @@ Template.feature_select.events
   'click .btn-create-campaign': (e) ->
     mixpanel.track("visit new campaign", { });
     delete Session.keys['campaign_id']
+    menuitemActive($(this).parent())
     Router.go "new_campaign"
 
   'click .btn-view-campaign': (e) ->
+    mixpanel.track("visit campaign list", { });
+    menuitemActive($(this).parent())
     Router.go "list_campaign"
 
 Template.home.rendered = ->
@@ -93,6 +107,7 @@ clearAllSelection = () ->
   i = 0
   while i < list.length
     $(list[i++]).removeClass("info").find(".icon i").removeClass "glyphicon glyphicon-ok"
+
 
   receivedMessages: ->
     #@uids?.length || 0
@@ -173,7 +188,7 @@ Template.confirm.events
     body = Session.get "OWN_MESS" # + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
     to = Session.get "CONF_DATA"
 
-    console.log subject, body, to
+    # console.log subject, body, to
     $('.draft-send').prop('disabled', true)
 
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
@@ -210,6 +225,12 @@ Template.confirm.events
         $(".success").removeClass("hidden")
         $('.draft-send').prop('disabled', false)
         $('.draft-close').trigger('click')
+
+@menuitemActive = (elcl) ->
+  if elcl.length
+    list = $('.left_nav ul')
+    list.find('li').removeClass('active').find('a').removeClass('active').find('span:first-child').removeClass('active_2')
+    list.find('li.' + elcl).addClass('active').find('a').addClass('active').find('span:first-child').addClass('active_2')
 
 #Template.compose.helpers
 #  webUrl: ->

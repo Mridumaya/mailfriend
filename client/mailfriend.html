@@ -3,6 +3,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+    <!-- <link rel="stylesheet" href="/css/style2.css"> -->
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/chosen.css">
     <link rel="stylesheet" href="/css/jquery.gritter.css">
@@ -67,15 +68,35 @@
                 </article>
             </div>
         </header>
-        <div class="container">
-            {{ > yield}}
+
+        <!--left tab menu start-->
+        <div class="mobile-menu mobile-menu1">
+            <section class="left_nav">
+                <ul>
+                    <li class="new-campaign">
+                        <a href="#" class="btn-create-campaign"><span class="new_coamp"></span><span>new campagin</span></a>
+                    </li>
+                    <li class="campaign-list">
+                        <a href="#" class="btn-view-campaign"><span class="exist_comp"></span><span>existing camagin</span></a>
+                    </li>
+                    <li class="my-inbox">
+                        <a href="#" class="btn-view-messages"><span class="my_inbox"><span class="notification">3</span></span><span>My inbox</span></a>
+                    </li>
+                </ul>
+            </section>
+        </div>
+        <div class="mobile-menu-bg"></div>
+        <!--left tab menu end--> 
+
+        <div id="container1">
+            <div class="container">
+                {{ > yield}}
+            </div>
         </div>
     </section>
     {{else}}
     {{> home}}
     {{/if}}
-    
-    {{> footer}}
 </template>
 
 <template name="masterLogoutLayout">

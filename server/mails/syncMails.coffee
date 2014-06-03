@@ -208,9 +208,10 @@ syncSentBox = (imapServer, user, session_id) ->
   # find user
   user = Meteor.users.findOne 'services.google': {$exists: true}, _id: user_id
   return unless user
-  console.log user.services.google.email
-  console.log Meteor.settings.google.api
-  console.log Meteor.settings.google.secret
+  # console.log user.services.google.email
+  # console.log Meteor.settings.google.api
+  # console.log Meteor.settings.google.secret
+
   xoauth2gen = XOauth2.createXOAuth2Generator
                 user: user.services.google.email
                 clientId: Meteor.settings.google.api

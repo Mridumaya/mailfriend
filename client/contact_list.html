@@ -25,9 +25,6 @@
         </select>
         <div class="alert alert-warning alert-contact">Warning! Select emails of friends first!</div>
         <div class="row" style="margin-top: 25px;">
-            {{#if isSearchRunning}}
-                <img src="/images/ajax-loader.gif" alt="Loading...">
-            {{/if}}
             <div class="well">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#matched-contacts-tab" data-toggle="tab">Matched Contacts</a></li>
@@ -49,17 +46,31 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                    {{#if matchedContacts}}
                                     {{#each matchedContacts}}
-                                        <tr class="contact" data-email="{{email}}">
-                                            <td class="icon" ><i></i></td>
-                                            <td>{{name}}</td>
-                                            <td>{{email}}</td>
-                                            <td>{{sentMessages}}</td>
-                                            <td>{{receivedMessages}}</td>
-                                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
-                                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
-                                        </tr>
+                                    <tr class="contact" data-email="{{email}}">
+                                        <td class="icon" ><i></i></td>
+                                        <td>{{name}}</td>
+                                        <td>{{email}}</td>
+                                        <td>{{sentMessages}}</td>
+                                        <td>{{receivedMessages}}</td>
+                                        <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                        <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                    </tr>
                                     {{/each}}
+                                    {{else}}
+                                    {{#if isSearchRunning}}
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            <img src="/images/ajax-loader.gif" alt="Loading...">
+                                        </td>
+                                    </tr>
+                                    {{else}}
+                                    <tr>
+                                        <td colspan="7" class="text-center">Your search had no results.<br>Please try again with other search terms or select recipients from the "Unmatched Contacts" list.</td>
+                                    </tr>
+                                    {{/if}}
+                                    {{/if}}
                                 </tbody>
                             </table>
                         </div>
@@ -79,17 +90,23 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                    {{#if unmatchedContacts}}
                                     {{#each unmatchedContacts}}
-                                        <tr class="contact" data-email="{{email}}">
-                                            <td class="icon" ><i></i></td>
-                                            <td>{{name}}</td>
-                                            <td>{{email}}</td>
-                                            <td>{{sentMessages}}</td>
-                                            <td>{{receivedMessages}}</td>
-                                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
-                                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
-                                        </tr>
+                                    <tr class="contact" data-email="{{email}}">
+                                        <td class="icon" ><i></i></td>
+                                        <td>{{name}}</td>
+                                        <td>{{email}}</td>
+                                        <td>{{sentMessages}}</td>
+                                        <td>{{receivedMessages}}</td>
+                                        <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                        <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                    </tr>
                                     {{/each}}
+                                    {{else}}
+                                    <tr>
+                                        <td colspan="7" class="text-center">There are currently no unmatched contacts.</td>
+                                    </tr>
+                                    {{/if}}
                                 </tbody>
                             </table>
                         </div>
@@ -103,8 +120,7 @@
         <!--<div class="row">-->
         <!--<label class="pull-right" >Step 3 of 4</label></div>-->
         <div class="row">
-            <button class="btn btn-primary contact-list-to-confirm pull-right" type="button">Next
-            </button>
+            <button class="btn btn-primary contact-list-to-confirm pull-right" type="button">Next </button>
             <!--<button class="btn btn-default pull-right contact-list-to-searchq" style="margin-right: 10px;"-->
             <!--type="button">Back-->
             <!--</button>-->

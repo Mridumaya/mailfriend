@@ -562,10 +562,20 @@ ie9 .scrollable tr {
 .ie7 .date_table {
     width: 127px;
 }
-.notification { position:absolute; width:17px; height:15px; background:#f26662;
+.notification { 
+    position: absolute; 
+    width: 17px; 
+    height: 15px; 
+    background: #f26662;
     margin-top: -13px;
-    left:76px;
-    border-radius: 10px; font-family: 'Lato', sans-serif; font-size:10px; font-weight:bold; color:#fff; padding-top:2px;}
+    left: 76px;
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif; 
+    font-size: 10px; 
+    font-weight: bold;
+    color: #fff;
+    /*padding-top:2px;*/
+}
 
 /* -- sliderbar-css --*/
 

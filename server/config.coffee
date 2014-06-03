@@ -1,8 +1,20 @@
 @GlobalConfiguration = {
     init: ->
-        if(Meteor.settings != undefined)
-            Meteor.log.info 'Starting server with following settings'
-            console.log Meteor.settings
+        # if(Meteor.settings != undefined)
+        #     Meteor.log.info 'Starting server with following settings'
+        # else
+        #     Meteor.settings = JSON.parse(Assets.getText("settings.json"));
+
+        if Meteor.absoluteUrl() == 'http://localhost:3000/'
+            Meteor.settings = JSON.parse(Assets.getText("settings_local.json"))
+            
+        else if Meteor.absoluteUrl() == 'http://jacint.meteor.com/'
+            Meteor.settings = JSON.parse(Assets.getText("settings_live.json"))
+
+        else 
+            Meteor.settings = JSON.parse(Assets.getText("settings_live.json"))
+
+        console.log Meteor.settings
 
         Meteor.log.info 'Calling GlobalConfiguration init.'
         this.initGoogleOauth()

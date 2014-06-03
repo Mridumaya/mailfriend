@@ -89,6 +89,8 @@ Template.list_campaign.events
 
 initialize = true
 Template.new_campaign.rendered = ->
+  menuitemActive('new-campaign')
+
   if (initialize)
     messageLength = 0
     interval = 0
@@ -132,6 +134,10 @@ Template.new_campaign.rendered = ->
       # getEnteredTags(message)
 
 
+Template.list_campaign.rendered = ->
+  menuitemActive('campaign-list')
+
+
 @searchLoader= (action) ->
   loader = $('#search-loader')
   if action is 'show'
@@ -163,7 +169,7 @@ Template.new_campaign.rendered = ->
     console.log SearchStatus.findOne()
     Meteor.call 'searchContacts', searchQuery, session_id, (err) ->
       Session.set('searchQ', searchQuery)
-      console.log 'Search Contact err : ' + err
+      # console.log 'Search Contact err : ' + err
       do cb
 
       #$("#loading").hide()
