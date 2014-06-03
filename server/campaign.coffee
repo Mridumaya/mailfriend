@@ -1,6 +1,13 @@
 Meteor.methods
   createCampaign:(userId, subject, body, search_tags) ->
-    campaign_id = Campaigns.insert user_id: userId, subject: subject,body: body, search_tags: search_tags, created_at: new Date()
+    #Generate Slug
+    slug = URLify2 subject
+
+    #Now check is the same slug used already
+    count = Campaigns.find(slug: slug, user_id: userId).count()
+    slug += "-" + count.toString() if count > 0
+
+    campaign_id = Campaigns.insert user_id: userId, subject: subject, slug: slug,body: body, search_tags: search_tags, created_at: new Date()
     return campaign_id
 
   updateCampaign:(campaignId, userId, subject, body, search_tags) ->

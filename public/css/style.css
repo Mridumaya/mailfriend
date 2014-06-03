@@ -290,3 +290,7 @@ table.contacts td{
     -webkit-border-radius: 0px 0px 5px 5px;
     border-radius: 0px 0px 5px 5px;
 }
+
+span.cyan{color: #37a8a6;}
+.gray-190{color: #bbbbbb;}
+.custom-red{color: #d9544f;}

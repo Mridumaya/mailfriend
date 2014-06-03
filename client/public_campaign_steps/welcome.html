@@ -1,0 +1,22 @@
+<template name="public_welcome">
+    <article class="welcome">
+        <h2>Welcome {{name}}</h2>
+        <h4>{{sender}} would like you to spread the word about {{mail_title}}. Checkout their message</h4>
+
+        <div id="original-message-holder">
+            <div class="original-message" id="original_message">
+                {{{orig_message}}}
+            </div>
+        </div>
+        <h4>Add your own note here before sending</h4>
+        <div class="input-prepend text-left" style="margin-bottom: 10px;">
+            <span class="add-on" style="font-size: 18px;">Email Subject:</span>
+            <input style="width: 520px;" class="subject" id="subject" type="text" placeholder="Invitation" value="{{mail_title}}">
+        </div>
+        <textarea id="own_message">{{{own_message}}}</textarea>
+
+        <div class="row">
+            <label class="pull-right">Step 1 of 4</label></div>
+        <a href="#" class="button pull-right welcome-to-searchq">Search for relevant contacts</a>
+    </article>
+</template>

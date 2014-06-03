@@ -11,7 +11,8 @@
       },
       "npm": {},
       "trail": {},
-      "iron-router-progress": {}
+      "iron-router-progress": {},
+      "urlify2": {}
     },
     "packages": {
       "google-contacts": {
@@ -53,6 +54,11 @@
         "git": "https://github.com/Multiply/iron-router-progress.git",
         "tag": "v0.3.1",
         "commit": "3f7900feb4bb70a1289b39a1fdcd1f438c0335b3"
+      },
+      "urlify2": {
+        "git": "https://github.com/peerlibrary/meteor-urlify2.git",
+        "tag": "v0.2.1",
+        "commit": "6af78cad650ee216b640a418a5557a0a7e5be538"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

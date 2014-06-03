@@ -12,6 +12,8 @@ Template.new_campaign.helpers
 Template.list_campaign.helpers
   campaigns: ->
     return Campaigns.find()
+  rooturl: ->
+    Meteor.absoluteUrl ""
 
 @key_up_delay = 0;
 get_entered_tags = (message) ->
@@ -68,6 +70,7 @@ Template.list_campaign.events
 
     'click .btn-create-campaign': (e) ->
         Router.go 'new_campaign'
+
 
 initialize = true
 Template.new_campaign.rendered = ->

@@ -1,0 +1,24 @@
+<template name="public_searchq">
+    <article class="searchq">
+        <h4 style="text-align: center;">Great now lets choose some friends who may been interested in this topic. Try
+            adding a few keywords, for example "art" or "cookies". Something that is specific to the original
+            topic. </h4>
+
+        <div class="row" style="margin-left:0px">
+            <input type="search" class="search-query input-full" placeholder="Type in a search term"
+                   value="{{searchQ}}"/>
+
+            <p id="sq_error" class="error hidden">Please add at least one search term</p>
+
+            <div class="row">
+                <label class="pull-right" >Step 2 of 4</label></div>
+            <div class="row">
+                <a href="#" class="next_button search-button pull-right">Search</a>
+                <a href="#" class="back_button pull-right searchq-to-welcome" style="margin-right: 10px;" >
+                    Back
+                </a>
+            </div>
+
+        </div>
+    </article>
+</template>
