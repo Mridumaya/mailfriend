@@ -1,5 +1,126 @@
 <template name="contact_list">
-    <article class="contact_list">
+    <section class="inbox_content">
+        <div class="text_box">
+            These are your Friends Interested in: <span class="red">{{searchQ}}</span> &nbsp;<span class="green edit-search-term" data-toggle="modal" data-target="#searchTermModal">edit search term</span>
+            <br>
+            The people at the top are the most relevant. Select people using these handy buttons.
+        </div>
+        <div class="info_button_box">
+            <a href="#" class="info_button sendToTop15">select top 15</a>
+            <a href="#" class="info_button sendToTop30">Select the top 30 relevant</a>
+            <a href="#" class="info_button sendToAll">Select all</a>
+            <a href="#" class="info_button add-all-relevant">Choose all relevant</a>
+        </div>
+
+        <div class="btn-group select-contact-group">
+            <a href="#matched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab tab-active">Matched Contacts</a>
+            <a href="#unmatched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab">Unatched Contacts</a>
+        </div>
+
+        <div class="tab-content table_2">
+            <div class="tab-pane active" id="matched-contacts-tab">
+                {{> DataTable
+                    selector=pages.selector
+                    columns=pages.columns
+                    rows=pages.rows
+                }}
+<!--                 <table id="matched-contacts" class="table table-bordered table-hover contacts">
+                    <thead>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Sent in last<br>90 Days</th>
+                        <th>Recevied in last<br>90 Days</th>
+                        <th>On contact<br>List</th>
+                        <th>Relevant<br>(Gramofon)</th>
+                    </thead>
+                    <tbody>
+                        {{#if matchedContacts}}
+                        {{#each matchedContacts}}
+                        <tr class="contact" data-email="{{email}}">
+                            <td class="icon"><i></i></td>
+                            <td>{{name}}</td>
+                            <td>{{email}}</td>
+                            <td>{{sentMessages}}</td>
+                            <td>{{receivedMessages}}</td>
+                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                        </tr>
+                        {{/each}}
+                        {{else}}
+                        {{#if isSearchRunning}}
+                        <tr class="nocontent">
+                            <td colspan="7" class="text-center">
+                                <img src="/images/ajax-loader.gif" alt="Loading...">
+                            </td>
+                        </tr>
+                        {{else}}
+                        <tr class="nocontent">
+                            <td colspan="7" class="text-center">Your search had no results.<br>Please try again with other search terms or select recipients from the "Unmatched Contacts" list.</td>
+                        </tr>
+                        {{/if}}
+                        {{/if}}
+                    </tbody>
+                </table> -->
+            </div>
+            <div class="tab-pane" id="unmatched-contacts-tab">
+                <table id="unmatched-contacts" class="table table-bordered table-hover contacts">
+                    <thead>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Sent in last<br>90 Days</th>
+                        <th>Recevied in last<br>90 Days</th>
+                        <th>On contact<br>List</th>
+                        <th>Relevant<br>(Gramofon)</th>
+                    </thead>
+                    <tbody>                       
+                        {{#if unmatchedContacts}}
+                        {{#each unmatchedContacts}}
+                        <tr class="contact" data-email="{{email}}">
+                            <td class="icon"><i></i></td>
+                            <td>{{name}}</td>
+                            <td>{{email}}</td>
+                            <td>{{sentMessages}}</td>
+                            <td>{{receivedMessages}}</td>
+                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                        </tr>
+                        {{/each}}
+                        {{else}}
+                        <tr>
+                            <td colspan="7" class="text-center">There are currently no unmatched contacts.</td>
+                        </tr>
+                        {{/if}}
+                    </tbody>
+                </table>
+            </div>            
+        </div>
+        <div class="back_next">
+            <span>Step 3 of 4</span>
+            <a href="#" class="back_button">Back</a>
+            <a href="#" class="next_button contact-list-to-confirm">Next</a>
+        </div>
+    </section>
+
+    <div class="modal fade" id="searchTermModal" tabindex="-1" role="dialog" aria-labelledby="mySearchTermLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="mySearchTermLabel">Edit search term</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Please add or change search term</p>
+                    <input type="text" id="s_term" value="{{searchQ}}" />
+                    <button type="button" class="btn btn-primary edit-search-term">Change</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!--     <article class="contact_list">
         <h4>These are your friends interested in: <b>{{searchQ}}</b> <a style="font-size: 15px;" href="#" data-toggle="modal" data-target="#searchTermModal">edit search term</a></h4>
         <h4>The people at the top are the most relevant. Select people using these handy buttons.</h4>
 
@@ -113,33 +234,19 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
+    </article>
+    -->
 
 
-        <div class="clear"></div>
+        <!-- <div class="clear"></div> -->
         <!--<div class="row">-->
         <!--<label class="pull-right" >Step 3 of 4</label></div>-->
-        <div class="row">
-            <button class="btn btn-primary contact-list-to-confirm pull-right" type="button">Next </button>
+        <!-- <div class="row"> -->
+            <!-- <button class="btn btn-primary contact-list-to-confirm pull-right" type="button">Next </button> -->
             <!--<button class="btn btn-default pull-right contact-list-to-searchq" style="margin-right: 10px;"-->
             <!--type="button">Back-->
             <!--</button>-->
-        </div>
-        <div class="modal fade" id="searchTermModal" tabindex="-1" role="dialog" aria-labelledby="mySearchTermLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="mySearchTermLabel">Edit search term</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Please add or change search term</p>
-                        <input type="text" id="s_term" value="{{searchQ}}" />
-                        <button type="button" class="btn btn-primary edit-search-term">Change</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </article>
+        <!-- </div> -->
+
 </template>

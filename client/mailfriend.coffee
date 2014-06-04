@@ -34,6 +34,10 @@ Template.masterLayout.events
     mixpanel.track("visit campaign list", { });
     Router.go "list_campaign"
 
+  'click .btn-view-messages': (e) ->
+    mixpanel.track("visit inbox", { });
+    Router.go "inbox"
+
 
 Template.feature_select.rendered = ->
   $('#manual-login-dialog').modal('hide')
@@ -61,8 +65,14 @@ Template.feature_select.events
     menuitemActive($(this).parent())
     Router.go "list_campaign"
 
+  'click .btn-view-messages': (e) ->
+    mixpanel.track("visit inbox", { });
+    Router.go "inbox"
+
+
 Template.home.rendered = ->
   mixpanel.track("view front page", { });
+
 
 Template.home.events
   'click .add-google-oauth': (e) ->
@@ -229,8 +239,8 @@ Template.confirm.events
 @menuitemActive = (elcl) ->
   if elcl.length
     list = $('.left_nav ul')
-    list.find('li').removeClass('active').find('a').removeClass('active').find('span:first-child').removeClass('active_2')
-    list.find('li.' + elcl).addClass('active').find('a').addClass('active').find('span:first-child').addClass('active_2')
+    list.find('li').removeClass('active').find('a').removeClass('active').find('span:first-child').removeClass('active')
+    list.find('li.' + elcl).addClass('active').find('a').addClass('active').find('span:first-child').addClass('active')
 
 #Template.compose.helpers
 #  webUrl: ->

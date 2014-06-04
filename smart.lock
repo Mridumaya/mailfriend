@@ -11,7 +11,8 @@
       },
       "npm": {},
       "trail": {},
-      "iron-router-progress": {}
+      "iron-router-progress": {},
+      "jquery-datatables": {}
     },
     "packages": {
       "google-contacts": {
@@ -21,8 +22,8 @@
       },
       "font-awesome": {
         "git": "https://github.com/nate-strauser/meteor-font-awesome.git",
-        "tag": "v4.0.3",
-        "commit": "61e9361384347547ae144f8228faa4deffda23db"
+        "tag": "v4.1.0",
+        "commit": "ce6b1e92715d1938babc5d69c655c17e387f5926"
       },
       "bootstrap-3": {
         "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
@@ -51,13 +52,23 @@
       },
       "iron-router-progress": {
         "git": "https://github.com/Multiply/iron-router-progress.git",
-        "tag": "v0.3.1",
-        "commit": "3f7900feb4bb70a1289b39a1fdcd1f438c0335b3"
+        "tag": "v0.4.0",
+        "commit": "02f78bdaca4c13d59f548d5a0ce83408c34b56d1"
+      },
+      "jquery-datatables": {
+        "git": "https://github.com/lumapictures/meteor-jquery-datatables",
+        "tag": "v1.0.3",
+        "commit": "37d0995035f6e2915bab29556a69543ae93c54bc"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
         "tag": "v0.2.2",
         "commit": "8bc53798fe5965669ae67c72f91829fcfdceabfd"
+      },
+      "luma-component": {
+        "git": "https://github.com/LumaPictures/meteor-luma-component",
+        "tag": "v1.0.5",
+        "commit": "9d567068048e9ca82699b096e78c3f7ec76c0fa4"
       }
     }
   }

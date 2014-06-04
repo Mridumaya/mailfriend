@@ -39,6 +39,10 @@ input[type=text],input[type=search],input[type=password], textarea {
     margin-top: 80px;
 }
 
+.mrm15 {
+    margin-right: -15px;
+}
+
 .mr10 {
     margin-right: 10px;
 }
@@ -310,11 +314,10 @@ table.contacts td{
 }
 
 #tags {
-    border-radius: 4px;
-    margin-top: 40px;
     min-height: 31px;
     padding: 0 2px 2px 2px;
-    border: 1px solid #CECECE;
+    border: none;
+    border-radius: 6px;
 }
 
 #tags li {
@@ -377,16 +380,43 @@ table.contacts td{
     margin-right: 10px;
 }
 
+#unmatched-contacts,
 #matched-contacts {
     background-color: #fefefe;
-    border-radius: 5px
+    border-radius: 5px;
+    border-collapse: separate;
 }
 
+#unmatched-contacts tbody td,
 #matched-contacts tbody td {
     vertical-align: middle;
 }
 
 #search-loader {
-    margin-top: 9px;
+    margin-top: 19px;
     margin-left: 10px
+}
+
+ul.wysihtml5-toolbar > li {
+    margin: 0 5px 0px 0;
+}
+
+.edit-search-term {
+    cursor: pointer;
+}
+
+.select-contact-group {
+    margin-bottom:10px;
+}
+
+a.contact-tab.tab-active {
+    background-color: #dddddd;
+    border-top: 1px solid #aaaaaa;
+    border-left: 1px solid #aaaaaa;
+    border-right: 1px solid #aaaaaa;
+    border-bottom: 1px solid #aaaaaa;
+}
+
+.mailbox_right {
+    cursor: text;
 }

@@ -1,0 +1,54 @@
+{
+    "google": {
+        "api" : "641565285402-b7u0f11mjhsuapuhthn3ntqn1u4jpbpp.apps.googleusercontent.com",
+        "secret" : "quILGppmE6wJGcmULASCvAmF"
+    },
+    "trail": {
+        "transports": [
+            {
+                "type": "console",
+                "options": {
+                    "meta": false
+                }
+            },
+            {
+                "type": "mongo",
+                "options": {
+                    "level": "ERROR",
+                    "collection": "error_log"
+                }
+            }
+        ]
+    },
+    "public": {
+        "trail": {
+            "share": {"level": "DEBUG"},
+            "monitor": true,
+            "monitor_console": {"show": true, "large": false},
+            "monitors": [
+                {
+                    "name": "Server + Client",
+                    "options": {"limit": 400}
+                },
+                {
+                    "name": "Client only",
+                    "filter": {"client": true}
+                },
+                {
+                    "name": "All clients W+E",
+                    "filter": {"client": true, "other_clients": true, "level": "WARN"}
+                },
+                {
+                    "name": "Server only",
+                    "filter": {"server": true}
+                }
+            ],
+            "transports": [
+                {
+                    "type": "console",
+                    "options": {"level": "DEBUG"}
+                }
+            ]
+        }
+    }
+}

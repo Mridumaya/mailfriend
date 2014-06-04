@@ -73,3 +73,6 @@ Router.map ->
 
   @route "confirm",
     path: "/campaign/confirm",
+
+  @route "inbox",
+    path: "/inbox",

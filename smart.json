@@ -1,6 +1,5 @@
 {
-  "packages": 
-  {
+  "packages": {
     "google-contacts": {},
     "font-awesome": {},
     "bootstrap-3": {},
@@ -8,6 +7,7 @@
     "iron-router": "0.7.0",
     "npm": {},
     "trail": {},
-    "iron-router-progress": {}
+    "iron-router-progress": {},
+    "jquery-datatables": {}
   }
 }

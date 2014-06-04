@@ -11,7 +11,7 @@ Template.new_campaign.helpers
 
 Template.list_campaign.helpers
   campaigns: ->
-    return Campaigns.find()
+    campaigns = Campaigns.find()
 
 @key_up_delay = 0;
 getEnteredTags = () ->
@@ -52,6 +52,8 @@ Template.new_campaign.events
       Session.set("contact_list", "yes")
       searchLoader('hide');
 
+    $("#DataTables_Table_0").empty();
+
   'click .tagit-close': (e) ->
     addedTags = $("#tags").tagit("assignedTags").join(" ")
     $('#campaign-tags').val(addedTags)
@@ -68,6 +70,9 @@ Template.new_campaign.events
 
   'click .back-to-feature-select': (e) ->
     Router.go 'feature_select'
+
+  'click .mailbox_right': (e) ->
+    $('li.tagit-new input').focus()
 
 Template.list_campaign.events
   'click .delete-campaign': (e)->
@@ -133,12 +138,103 @@ Template.new_campaign.rendered = ->
       # message = $('#own_message').val()
       # getEnteredTags(message)
 
+@initScrollbar = (scrollcontent) ->
+  $(scrollcontent).mCustomScrollbar
+    scrollButtons:
+      enable: true,
+      scrollType: "pixels",
+      horizontalScroll: true
+
+@displayDate = (list) ->
+  weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+  curr_date = new Date()
+  curr_monthday = curr_date.getDate()
+  curr_day = weekdays[curr_date.getDay()]
+  curr_month = months[curr_date.getMonth()]
+  curr_year = curr_date.getFullYear()
+
+  # console.log curr_year + ' ' + curr_month + ' ' + curr_day + ' ' + curr_monthday
+
+  _.each(list,(item) ->
+    elem = $(item)
+    created = new Date(elem.data('created'))
+
+    created_hours = created.getHours()
+
+    if created_hours > 12
+      created_hours -= 12
+
+    if created_hours > 11
+      ampm = 'pm'
+    else
+      ampm = 'am'        
+
+    created_time = created_hours + ':' + created.getMinutes() + ampm
+    created_monthday = created.getDate()
+    created_day = weekdays[created.getDay()]
+    created_month = months[created.getMonth()]
+    created_year = created.getFullYear()
+
+    # console.log created
+    # console.log created_year + ' ' + created_month + ' ' + created_day + ' ' + created_time + ' ' + created_monthday
+
+    formated = created_day + ' ' + created_time
+
+    if curr_year is created_year
+      if curr_month is created_month
+        if curr_monthday is created_monthday
+          formated = 'Today ' + created_time
+        else if curr_month - 1 is created_monthday
+          formated = 'Yesterday ' + created_time
+        else formated += ', ' + created_month + ' ' + created_monthday
+      else
+        formated += ', ' + created_month + ' ' + created_monthday
+    else
+      formated += ', ' + created_month + ' ' + created_monthday + ' ' + created_year
+
+    elem.removeClass('raw').text(formated)
+  )
 
 Template.list_campaign.rendered = ->
   menuitemActive('campaign-list')
 
+  destroyInt = 0
 
-@searchLoader= (action) ->
+  listInt = setInterval(->
+    # console.log 'int'
+    list1 = $('#list1 td.info_content span.created.raw')
+    list2 = $('#list2 td.info_content span.created.raw')
+
+    if list1.length
+      displayDate(list1)
+
+      if list1.length > 4
+        initScrollbar('#content_1')
+        destroyInt++
+
+    if list2.length
+      displayDate(list2)   
+
+      if list2.length > 4
+        initScrollbar('#content_2')
+        destroyInt++
+
+    if destroyInt is 2
+      # console.log 'destroy'
+      clearInterval listInt
+
+  , 750)
+
+Template.inbox.helpers = ->
+
+Template.inbox.events = ->
+
+Template.inbox.rendered = ->
+  menuitemActive('my-inbox')
+
+@searchLoader = (action) ->
   loader = $('#search-loader')
   if action is 'show'
     loader.removeClass('hidden')
