@@ -1,41 +1,96 @@
-@matchedContacts = () ->
-  console.log 'Matched Contacts'
-  if Session.get('searchQ')
-    selector = {}
-    _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
-    _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
-    _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
-    _.extend(selector, {searchQ: Session.get('searchQ')})
-    contacts = Contacts.find(selector).fetch()
+Template.contact_list.helpers
+  matchedContacts: ->
+    console.log 'Matched Contacts'
+    if Session.get('searchQ')
+      selector = {}
 
-    if contacts isnt undefined and contacts isnt null
-      contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
-      _.map contacts, (c, i) -> _.extend c, {index: i+1}
+      _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
+      _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
+      _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
+      _.extend(selector, {searchQ: Session.get('searchQ')})
+      
+      contacts = Contacts.find(selector).fetch()
+
+      button = $('a.search-tags')
+      button.data('results', contacts.length)
+
+      if contacts isnt undefined and contacts isnt null and contacts.length isnt 0
+        contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
+        _.map contacts, (c, i) -> _.extend c, {index: i+1}
+      else
+        button.data('destroyContactInt', 1)
+        console.log 'no matched contacts'
+        []
     else
       []
-  else
-    []
 
-Template.contact_list.helpers
   unmatchedContacts: ->
     console.log 'Unmatched Contacts'
-    selector = {}
-    _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
-    _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
-    _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
-    _.extend(selector, {searchQ: {$ne: Session.get('searchQ')}}) if Session.get('searchQ')
+    if Session.get('searchQ')
+      selector = {}
 
-    contacts = Contacts.find(selector).fetch()
+      _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
+      _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
+      _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
+      _.extend(selector, {searchQ: {$ne: Session.get('searchQ')}}) if Session.get('searchQ')
 
-    if contacts isnt undefined and contacts isnt null
-      contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
-      _.map contacts, (c, i) -> _.extend c, {index: i+1}
+      contacts = Contacts.find(selector).fetch()
+
+      if contacts isnt undefined and contacts isnt null and contacts.length isnt 0
+        contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
+        _.map contacts, (c, i) -> _.extend c, {index: i+1}
+      else
+        []
     else
       []
+
+  columns: ->
+    columns = [{
+      title: ""
+      data: "checked"
+    },{
+      title: "Name"
+      data: "name"
+      mRender:  ( data, type, row ) ->
+        row.name ?= ""
+    },{
+      title: "Email"
+      data: "email"
+      mRender:  ( data, type, row ) ->
+        row.email ?= ""    
+    },{
+      title: "Sent in last<br>90 Days"
+      data: "sentMessages"
+      mRender:  ( data, type, row ) ->
+        row.sentMessages ?= ""
+    },{
+      title: "Recevied in last<br>90 Days"
+      data: "receivedMessages"
+      mRender:  ( data, type, row ) ->
+        row.receivedMessages ?= ""    
+    },{
+      title: "On contact<br>List"
+      data: "isGContact"
+      mRender:  ( data, type, row ) ->
+        row.isGContact ?= "" 
+    },{
+      title: 'Relevant<br>(<span class="relevantQ"></span>)'
+      data: "isRelevant"
+      mRender:  ( data, type, row ) ->
+        row.isRelevant ?= "" 
+    }]
+
+  matched_selector: ->
+    selector = "matched-contacts"
+
+  unmatched_selector: ->
+    selector = "unmatched-contacts"
+
+  timestamp: ->
+    timestamp = new Date()
 
   receivedMessages: ->
     @uids?.length || 0
-
 
   sentMessages: ->
     @sent_uids?.length || 0
@@ -66,43 +121,29 @@ Template.contact_list.events
   'click .gmail-received': (e) ->
     Session.set("FILTER_GMAIL_RECEIVED", $(e.currentTarget).is(":checked"))
 
-
   'click .gmail-sent': (e) ->
     Session.set("FILTER_GMAIL_SENT", $(e.currentTarget).is(":checked"))
-
 
   'click .gcontact': (e) ->
     Session.set("FILTER_GCONTACT", $(e.currentTarget).is(":checked"))
 
-  'click .add-all-relevant': (e) ->
-    selector = $('tr.contact').find('i.relevant-contact').closest('tr.contact').addClass('info')
-    selector.find('.icon i').addClass('glyphicon glyphicon-ok')
-    selector.each ->
-      SelectedEmailsHelper.selectEmail($(this).data('email'))
-
-  'click tr.contact': (e) ->
-    console.log $(e.currentTarget).data("email")
-    if $(e.currentTarget).toggleClass('info').find('.icon i').toggleClass('glyphicon glyphicon-ok').hasClass('glyphicon glyphicon-ok')
-      SelectedEmailsHelper.selectEmail($(e.currentTarget).data('email'))
-    else
-      SelectedEmailsHelper.unselectEmail($(e.currentTarget).data('email'))
-    $('.alert-contact').hide()
-
   'click button.selectAll': (e) ->
-    $('.alert-contact').hide()
     selectAll = $(e.currentTarget)
-    if $(selectAll).toggleClass('selected').hasClass('selected')
-      $(selectAll).text('Unselect All')
-      selector = $('tr.contact').addClass('info')
-      selector.find('.icon i').addClass('glyphicon glyphicon-ok')
-      selector.each ->
-        SelectedEmailsHelper.selectEmail($(this).data('email'))
+    rows = $('table.dataTable:visible tbody tr')
+    
+    $('.alert-contact').hide()
+
+    if selectAll.hasClass('selected')
+      selectAll.removeClass('selected').text('Select All')
+      rows.removeClass('info').find('td:nth-child(1)').html('')
+      rows.each ->
+        SelectedEmailsHelper.unselectEmail($(this).find('td:nth-child(3)').text())
+
     else
-      $(selectAll).text('Select All')
-      selector = $('tr.contact').removeClass('info')
-      selector.find('.icon i').removeClass('glyphicon glyphicon-ok')
-      selector.each ->
-        SelectedEmailsHelper.unselectEmail($(this).data('email'))
+      selectAll.addClass('selected').text('Unselect All')
+      rows.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+      rows.each ->
+        SelectedEmailsHelper.selectEmail($(this).find('td:nth-child(3)').text())
 
   'click .add-all': (e) ->
     selector = $('tr.contact').addClass('info')
@@ -125,19 +166,58 @@ Template.contact_list.events
     , 10*1000
     loadAllGmails(isLoadAll)
 
+
+
+  'click table.dataTable tbody tr': (e) ->
+    row = $(e.currentTarget)
+    email = row.find('td:nth-child(3)').text()
+
+    row.toggleClass('info')
+
+    if row.hasClass('info')
+      row.find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+    else
+      row.find('td:nth-child(1)').html('')
+
+    $('.alert-contact').hide()
+
   'click .sendToTop15': (e) ->
     console.log 'sendToTop15'
-    $('tr.contact').removeClass('info').find('.icon i').removeClass('glyphicon glyphicon-ok')
-    $('tr.contact').slice(0,15).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
+    rows = $('table.dataTable:visible tbody tr')
+    rows15 = $('table.dataTable:visible tbody tr').slice(0,15)
+
+    rows.removeClass('info').find('td:nth-child(1)').html('')
+    rows15.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
 
   'click .sendToTop30': (e) ->
     console.log 'sendToTop30'
-    $('tr.contact').removeClass('info').find('.icon i').removeClass('glyphicon glyphicon-ok')
-    $('tr.contact').slice(0,30).addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
+    rows = $('table.dataTable:visible tbody tr')
+    rows30 = $('table.dataTable:visible tbody tr').slice(0,30)
+
+    rows.removeClass('info').find('td:nth-child(1)').html('')
+    rows30.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
 
   'click .sendToAll': (e) ->
     console.log 'sendToAll'
-    $('tr.contact').addClass('info').find('.icon i').addClass('glyphicon glyphicon-ok')
+    rows = $('table.dataTable:visible tbody tr')
+
+    rows.removeClass('info').find('td:nth-child(1)').html('')
+    rows.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+
+  'click .add-all-relevant': (e) ->
+    console.log 'sendToAllRelevant'
+    rows = $('table.dataTable:visible tbody tr')
+    relevant = $('table.dataTable:visible tbody').find('i.relevant-contact').closest('tr')
+
+    rows.removeClass('info').find('td:nth-child(1)').html('')
+    relevant.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+
+  'click .selectNone': (e) ->
+    console.log 'se'
+    rows = $('table.dataTable:visible tbody tr')
+    rows.removeClass('info').find('td:nth-child(1)').html('')
+
+
 
   'click .edit-search-term': (e) ->
     searchQuery = $('#s_term').val().trim()
@@ -147,8 +227,28 @@ Template.contact_list.events
         $("#searchTermModal").modal("hide")
 
   'click .contact-list-to-confirm': (e) ->
-    Session.set("OWN_MESS", $("#own_message").val())
-    Session.set("MAIL_TITLE", $("#subject").val())
+    subject = $("#subject").val()
+    message = $("#own_message").val()
+    recipients = $('table.dataTable tbody tr.info')
+
+    console.log subject.length
+    console.log message.length
+
+    if subject.length is 0
+      alert 'Please enter the subject for your campaign email!'
+      return false
+
+    if message.length is 0
+      alert 'Please enter your message!'
+      return false
+
+    if recipients.length is 0
+      alert 'Please select recipients for your campaign email!'
+      return false
+
+    Session.set("OWN_MESS", message)
+    Session.set("MAIL_TITLE", subject)
+
     user = Meteor.user()
     SaveCampaign()
     clickSendMessages()
@@ -175,99 +275,24 @@ loadAllGmails = (isLoadAll) ->
       loadAllGmails(isLoadAll)
   , 500
 
-Template.contact_list.pages = -> return {
-  # ## Columns
-  #   * `data` maps the object properties to column headings
-  #   * `title` is the column heading
-  #   * `mRender` is a custom render function for that property ( default is "" )
-  columns: [{
-    title: ""
-    data: ""
-  },{
-    title: "Name"
-    data: "name"
-    mRender:  ( data, type, row ) ->
-      row.name ?= ""
-  },{
-    title: "Email"
-    data: "email"
-    mRender:  ( data, type, row ) ->
-      row.email ?= ""    
-  },{
-    title: "Sent in last<br>90 Days"
-    data: "sentMessages"
-    mRender:  ( data, type, row ) ->
-      row.sentMessages ?= ""
-  },{
-    title: "Recevied in last<br>90 Days"
-    data: "receivedMessages"
-    mRender:  ( data, type, row ) ->
-      row.receivedMessages ?= ""    
-  },{
-    title: "On contact<br>List"
-    data: "isGContact"
-    mRender:  ( data, type, row ) ->
-      row.isGContact ?= "" 
-  },{
-    title: "Relevant<br>(Gramofon)"
-    data: "isRelevant"
-    mRender:  ( data, type, row ) ->
-      row.isGContact ?= "" 
-  }]
-  # ## Selector
-  #   * must be unique in page scope
-  selector: "matched-contacts"
-
-  # ## Rows
-  #   * Array data source for this table
-  rows: matchedContacts  
-
-  bDestroy: true
-}
-
-@initDbTables = (table) ->
-  table.dataTable({
-    "sPaginationType": "bs_full",
-    "bStateSave": true,
-    "aLengthMenu": 
-      [
-        [10, 25, 50, 100, -1],
-        [10, 25, 50, 100, "All"]
-      ]      
-    "aoColumns": [
-      { 
-        "bSearchable": false, #checkbox
-        "bSortable": false
-      },        
-      { 
-        "bSearchable": true,  #name
-        "bSortable": true
-      },
-      { 
-        "bSearchable": true,  #email
-        "bSortable": true
-      },
-      { 
-        "bSearchable": false, #sent in last 90 days
-        "bSortable": false
-      },
-      { 
-        "bSearchable": false, #received in last 90 days
-        "bSortable": false
-      },   
-      { 
-        "bSearchable": false, #on contact list
-        "bSortable": false
-      },  
-      { 
-        "bSearchable": false, #relevant
-        "bSortable": false
-      }                     
-    ]
-  });
 
 Template.contact_list.rendered = ->
   mixpanel.track("visits step 3 page", { });
+
+  # set some custom stuff in the datatables layout
+  $('div.dataTables_filter input').attr('placeholder', "Sort By Pople l've:").after('<button type="submit"><img src="/images/search_button.png" alt="Search"></button>')
+  $('div.dataTables_length select').after(' entries')
+
+  if $('#campaign-tags').val().length
+    button = $('a.search-tags')
+    pressed = button.data('pressed')
+
+    if pressed is 0    
+      setTimeout ->
+        console.log 'search-tags click triggered'
+        button.trigger('click')
+      , 3000
+
   $(this.find('.alert-contact')).hide()
   $(this.find('button.selectAll')).prop('disabled', !Meteor.user())
   if Meteor.user()?.profile?.isLoadAll
@@ -298,32 +323,11 @@ Template.contact_list.rendered = ->
       Session.set('FILTER_GCONTACT', true) if values[i] == "gcontact"
 
 
-  # dtable = $('#matched-contacts')
-  # if dtable.find('tbody td:not(.nocontent)').length
-  #   # initDbTables(dtable)
-  #   console.log 'there is some content'
-  # else
-  #   console.log 'nodata'
-
-  # $("#matched-contacts").dataTable({
-  #   "sDom": "<'row-fluid'l<'span6'>r>t<'row-fluid'<'span4'><'span8'p>>",
-  #   "sPaginationType": "bootstrap",
-  #   "iDisplayLength": 25,
-  #   "aoColumns": [
-  #     { sWidth: '10%' },
-  #     { sWidth: '15%' },
-  #     { sWidth: '25%' },
-  #     { sWidth: '25%' },
-  #     { sWidth: '15%' },
-  #     { sWidth: '15%' }]
-  # });
-
-
 clickSendMessages = (toEmails=[])->
   emails = []
   if toEmails.length
     emails = toEmails
   else
-    $('tr.contact.info').each -> emails.push $(this).data('email')
+    $('table.dataTable tbody tr.info').each -> emails.push $(this).find('td:nth-child(3)').text()
 
   Session.set("CONF_DATA", emails)

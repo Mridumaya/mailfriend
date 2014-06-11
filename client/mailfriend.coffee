@@ -28,6 +28,9 @@ Template.masterLayout.events
   'click .btn-create-campaign': (e) ->
     mixpanel.track("visit new campaign", { });
     delete Session.keys['campaign_id']
+    delete Session.keys['searchQ']
+    delete Session.keys['prev_searchQ']
+    delete Session.keys['contact_list']
     Router.go "new_campaign"
 
   'click .btn-view-campaign': (e) ->

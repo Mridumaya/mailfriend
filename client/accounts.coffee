@@ -151,9 +151,12 @@ Template.register_dialog.rendered = ->
 
 Template.edit_user_info.helpers
   first_name: ->
-    return Meteor.user().profile.first_name
+    # return Meteor.user().profile.first_name
+    return Meteor.user().profile.given_name
   last_name: ->
-    return Meteor.user().profile.last_name
+    # return Meteor.user().profile.last_name
+    return Meteor.user().profile.family_name
+
 
 Template.edit_user_info.events
   'click .cancel': ->

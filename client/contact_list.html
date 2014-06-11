@@ -1,5 +1,5 @@
 <template name="contact_list">
-    <section class="inbox_content">
+    <section class="inbox_content" id="contact-list-container">
         <div class="text_box">
             These are your Friends Interested in: <span class="red">{{searchQ}}</span> &nbsp;<span class="green edit-search-term" data-toggle="modal" data-target="#searchTermModal">edit search term</span>
             <br>
@@ -9,7 +9,8 @@
             <a href="#" class="info_button sendToTop15">select top 15</a>
             <a href="#" class="info_button sendToTop30">Select the top 30 relevant</a>
             <a href="#" class="info_button sendToAll">Select all</a>
-            <a href="#" class="info_button add-all-relevant">Choose all relevant</a>
+            <a href="#" class="info_button add-all-relevant">Select all relevant</a>
+            <a href="#" class="info_button selectNone">Select none</a>
         </div>
 
         <div class="btn-group select-contact-group">
@@ -17,82 +18,58 @@
             <a href="#unmatched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab">Unatched Contacts</a>
         </div>
 
+        <div class="alert alert-warning alert-dismissable no-results hidden mt20">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Your search had no results!</strong> Please try again with other keywords or select recipients from the "Unmatched Contacts" list.
+        </div>
+
         <div class="tab-content table_2">
             <div class="tab-pane active" id="matched-contacts-tab">
+                <div class="loading-contacts">
+                    <img src="/images/ajax-loader.gif" alt=""><span> Loading search results...</span>
+                </div>
+
                 {{> DataTable
-                    selector=pages.selector
-                    columns=pages.columns
-                    rows=pages.rows
+                    selector=matched_selector
+                    columns=columns
                 }}
-<!--                 <table id="matched-contacts" class="table table-bordered table-hover contacts">
-                    <thead>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Sent in last<br>90 Days</th>
-                        <th>Recevied in last<br>90 Days</th>
-                        <th>On contact<br>List</th>
-                        <th>Relevant<br>(Gramofon)</th>
-                    </thead>
-                    <tbody>
-                        {{#if matchedContacts}}
-                        {{#each matchedContacts}}
-                        <tr class="contact" data-email="{{email}}">
-                            <td class="icon"><i></i></td>
-                            <td>{{name}}</td>
-                            <td>{{email}}</td>
-                            <td>{{sentMessages}}</td>
-                            <td>{{receivedMessages}}</td>
-                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
-                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
-                        </tr>
-                        {{/each}}
-                        {{else}}
-                        {{#if isSearchRunning}}
-                        <tr class="nocontent">
-                            <td colspan="7" class="text-center">
-                                <img src="/images/ajax-loader.gif" alt="Loading...">
-                            </td>
-                        </tr>
-                        {{else}}
-                        <tr class="nocontent">
-                            <td colspan="7" class="text-center">Your search had no results.<br>Please try again with other search terms or select recipients from the "Unmatched Contacts" list.</td>
-                        </tr>
-                        {{/if}}
-                        {{/if}}
-                    </tbody>
-                </table> -->
+
+                <table id="tmp_matched_contacts" class="hidden">
+                    {{#each matchedContacts}}
+                    <tr class="contact" data-email="{{email}}">
+                        <td class="icon"><i></i></td>
+                        <td>{{name}}</td>
+                        <td>{{email}}</td>
+                        <td>{{sentMessages}}</td>
+                        <td>{{receivedMessages}}</td>
+                        <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                        <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
             </div>
             <div class="tab-pane" id="unmatched-contacts-tab">
-                <table id="unmatched-contacts" class="table table-bordered table-hover contacts">
-                    <thead>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Sent in last<br>90 Days</th>
-                        <th>Recevied in last<br>90 Days</th>
-                        <th>On contact<br>List</th>
-                        <th>Relevant<br>(Gramofon)</th>
-                    </thead>
-                    <tbody>                       
-                        {{#if unmatchedContacts}}
-                        {{#each unmatchedContacts}}
-                        <tr class="contact" data-email="{{email}}">
-                            <td class="icon"><i></i></td>
-                            <td>{{name}}</td>
-                            <td>{{email}}</td>
-                            <td>{{sentMessages}}</td>
-                            <td>{{receivedMessages}}</td>
-                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
-                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
-                        </tr>
-                        {{/each}}
-                        {{else}}
-                        <tr>
-                            <td colspan="7" class="text-center">There are currently no unmatched contacts.</td>
-                        </tr>
-                        {{/if}}
-                    </tbody>
+                <div class="loading-contacts">
+                    <img src="/images/ajax-loader.gif" alt=""><span> Loading search results...</span>
+                </div>
+
+                {{> DataTable
+                    selector=unmatched_selector
+                    columns=columns
+                }}
+
+                <table id="tmp_unmatched_contacts" class="hidden">
+                    {{#each unmatchedContacts}}
+                    <tr class="contact" data-email="{{email}}">
+                        <td class="icon"><i></i></td>
+                        <td>{{name}}</td>
+                        <td>{{email}}</td>
+                        <td>{{sentMessages}}</td>
+                        <td>{{receivedMessages}}</td>
+                        <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                        <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                    </tr>
+                    {{/each}}
                 </table>
             </div>            
         </div>

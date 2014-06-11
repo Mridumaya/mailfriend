@@ -11,7 +11,9 @@ Template.new_campaign.helpers
 
 Template.list_campaign.helpers
   campaigns: ->
-    campaigns = Campaigns.find()
+    campaigns = Campaigns.find().fetch()
+    campaigns = _.sortBy campaigns, (c) -> -c.created_at || 0
+
 
 @key_up_delay = 0;
 getEnteredTags = () ->
@@ -42,17 +44,143 @@ getEnteredTags = () ->
     Session.set("search_tags", tags)
   , 1000)
 
+
+# @clearDataTable = (table) ->
+#   console.log 'clear table'
+#   table = table.DataTable()
+#   table.clear()
+
+@refreshDataTable = (table, source) ->
+  table = table.DataTable()
+  table.clear().draw()
+
+  newrows = []
+  _.each(source,(item) ->
+    row = $(item)
+    newrow =
+      checked: ''
+      name: row.find('td:nth-child(2)').html()
+      email: row.find('td:nth-child(3)').html()
+      sentMessages: row.find('td:nth-child(4)').html()
+      receivedMessages: row.find('td:nth-child(5)').html()
+      isGContact: row.find('td:nth-child(6)').html()
+      isRelevant: row.find('td:nth-child(7)').html()
+    
+    newrows.push(newrow)
+  )
+
+  if newrows.length
+    table.rows.add(newrows).draw()
+
+    # hide loaders
+    searchLoader('hide');
+    $('div.loading-contacts').addClass('hidden')
+
+
 Template.new_campaign.events
   'click .search-tags': (e) ->
+    button = $(e.currentTarget)
+    button.data('pressed', 1)
+    
     searchQuery = $("#tags").tagit("assignedTags").join(" ");
-    mixpanel.track("search tag", { });
-    searchLoader('show');
-    searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
-      console.log("show list")
-      Session.set("contact_list", "yes")
-      searchLoader('hide');
+    prev_searchQuery = Session.get("prev_searchQ")
 
-    $("#DataTables_Table_0").empty();
+    # do the search if there's a search term and if the current search term is not equal to the previous one
+    if searchQuery.length
+      mixpanel.track("search tag", { });
+      
+      if searchQuery is prev_searchQuery
+        # scroll to results
+        results = $('#contact-list-container')
+        if results.length
+          scroll = results.offset().top
+          $('html, body').animate({
+            scrollTop: scroll
+          }, 1000)
+
+        return false     
+
+      # show the loaders
+      searchLoader('show');
+      $('div.loading-contacts').removeClass('hidden')
+
+      # remove the no results warning
+      $('div.no-results').addClass('hidden')
+
+      # switch to matched contacts tab
+      $('div.select-contact-group a:first-child').trigger('click')
+
+      # clear the tmp tables
+      # $('#tmp_matched_contacts tr, #tmp_unmatched_contacts tr').remove()
+
+      searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
+        console.log("show list")
+        Session.set("searchQ", searchQuery)
+        Session.set("prev_searchQ", searchQuery)
+        Session.set("contact_list", "yes")
+
+        button.data('destroyContactInt', 0)
+
+        # check for results in every 0.75 seconds
+        contactInt = setInterval(->
+          # add tags to datatables header
+          $("span.relevantQ").text(searchQuery)
+
+          # if there are matches add them to datatables
+          matches = parseInt($('#tmp_matched_contacts tr').length)
+          if matches
+            setTimeout ->
+              # populate datatables
+              @refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+              @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+
+              # scroll to results
+              results = $('#contact-list-container')
+              if results.length
+                scroll = results.offset().top
+                $('html, body').animate({
+                  scrollTop: scroll
+                }, 1000, ->
+                  # hide loaders
+                  searchLoader('hide');
+                  $('div.loading-contacts').addClass('hidden')
+                )
+
+              button.data('pressed', 0)
+            , 2000
+
+            button.data('destroyContactInt', 1)
+
+          # check for results, if there's none, display notification
+          results = button.data('results')
+          if results is 0
+            button.data('destroyContactInt', 1)
+
+            # clear datatables
+            @refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+            @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+
+            # scroll to results
+            results = $('#contact-list-container')
+            if results.length
+              scroll = results.offset().top
+              $('html, body').animate({
+                scrollTop: scroll
+              }, 1000, ->
+                # hide loaders
+                searchLoader('hide');
+                $('div.loading-contacts').addClass('hidden')
+              )
+
+            # show the no results warning
+            $('div.no-results').removeClass('hidden')
+
+          # clear interval
+          destroyContactInt = button.data('destroyContactInt')
+          if destroyContactInt is 1
+            clearInterval contactInt
+        
+        , 750)
 
   'click .tagit-close': (e) ->
     addedTags = $("#tags").tagit("assignedTags").join(" ")
@@ -87,6 +215,9 @@ Template.list_campaign.events
   'click .btn-create-campaign': (e) ->
       mixpanel.track("visit new campaign", { });
       delete Session.keys['campaign_id']
+      delete Session.keys['searchQ']
+      delete Session.keys['prev_searchQ']
+      delete Session.keys['contact_list']
       Router.go 'new_campaign'
 
   'click .back-to-feature-select': (e) ->
@@ -123,7 +254,8 @@ Template.new_campaign.rendered = ->
     afterTagAdded: (event,ui)->
       Session.set("search_tags", $("#tags").tagit("assignedTags"))
       addedTags = $("#tags").tagit("assignedTags").join(" ")
-      Session.set("searchQ", addedTags)
+      # Session.set("searchQ", addedTags)
+      # console.log Session.get("searchQ")
       $('#campaign-tags').val(addedTags)
 
     afterTagRemoved: (event,ui)->

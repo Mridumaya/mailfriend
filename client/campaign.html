@@ -19,7 +19,7 @@
                         <input type="hidden" value="{{#if _id}}{{search_tags}}{{/if}}" id="campaign-tags">
                         <ul id="tags"></ul>
                     </div>
-                    <a href="#" class="button search-tags">Search</a>
+                    <a href="#" class="button search-tags" data-pressed="0" data-destroyContactInt="0" data-results="0">Search</a>
                     <img id="search-loader" src="/images/ajax-loader.gif" class="hidden">
                 </div>
             </div>
@@ -29,33 +29,6 @@
         {{> contact_list}}
         {{/if}}        
     </div>
-
-
- <!--    <div class="row mt80">
-        <div class="col-md-8">
-            {{#if _id}}
-            <button class="btn back-to-campaign-list"><i class="glyphicon glyphicon-chevron-left"></i> Back to Campaigns</button>
-            {{else}}
-            <button class="btn back-to-feature-select"><i class="glyphicon glyphicon-chevron-left"></i> Back to Home Screen</button>
-            {{/if}}
-        </div>
-    </div>
-    <div class="row new-capaign">
-        <div class="col-md-8">
-            <h3>Create a new campaign</h3>
-            <input class="subject col-sm-12 col-md-12 col-lg-12" id="subject" type="text" placeholder="Subject:" value="{{#if _id}}{{subject}}{{/if}}">
-            <textarea id="own_message">{{#if _id}}{{body}}{{/if}}</textarea>    
-            <button class="btn btn-primary btn-save-campaign pull-right">Save</button>
-        </div>
-        <div class="col-md-4">
-            <span>Share this campaign:</span>
-            <a href="http://bit.ly/1fNinNZ" target="_blank">http://bit.ly/1fNinNZ</a>
-            <input type="hidden" value="{{#if _id}}{{search_tags}}{{/if}}" id="campaign-tags">
-            <ul id="tags"></ul>
-            <button class="btn btn-default search-tags">Search</button>
-            <img id="search-loader" src="/images/ajax-loader.gif" class="hidden">
-        </div>
-    </div> -->
 </template>
 
 <template name="list_campaign">
@@ -63,7 +36,7 @@
         <section class="inbox_content">
             <div class="block_head">
                 <div class="box_left">
-                    <h2>Create a new campaign</h2>
+                    <h2>New campaigns</h2>
                     <img src="/images/arreow_block.png" alt="arreow_box">
                 </div>
             </div>
@@ -91,7 +64,7 @@
             </div>
         </section>
 
-        <section class="inbox_content">
+        <section class="inbox_content" id="contact-list-container">
             <div class="block_head">
                 <div class="box_left">
                     <h2>Past campaigns</h2>
@@ -122,55 +95,6 @@
             </div>
         </section>
     </div>
-
-<!--     <div class="row mt80">
-        <div class="col-md-8">
-            <button class="btn back-to-feature-select mlm14"><i class="glyphicon glyphicon-chevron-left"></i> Back to Home Screen</button>
-        </div>
-    </div>      
-    <div class="row">
-        <div class="col-md-8">
-            <h3 class="mlm14">List of Campaigns</h3>
-        </div>
-        <div class="col-md-4 pull-right">
-            <button class="btn btn-default btn-lg btn-block btn-create-campaign mt10">
-                <i class="glyphicon glyphicon-plus"></i> Create a new email campaign
-            </button>
-        </div>
-    </div>
-    <div class="row mt30">
-        <div class="">
-            <div class="row">
-                <table id="matched-contacts" class="table table-striped contacts">
-                    <thead>
-                        <tr>
-                            <th>Subject</th>
-                            <th>Body</th>
-                            <th>Search tags</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each campaigns}}
-                            <tr>
-                                <td>{{subject}}</td>
-                                <td>{{{body}}}</td>
-                                <td>{{{search_tags}}}</td>
-                                <td>
-                                    <button class="delete-campaign btn btn-danger pull-right" data-id="{{_id}}">
-                                        <i class="glyphicon glyphicon-trash"></i> Delete
-                                    </button>
-                                    <button class="edit-campaign btn btn-primary pull-right" data-id="{{_id}}">
-                                        <i class="glyphicon glyphicon-floppy-disk"></i> Edit
-                                    </button>                                    
-                                </td>
-                            </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div> -->
 </template>
 
 <template name="inbox">

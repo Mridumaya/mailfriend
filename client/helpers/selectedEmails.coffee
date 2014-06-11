@@ -2,8 +2,7 @@
 
 @SelectedEmailsHelper =
   selectedEmail: ()->
-    SelectedEmails.findOne()
-
+    SelectedEmails.findOne
 
   selectEmail: (email) ->
     if email isnt undefined
@@ -13,21 +12,15 @@
       else
         SelectedEmails.insert({emails: [email]})
 
-
-
   unselectEmail: (email) ->
     emailModel = @selectedEmail()
     if emailModel
       SelectedEmails.update(emailModel._id, {$pull: {emails: email}})
 
-
-
   selectEmails: (emails) ->
     emailModel = @selectedEmail()
     if emailModel
       SelectedEmails.update emailModel._id, {$addToSet: {emails: {$each: emails}}}
-
-
 
   unselectEmails: (emails) ->
     emailModel = @selectedEmail()

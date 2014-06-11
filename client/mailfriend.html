@@ -61,7 +61,8 @@
                 <article class="user_pic">
                     <ul>
                         <li>
-                            <img src="{{picture}}" alt="user_pic" title="user_pic" height="44" width="44">
+                            <img src="{{picture}}" alt="user_pic" title="user_pic" height="43" width="40">
+                            <div class="image-mask"></div>
                         </li>
                         <li>
                             <a href="#" class="edit-user-info">{{fullname}}</a>
@@ -250,7 +251,59 @@
 </template>
 
 <template name="confirm">
-    <article class="confirm">
+    <div id="container-inner">
+        <section class="inbox_content">
+            <div class="block_head">
+                <div class="box_left">
+                    <h2>Almost done, please review your selection and click send</h2>
+                    <img src="/images/arreow_block.png" alt="arreow_box">
+                </div>
+            </div>
+            <div id="content_1" class="content2">
+                <div class="existing_main_content">
+                    <div class="preview">
+                        <h4>Subject:</h4>
+                        <p class="draft-subject">{{subject}}</p>
+
+                        <h4>Body:</h4>
+                        <p class="draft-body">{{{user_message}}}</p>
+
+                        <h4>Send To:</h4>
+                        <p class="draft-to">{{emails}}</p>
+                    </div>
+
+                    <div class="row">
+                        <label class="pull-right" style="margin-right: 13px; margin-top: 10px;">Step 4 of 4</label>
+                    </div>
+                    <div class="row">
+                        <button class="btn btn-primary pull-right draft-send" style="margin-right: 10px;" type="button">Send</button>
+                        <button class="btn btn-default pull-right confirm-to-contact-list" style="margin-right: 10px;" type="button">Back</button>
+                    </div>
+                    <div class="row text-center success hidden">
+                        <h4>Your email has been sent!</h4>
+                        <h4>Tell your friends about this awesome app?</h4>
+
+                        <div>
+                            <a id="facebook" href="#" target="_blank" class="active">
+                                <img src="/images/facebook_icon.png">
+                            </a>
+                            <a id="twitter" href="#" class="active">
+                                <img src="/images/twitter_icon.png">
+                            </a>
+                            <a id="google" href="#" class="active">
+                                <img src="/images/google_icon.png">
+                            </a>
+                            <a id="linkedin" href="#" class="active">
+                                <img src="/images/linkedin_icon.png">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+<!--     <article class="confirm">
         <h4 style="text-align: center;">Almost done, please review your selection and click send</h4>
 
         <div class="preview">
@@ -290,7 +343,7 @@
                 </a>
             </div>
         </div>
-    </article>
+    </article> -->
 </template>
 
 <template name="notFound">
