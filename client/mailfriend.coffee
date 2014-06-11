@@ -19,6 +19,7 @@ Template.masterLayout.events
     return true
 
   'click .edit-user-info': (e) ->
+    menuitemActive()
     e.preventDefault
     Router.go "edit_user_info"
 
@@ -43,6 +44,7 @@ Template.masterLayout.events
 
 
 Template.feature_select.rendered = ->
+  menuitemActive()
   $('#manual-login-dialog').modal('hide')
   $('#login-dialog').modal('hide')
   $('#register-dialog').modal('hide')
@@ -50,11 +52,19 @@ Template.feature_select.rendered = ->
 
 Template.feature_select.helpers
   name: ->
-    user = Meteor.user()
-    if user
-      user.profile.name.split(" ")[0]
-    else
-      ''
+    Meteor.user().profile.name
+    # if user
+    #   user.profile.name.split(" ")[0]
+    # else
+      # ''
+
+  new_campaign_count: ->
+    campaigns = Campaigns.find().fetch()
+    count = campaigns.length
+
+  past_campaign_count: ->
+    campaigns = Campaigns.find().fetch()
+    count = campaigns.length
 
 Template.feature_select.events
   'click .btn-create-campaign': (e) ->
@@ -180,7 +190,10 @@ Template.confirm.helpers
 Template.confirm.events
   'click .confirm-to-contact-list': (e) ->
     mixpanel.track("click on cancel/back button", { })
-    window.history.back()
+    delete Session.keys['searchQ']
+    delete Session.keys['prev_searchQ']
+    delete Session.keys['contact_list']    
+    Router.go 'new_campaign'
     # Session.set("STEP", "contact_list")
   
   'click #facebook': (e) ->
@@ -233,6 +246,12 @@ Template.confirm.events
             password: 'queens'
             created_at: new Date()
 
+        # Meteor.call 'markCampaignSent', Session.get("campaign_id"), user._id,(e, campaign_id) ->
+        #   console.log e if e
+          # $.gritter.add
+          #   title: "Email sent"
+          #   text: "Your campaign email was successfully sent!"
+
         mixpanel.track("send email", { });
         console.log 'send mail success'
         $(".success").removeClass("hidden")
@@ -240,9 +259,10 @@ Template.confirm.events
         $('.draft-close').trigger('click')
 
 @menuitemActive = (elcl) ->
-  if elcl.length
-    list = $('.left_nav ul')
-    list.find('li').removeClass('active').find('a').removeClass('active').find('span:first-child').removeClass('active')
+  list = $('.left_nav ul')
+  list.find('li').removeClass('active').find('a').removeClass('active').find('span:first-child').removeClass('active')
+  
+  if elcl isnt undefined and elcl.length
     list.find('li.' + elcl).addClass('active').find('a').addClass('active').find('span:first-child').addClass('active')
 
 #Template.compose.helpers

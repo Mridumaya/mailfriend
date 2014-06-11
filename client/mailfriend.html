@@ -228,25 +228,35 @@
 </template>
 
 <template name="feature_select">
-    <div class="row text-center mt60">
-        <h3>Welcome {{name}}</h3>
-    </div>
-    <div class="row feature-select">
-        <div class="col-md-4">
-            <button class="btn btn-default btn-lg btn-block btn-create-campaign">Create a new email campaign</button>
-            <button class="btn btn-default btn-lg btn-block btn-view-campaign">View an existing campaign</button>
-            <button class="btn btn-default btn-lg btn-block btn-view-messages">View incoming messages</button>
-        </div>
-        <div class="col-md-8">
-            <div class="info">
-                <h3 class="text-center">Current status:</h3>
-                <ul>
-                    <li> 5 people forwarded your campaign</li>
-                    <li> you have 3 unread messages</li>
-                    <li> etc </li>
-                </ul>
+    <div id="container-inner">
+        <section class="inbox_content">
+            <div class="block_head">
+                <div class="box_left">
+                    <h2>Welcome {{name}}</h2>
+                    <img src="/images/arreow_block.png" alt="arreow_box">
+                </div>
             </div>
-        </div>
+            <div class="block_main_content">
+                <div class="row feature-select">
+                    <div class="col-md-4">
+                        <button class="btn btn-default btn-lg btn-block btn-create-campaign">Create a new email campaign</button>
+                        <button class="btn btn-default btn-lg btn-block btn-view-campaign">View an existing campaign</button>
+                        <button class="btn btn-default btn-lg btn-block btn-view-messages">View incoming messages</button>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="info">
+                            <h3 class="text-center">Current status:</h3>
+                            <ul>
+                                <li>5 people forwarded your campaign</li>
+                                <li>You have 3 unread messages</li>
+                                <li>You have {{new_campaign_count}} new campaigns</li>
+                                <li>You have {{past_campaign_count}} past campaigns</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </template>
 

@@ -231,9 +231,6 @@ Template.contact_list.events
     message = $("#own_message").val()
     recipients = $('table.dataTable tbody tr.info')
 
-    console.log subject.length
-    console.log message.length
-
     if subject.length is 0
       alert 'Please enter the subject for your campaign email!'
       return false
@@ -282,16 +279,6 @@ Template.contact_list.rendered = ->
   # set some custom stuff in the datatables layout
   $('div.dataTables_filter input').attr('placeholder', "Sort By Pople l've:").after('<button type="submit"><img src="/images/search_button.png" alt="Search"></button>')
   $('div.dataTables_length select').after(' entries')
-
-  if $('#campaign-tags').val().length
-    button = $('a.search-tags')
-    pressed = button.data('pressed')
-
-    if pressed is 0    
-      setTimeout ->
-        console.log 'search-tags click triggered'
-        button.trigger('click')
-      , 3000
 
   $(this.find('.alert-contact')).hide()
   $(this.find('button.selectAll')).prop('disabled', !Meteor.user())

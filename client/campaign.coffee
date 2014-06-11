@@ -203,14 +203,44 @@ Template.new_campaign.events
     $('li.tagit-new input').focus()
 
 Template.list_campaign.events
-  'click .delete-campaign': (e)->
+  'click .delete-campaign': (e) ->
       console.log $(e.currentTarget).attr('data-id')
       if (confirm('Are you sure?'))
           Meteor.call 'deleteCampaign', $(e.currentTarget).attr('data-id')
 
-  'click .edit-campaign': (e)->
+  'click .edit-campaign': (e) ->
+      delete Session.keys['searchQ']
+      delete Session.keys['prev_searchQ']
+      delete Session.keys['contact_list']
       Session.set 'campaign_id', $(e.currentTarget).attr('data-id')
       Router.go 'new_campaign'
+
+  'click .send-campaign': (e) ->
+      # Session.set 'campaign_id', $(e.currentTarget).attr('data-id')
+      
+      # subject = $("#subject").val()
+      # message = $("#own_message").val()
+      # recipients = $('table.dataTable tbody tr.info')
+
+      # if subject.length is 0
+      #   alert 'Please enter the subject for your campaign email!'
+      #   return false
+
+      # if message.length is 0
+      #   alert 'Please enter your message!'
+      #   return false
+
+      # if recipients.length is 0
+      #   alert 'Please select recipients for your campaign email!'
+      #   return false
+
+      # Session.set("OWN_MESS", message)
+      # Session.set("MAIL_TITLE", subject)
+
+      # user = Meteor.user()
+      # SaveCampaign()
+      # clickSendMessages()
+      # Router.go("confirm")
 
   'click .btn-create-campaign': (e) ->
       mixpanel.track("visit new campaign", { });
@@ -226,6 +256,16 @@ Template.list_campaign.events
 initialize = true
 Template.new_campaign.rendered = ->
   menuitemActive('new-campaign')
+
+  if $('#campaign-tags').val().length
+    button = $('a.search-tags')
+    pressed = button.data('pressed')
+
+    if pressed is 0    
+      setTimeout ->
+        console.log 'search-tags click triggered'
+        button.trigger('click')
+      , 3000
 
   if (initialize)
     messageLength = 0
