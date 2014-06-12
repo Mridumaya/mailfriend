@@ -76,7 +76,7 @@ Template.manual_login_dialog.events
     Meteor.loginWithPassword($("#login-email").val(), $("#login-password").val(), (err) ->
       console.log err
       if err && (err.error == 403 or err.error == 400)
-        alert(err.reason)
+        apprise(err.reason)
         return
       unless err
         mixpanel.track("logs in with password", { });
@@ -127,7 +127,7 @@ Template.register_dialog.rendered = ->
         console.log('[ERROR] create_user:', err) if err
         
         if err?.reason == "Email already exist."
-          alert("Email already exists, try again.")
+          apprise("Email already exists, try again.")
           return
 
         # console.log user
@@ -136,7 +136,7 @@ Template.register_dialog.rendered = ->
         Meteor.loginWithPassword($(form).find("#email").val(), $(form).find("#password").val(), (err) ->
           # console.log err
           if err && err.error == 403
-            alert(err.reason)
+            apprise(err.reason)
             return
           unless err
             mixpanel.track("logs in with password", { });
@@ -208,7 +208,7 @@ Template.edit_user_info.rendered = ->
     submitHandler: (form) ->
       Accounts.changePassword($("#old_password").val(), $("#new_password").val(), (err)->
         if err && err.error == 403
-          alert(err.reason)
+          apprise(err.reason)
           return
         else
           Router.go("feature_select")

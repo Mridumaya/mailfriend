@@ -227,20 +227,22 @@ Template.contact_list.events
         $("#searchTermModal").modal("hide")
 
   'click .contact-list-to-confirm': (e) ->
+    menuitemActive()
+    
     subject = $("#subject").val()
     message = $("#own_message").val()
     recipients = $('table.dataTable tbody tr.info')
 
     if subject.length is 0
-      alert 'Please enter the subject for your campaign email!'
+      apprise('Please enter the subject for your campaign email!')
       return false
 
     if message.length is 0
-      alert 'Please enter your message!'
+      apprise('Please enter your message!')
       return false
 
     if recipients.length is 0
-      alert 'Please select recipients for your campaign email!'
+      apprise('Please select recipients for your campaign email!')
       return false
 
     Session.set("OWN_MESS", message)

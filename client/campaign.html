@@ -15,7 +15,7 @@
                 </div>
                 <div class="mail_content">
                     <div class="mailbox_right">
-                        <div class="top_content">Unique URL Specific</div>
+                        <div class="top_content">Unique Keywords Specific</div>
                         <input type="hidden" value="{{#if _id}}{{search_tags}}{{/if}}" id="campaign-tags">
                         <ul id="tags"></ul>
                     </div>
@@ -57,6 +57,9 @@
                             <td class="send_button">
                                 <a href="#" class="send-campaign s_button" data-id="{{_id}}"><span class="send"></span> Send</a>
                             </td>
+                            <td class="delete_button">
+                                <a href="#" class="delete-campaign d_button" data-id="{{_id}}"><span class="delete"></span> Delete</a>
+                            </td>                            
                         </tr>
                         {{/each}}
                     </table>
@@ -64,7 +67,7 @@
             </div>
         </section>
 
-        <section class="inbox_content" id="contact-list-container">
+        <!-- <section class="inbox_content" id="contact-list-container">
             <div class="block_head">
                 <div class="box_left">
                     <h2>Past campaigns</h2>
@@ -93,7 +96,7 @@
                     </table>
                 </div>
             </div>
-        </section>
+        </section> -->
     </div>
 </template>
 

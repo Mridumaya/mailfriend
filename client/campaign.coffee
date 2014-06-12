@@ -202,45 +202,70 @@ Template.new_campaign.events
   'click .mailbox_right': (e) ->
     $('li.tagit-new input').focus()
 
+
 Template.list_campaign.events
   'click .delete-campaign': (e) ->
-      console.log $(e.currentTarget).attr('data-id')
-      if (confirm('Are you sure?'))
-          Meteor.call 'deleteCampaign', $(e.currentTarget).attr('data-id')
+      # console.log $(e.currentTarget).data('id')
+      apprise('Are you sure to delete this campaign?', {'verify':true}, (r) ->
+        if r
+          Meteor.call 'deleteCampaign', $(e.currentTarget).data('id')
+      )
+      # if (confirm('Are you sure?'))
 
   'click .edit-campaign': (e) ->
       delete Session.keys['searchQ']
       delete Session.keys['prev_searchQ']
       delete Session.keys['contact_list']
-      Session.set 'campaign_id', $(e.currentTarget).attr('data-id')
+      Session.set 'campaign_id', $(e.currentTarget).data('id')
       Router.go 'new_campaign'
 
   'click .send-campaign': (e) ->
-      # Session.set 'campaign_id', $(e.currentTarget).attr('data-id')
-      
-      # subject = $("#subject").val()
-      # message = $("#own_message").val()
-      # recipients = $('table.dataTable tbody tr.info')
+      menuitemActive()
 
-      # if subject.length is 0
-      #   alert 'Please enter the subject for your campaign email!'
-      #   return false
+      # get campaign data
+      campaign_id = $(e.currentTarget).data('id')
+      campaign = Campaigns.findOne({_id: campaign_id})
 
-      # if message.length is 0
-      #   alert 'Please enter your message!'
-      #   return false
+      if campaign.subject.length is 0
+        apprise('Your campaign message has no subject. Would you like to be redirected to the edit page now?', { verify: true }, (r) ->
+          if r
+            delete Session.keys['searchQ']
+            delete Session.keys['prev_searchQ']
+            delete Session.keys['contact_list']           
+            Session.set('campaign_id', campaign_id)
+            Router.go('new_campaign')
+        )
+        return false
 
-      # if recipients.length is 0
-      #   alert 'Please select recipients for your campaign email!'
-      #   return false
+      if campaign.body.length is 0
+        apprise('Your campaign has no message body. Would you like to be redirected to the edit page now?', { verify: true }, (r) ->
+          if r
+            delete Session.keys['searchQ']
+            delete Session.keys['prev_searchQ']
+            delete Session.keys['contact_list']          
+            Session.set('campaign_id', campaign_id)
+            Router.go('new_campaign')
+        )
+        return false
 
-      # Session.set("OWN_MESS", message)
-      # Session.set("MAIL_TITLE", subject)
+      if campaign.recipients is undefined or campaign.recipients.length is 0
+        apprise('Your campaign message has no recipients. Would you like to be redirected to the edit page now?', { verify: true }, (r) ->
+          if r
+            delete Session.keys['searchQ']
+            delete Session.keys['prev_searchQ']
+            delete Session.keys['contact_list']
+            Session.set('campaign_id', campaign_id)
+            Router.go('new_campaign')
+        )
+        return false
 
-      # user = Meteor.user()
-      # SaveCampaign()
-      # clickSendMessages()
-      # Router.go("confirm")
+      Session.set('campaign_id', campaign_id)
+
+      Session.set("OWN_MESS", campaign.body)
+      Session.set("MAIL_TITLE", campaign.subject)
+      Session.set("CONF_DATA", campaign.recipients)
+
+      Router.go("confirm")
 
   'click .btn-create-campaign': (e) ->
       mixpanel.track("visit new campaign", { });
@@ -252,6 +277,7 @@ Template.list_campaign.events
 
   'click .back-to-feature-select': (e) ->
     Router.go 'feature_select'      
+
 
 initialize = true
 Template.new_campaign.rendered = ->
@@ -417,14 +443,17 @@ Template.inbox.rendered = ->
 @SaveCampaign = ->
   user = Meteor.user()
   if user
+    recipients = []
+    $('table.dataTable tbody tr.info').each -> recipients.push $(this).find('td:nth-child(3)').text()
+
     if Session.get("campaign_id")
-      Meteor.call 'updateCampaign', Session.get("campaign_id"), user._id, $("#subject").val(),  $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "),(e, campaign_id) ->
+      Meteor.call 'updateCampaign', Session.get("campaign_id"), user._id, $("#subject").val(), $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), recipients, (e, campaign_id) ->
         console.log e if e
         $.gritter.add
           title: "Notification"
           text: "Campaign updated!"
     else
-      Meteor.call 'createCampaign', user._id, $("#subject").val(),  $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "),(e, campaign_id) ->
+      Meteor.call 'createCampaign', user._id, $("#subject").val(), $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), recipients, (e, campaign_id) ->
         console.log e if e
         Session.set("campaign_id", campaign_id)
         $.gritter.add
