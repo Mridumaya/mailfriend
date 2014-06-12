@@ -91,6 +91,7 @@ getEnteredTags = () ->
 Template.new_campaign.events
   'click .reset-tags': (e) ->
     $('#tags').tagit('removeAll')
+    $('#campaign-tags').val('')
     delete Session.keys['searchQ']
 
     $('#tmp_matched_contacts tr, #tmp_unmatched_contacts tr').remove()
@@ -399,16 +400,20 @@ Template.new_campaign.rendered = ->
     created = new Date(elem.data('created'))
 
     created_hours = created.getHours()
+    created_minutes = created.getMinutes()
 
-    if created_hours > 12
-      created_hours -= 12
+    if created_minutes < 10
+      created_minutes = '0' + created_minutes
 
     if created_hours > 11
       ampm = 'pm'
     else
-      ampm = 'am'        
+      ampm = 'am'  
 
-    created_time = created_hours + ':' + created.getMinutes() + ampm
+    if created_hours > 12
+      created_hours -= 12      
+
+    created_time = created_hours + ':' + created_minutes + ampm
     created_monthday = created.getDate()
     created_day = weekdays[created.getDay()]
     created_month = months[created.getMonth()]
