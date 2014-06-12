@@ -66,19 +66,20 @@ getEnteredTags = () ->
   table.clear().draw()
 
   newrows = []
-  _.each(source,(item) ->
-    row = $(item)
-    newrow =
-      checked: ''
-      name: row.find('td:nth-child(2)').html()
-      email: row.find('td:nth-child(3)').html()
-      sentMessages: row.find('td:nth-child(4)').html()
-      receivedMessages: row.find('td:nth-child(5)').html()
-      isGContact: row.find('td:nth-child(6)').html()
-      isRelevant: row.find('td:nth-child(7)').html()
-    
-    newrows.push(newrow)
-  )
+  if source.length isnt 0
+    _.each(source,(item) ->
+      row = $(item)
+      newrow =
+        checked: ''
+        name: row.find('td:nth-child(2)').html()
+        email: row.find('td:nth-child(3)').html()
+        sentMessages: row.find('td:nth-child(4)').html()
+        receivedMessages: row.find('td:nth-child(5)').html()
+        isGContact: row.find('td:nth-child(6)').html()
+        isRelevant: row.find('td:nth-child(7)').html()
+      
+      newrows.push(newrow)
+    )
 
   if newrows.length
     table.rows.add(newrows).draw()
@@ -90,13 +91,16 @@ getEnteredTags = () ->
 
 Template.new_campaign.events
   'click .reset-tags': (e) ->
+    $('#recipients').tagit('removeAll')
+    $('#existing-recipients').text('')
+
     $('#tags').tagit('removeAll')
     $('#campaign-tags').val('')
     delete Session.keys['searchQ']
 
     $('#tmp_matched_contacts tr, #tmp_unmatched_contacts tr').remove()
-    @refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
-    @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+    refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+    refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
 
   'click .search-tags': (e) ->
@@ -152,20 +156,20 @@ Template.new_campaign.events
           if matches
             setTimeout ->
               # populate datatables
-              @refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
-              @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+              refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+              refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
               # scroll to results
-              results = $('#contact-list-container')
-              if results.length
-                scroll = results.offset().top
-                $('html, body').animate({
-                  scrollTop: scroll
-                }, 1000, ->
-                  # hide loaders
-                  searchLoader('hide');
-                  $('div.loading-contacts').addClass('hidden')
-                )
+              # results = $('#contact-list-container')
+              # if results.length
+              #   scroll = results.offset().top
+              #   $('html, body').animate({
+              #     scrollTop: scroll
+              #   }, 1000, ->
+              #     # hide loaders
+              #     searchLoader('hide');
+              #     $('div.loading-contacts').addClass('hidden')
+              #   )
 
               # add existing recipients to recipienys list
               recipients_str = $('#existing-recipients').text()
