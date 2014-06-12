@@ -1462,9 +1462,9 @@ table.dataTable tbody td {
     border-top-right-radius:6px;
     border-bottom-right-radius:6px;
 }
+.dataTables_paginate span a:first-child,
 .dataTables_paginate span a:last-child {
-    border-top-right-radius:0px;
-    border-bottom-right-radius:0px;
+    border-radius: 0;
 }
 .dataTables_paginate span span {
     float: left;
@@ -1485,10 +1485,16 @@ table.dataTable tbody td {
     -ms-transition:all 0.5s;
     -o-transition:all 0.5s;
     -webkit-transition:all 0.5s;
+    cursor:pointer;
 }
-.dataTables_paginate a:hover { background:#38a6a6; color:#fff; cursor:pointer;}
-.dataTables_paginate a:hover { color:#fff;}
-
+.dataTables_paginate a.current {
+    background:#DDDDDD; 
+    color:#000000;    
+}
+.dataTables_paginate a:hover { 
+    background:#EBEBEB; 
+    color:#000000; 
+}
 .dataTables_info {
     color: #95A0AA;
     font-size: 14px;

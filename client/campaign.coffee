@@ -1,13 +1,29 @@
 Template.new_campaign.helpers
   own_message: ->
     return Session.get("OWN_MESS", '')
+  
   showContactList: ->
     console.log "enter list"
     Session.equals("contact_list", "yes")
+  
   searchTags: ->
     Session.get("search_tags") || []
+  
   mail_title: ->
     return Session.get("MAIL_TITLE", '')
+
+  recipients: ->
+    campaign_id = Session.get('campaign_id')
+    campaign = Campaigns.findOne({_id: campaign_id})
+
+    if campaign
+      if campaign.recipients isnt undefined
+        return  campaign.recipients
+      else
+        return ''
+    else
+      return ''
+
 
 Template.list_campaign.helpers
   campaigns: ->
@@ -45,11 +61,6 @@ getEnteredTags = () ->
   , 1000)
 
 
-# @clearDataTable = (table) ->
-#   console.log 'clear table'
-#   table = table.DataTable()
-#   table.clear()
-
 @refreshDataTable = (table, source) ->
   table = table.DataTable()
   table.clear().draw()
@@ -78,6 +89,15 @@ getEnteredTags = () ->
 
 
 Template.new_campaign.events
+  'click .reset-tags': (e) ->
+    $('#tags').tagit('removeAll')
+    delete Session.keys['searchQ']
+
+    $('#tmp_matched_contacts tr, #tmp_unmatched_contacts tr').remove()
+    @refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+    @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+
+
   'click .search-tags': (e) ->
     button = $(e.currentTarget)
     button.data('pressed', 1)
@@ -144,6 +164,20 @@ Template.new_campaign.events
                   # hide loaders
                   searchLoader('hide');
                   $('div.loading-contacts').addClass('hidden')
+                )
+
+              # add existing recipients to recipienys list
+              recipients_str = $('#existing-recipients').text()
+
+              if recipients_str.length
+                recipients = recipients_str.split(',')
+
+                _.each(recipients, (email) ->
+                  console.log email
+                  $("#recipients").tagit("createTag", email)
+
+                  row = $('table.dataTable tbody tr td:contains(' + email + ')').parent()
+                  row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
                 )
 
               button.data('pressed', 0)
@@ -317,14 +351,16 @@ Template.new_campaign.rendered = ->
     # initialize = false;
 
   $("#tags").tagit({
-    afterTagAdded: (event,ui)->
+    afterTagAdded: (event,ui) ->
       Session.set("search_tags", $("#tags").tagit("assignedTags"))
       addedTags = $("#tags").tagit("assignedTags").join(" ")
       # Session.set("searchQ", addedTags)
       # console.log Session.get("searchQ")
       $('#campaign-tags').val(addedTags)
 
-    afterTagRemoved: (event,ui)->
+      $('a.search-tags').trigger('click');
+
+    afterTagRemoved: (event,ui) ->
       Session.set("search_tags", $("#tags").tagit("assignedTags"))
       Session.set("searchQ", $("#tags").tagit("assignedTags").join(" "))
   })
@@ -336,12 +372,15 @@ Template.new_campaign.rendered = ->
       # message = $('#own_message').val()
       # getEnteredTags(message)
 
+
 @initScrollbar = (scrollcontent) ->
+  console.log scrollcontent
   $(scrollcontent).mCustomScrollbar
     scrollButtons:
       enable: true,
       scrollType: "pixels",
       horizontalScroll: true
+
 
 @displayDate = (list) ->
   weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -395,42 +434,32 @@ Template.new_campaign.rendered = ->
     elem.removeClass('raw').text(formated)
   )
 
+
 Template.list_campaign.rendered = ->
   menuitemActive('campaign-list')
 
-  destroyInt = 0
-
   listInt = setInterval(->
-    # console.log 'int'
     list1 = $('#list1 td.info_content span.created.raw')
-    list2 = $('#list2 td.info_content span.created.raw')
 
     if list1.length
       displayDate(list1)
 
       if list1.length > 4
         initScrollbar('#content_1')
-        destroyInt++
-
-    if list2.length
-      displayDate(list2)   
-
-      if list2.length > 4
-        initScrollbar('#content_2')
-        destroyInt++
-
-    if destroyInt is 2
-      # console.log 'destroy'
-      clearInterval listInt
+        clearInterval listInt
 
   , 750)
 
+
 Template.inbox.helpers = ->
+
 
 Template.inbox.events = ->
 
+
 Template.inbox.rendered = ->
   menuitemActive('my-inbox')
+
 
 @searchLoader = (action) ->
   loader = $('#search-loader')
@@ -443,8 +472,7 @@ Template.inbox.rendered = ->
 @SaveCampaign = ->
   user = Meteor.user()
   if user
-    recipients = []
-    $('table.dataTable tbody tr.info').each -> recipients.push $(this).find('td:nth-child(3)').text()
+    recipients = $("#recipients").tagit("assignedTags")
 
     if Session.get("campaign_id")
       Meteor.call 'updateCampaign', Session.get("campaign_id"), user._id, $("#subject").val(), $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), recipients, (e, campaign_id) ->

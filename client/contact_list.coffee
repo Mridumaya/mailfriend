@@ -176,8 +176,10 @@ Template.contact_list.events
 
     if row.hasClass('info')
       row.find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+      addRecipient(row)      
     else
       row.find('td:nth-child(1)').html('')
+      removeRecipient(row)      
 
     $('.alert-contact').hide()
 
@@ -187,7 +189,13 @@ Template.contact_list.events
     rows15 = $('table.dataTable:visible tbody tr').slice(0,15)
 
     rows.removeClass('info').find('td:nth-child(1)').html('')
+    # clear recipients list
+    $("#recipients").tagit("removeAll")
+
     rows15.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+    # add recipients
+    rows15.each ->
+      addRecipient($(this))      
 
   'click .sendToTop30': (e) ->
     console.log 'sendToTop30'
@@ -195,14 +203,26 @@ Template.contact_list.events
     rows30 = $('table.dataTable:visible tbody tr').slice(0,30)
 
     rows.removeClass('info').find('td:nth-child(1)').html('')
+    # clear recipients list
+    $("#recipients").tagit("removeAll")
+
     rows30.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+    # add recipients
+    rows30.each ->
+      addRecipient($(this))      
 
   'click .sendToAll': (e) ->
     console.log 'sendToAll'
     rows = $('table.dataTable:visible tbody tr')
 
     rows.removeClass('info').find('td:nth-child(1)').html('')
+    # clear recipients list
+    $("#recipients").tagit("removeAll")
+
     rows.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+    # add recipients
+    rows.each ->
+      addRecipient($(this))      
 
   'click .add-all-relevant': (e) ->
     console.log 'sendToAllRelevant'
@@ -210,12 +230,22 @@ Template.contact_list.events
     relevant = $('table.dataTable:visible tbody').find('i.relevant-contact').closest('tr')
 
     rows.removeClass('info').find('td:nth-child(1)').html('')
+    # clear recipients list
+    $("#recipients").tagit("removeAll")
+
     relevant.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+    # add recipients
+    rows.each ->
+      addRecipient($(this))
 
   'click .selectNone': (e) ->
-    console.log 'se'
-    rows = $('table.dataTable:visible tbody tr')
+    console.log 'selectNone'
+    rows = $('table.dataTable tbody tr')
+    # rows = $('table.dataTable:visible tbody tr')
     rows.removeClass('info').find('td:nth-child(1)').html('')
+
+    # clear recipients list
+    $("#recipients").tagit("removeAll")
 
 
 
@@ -228,7 +258,7 @@ Template.contact_list.events
 
   'click .contact-list-to-confirm': (e) ->
     menuitemActive()
-    
+
     subject = $("#subject").val()
     message = $("#own_message").val()
     recipients = $('table.dataTable tbody tr.info')
@@ -253,6 +283,14 @@ Template.contact_list.events
     clickSendMessages()
     Router.go("confirm")
 
+  'click .back-to-editing': (e) ->
+    editor = $('#campaign-editor-section')
+    if editor.length
+      scroll = editor.offset().top
+      $('html, body').animate({
+        scrollTop: scroll
+      }, 1000)
+
   'click .contact-list-to-searchq': (e) ->
     Router.go("new_campaign")
     #Session.set("STEP", "searchq")
@@ -264,6 +302,28 @@ Template.contact_list.events
   'click .contact-tab': (e) ->
     $('.contact-tab').removeClass('tab-active')
     $(e.target).addClass('tab-active')
+
+
+@addRecipient = (row) ->
+  name = row.find('td:nth-child(2)').text()
+  email = row.find('td:nth-child(3)').text()
+
+  recipient = email
+  # if name.length
+  #   recipient += ' (' + name + ')'
+
+  $("#recipients").tagit("createTag", recipient)
+
+@removeRecipient = (row) ->
+  name = row.find('td:nth-child(2)').text()
+  email = row.find('td:nth-child(3)').text()
+
+  recipient = email
+  # if name.length
+  #   recipient += ' (' + name + ')'
+
+  $("#recipients").tagit("removeTagByLabel", recipient)
+
 
 loadAllGmails = (isLoadAll) ->
   Meteor.setTimeout ->
@@ -311,8 +371,17 @@ Template.contact_list.rendered = ->
       Session.set('FILTER_GMAIL_SENT', true) if values[i] == "gmail-sent"
       Session.set('FILTER_GCONTACT', true) if values[i] == "gcontact"
 
+  # recipients list
+  $("#recipients").tagit(
+    afterTagRemoved: (event,ui) ->
+      email = ui.tagLabel
+      row = $('table.dataTable tbody tr td:contains(' + email + ')').parent()
 
-clickSendMessages = (toEmails=[])->
+      row.removeClass('info').find('td:nth-child(1)').html('')
+  )
+
+
+clickSendMessages = (toEmails=[]) ->
   emails = []
   if toEmails.length
     emails = toEmails

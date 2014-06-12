@@ -317,6 +317,7 @@ table.contacts td{
     border-radius: 0px 0px 5px 5px;
 }
 
+#recipients,
 #tags {
     min-height: 31px;
     padding: 0 2px 2px 2px;
@@ -324,14 +325,24 @@ table.contacts td{
     border-radius: 6px;
 }
 
+#recipients li, 
 #tags li {
     font-size: 14px;
     height: 25px;
     margin: 2px 2px 0 0;
 }
 
+#recipients li.tagit-new {
+    display: none;
+}
+
 .search-tags {
     margin-top: 10px;
+}
+
+.reset-tags {
+    background-color: #D9534F !important;
+    margin-right: 3px;    
 }
 
 #login-dialog .modal-header h3 {
