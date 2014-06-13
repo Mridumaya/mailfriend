@@ -1,19 +1,19 @@
 Meteor.publish 'contacts', (user_id) ->
   if user_id and (user_id is @userId)
-    Contacts.find({user_id: @userId}, {fields: {from: 0}}).fetch()
+    Contacts.find({user_id: @userId}, {fields: {from: 0}})
 
 Meteor.publish 'sharings', ->
-  Sharings.find().fetch()
+  Sharings.find()
 
-Meteor.publish 'campaigns',(user_id) ->
+Meteor.publish 'campaigns', (user_id) ->
   if user_id and (user_id is @userId)
-    Campaigns.find({user_id: @userId}).fetch()
+    Campaigns.find({user_id: @userId})
 
 Meteor.publish 'publicCampaigns', (user_id, slug) ->
-  Campaigns.find({user_id: user_id, slug: slug}).fetch()
+  Campaigns.find({user_id: user_id, slug: slug})
 
 Meteor.publish 'messages', ->
-  Messages.find().fetch()
+  Messages.find()
 
 Meteor.publish 'search_status', ->
-  SearchStatus.find().fetch()
+  SearchStatus.find()
