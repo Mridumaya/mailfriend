@@ -48,6 +48,7 @@ Template.feature_select.rendered = ->
   $('#manual-login-dialog').modal('hide')
   $('#login-dialog').modal('hide')
   $('#register-dialog').modal('hide')
+  $('#help-dialog').modal('hide')
 
 
 Template.feature_select.helpers

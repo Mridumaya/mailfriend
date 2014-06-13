@@ -35,6 +35,10 @@ input[type=text],input[type=search],input[type=password], textarea {
     margin-top: 30px;
 }
 
+.mr50 {
+    margin-right: 50px;
+}
+
 .mt60 {
     margin-top: 60px;
 }
@@ -51,12 +55,24 @@ input[type=text],input[type=search],input[type=password], textarea {
     margin-right: 10px;
 }
 
+.mb20 {
+    margin-bottom: 20px;
+}
+
 .mrm8 {
     margin-right: -8px;
 }
 
 .mlm14 {
     margin-left: -14px;
+}
+
+.centertext {
+    text-align: center !important;
+}
+
+.pb70 {
+    padding-bottom: 70px !important;
 }
 
 .container {
@@ -91,6 +107,19 @@ article{
     position: relative;
     margin-top: 50px;
 }
+
+.modal-header button.close {
+    cursor: pointer;
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 0.5;
+    position: absolute;
+    right: 13px;
+    top: 37px;
+} 
+
+.modal-header h1 { color:#333645; font-family: 'Lato', sans-serif;font-size: 18px;text-align:left; font-weight:bold !important; text-transform:uppercase; border-bottom:1px solid #d1d6da; padding-bottom:16px;}
+
 .navbar-default {
     background: #27709b;
     /*line-height: 69px;*/

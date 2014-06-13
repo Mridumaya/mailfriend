@@ -25,6 +25,7 @@ googleOauthOpen = (ev) ->
 registerOpen = (ev) ->
   ev.preventDefault()
   $('#login-dialog').modal('hide')
+  $('#help-dialog').modal('hide')
   mixpanel.track("click goto registration button", { });
   $('#register-dialog').modal('show')
   # Router.go("register")
@@ -39,6 +40,16 @@ manualLoginOpen = (ev) ->
   # Router.go("manual_login")
   #Session.set("STEP", "manual_login")
 
+
+Template.welcome.rendered = ->
+
+
+Template.welcome.events
+  'click .register': (e) ->
+    registerOpen(e)
+
+  'click .add-google-oauth': (e) ->
+    googleOauthOpen(e)
 
 # home template events
 Template.home.events

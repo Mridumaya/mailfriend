@@ -30,6 +30,9 @@ Template.list_campaign.helpers
     campaigns = Campaigns.find().fetch()
     campaigns = _.sortBy campaigns, (c) -> -c.created_at || 0
 
+  rooturl: ->
+    Meteor.absoluteUrl ""
+
 
 @key_up_delay = 0;
 getEnteredTags = () ->
