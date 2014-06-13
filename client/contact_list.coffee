@@ -48,6 +48,8 @@ Template.contact_list.helpers
     columns = [{
       title: ""
       data: "checked"
+      mRender:  ( data, type, row ) ->
+        row.checked ?= ""      
     },{
       title: "Name"
       data: "name"

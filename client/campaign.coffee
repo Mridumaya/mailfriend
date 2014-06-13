@@ -66,11 +66,20 @@ getEnteredTags = () ->
   table.clear().draw()
 
   newrows = []
+  selectedrows = []
+  rowcount = 0
   if source.length isnt 0
     _.each(source,(item) ->
       row = $(item)
+
+      checked = row.find('td:nth-child(1)').html()
+      if checked isnt '<i></i>'
+        selectedrows.push(rowcount)
+
+      rowcount++
+
       newrow =
-        checked: ''
+        checked: row.find('td:nth-child(1)').html()
         name: row.find('td:nth-child(2)').html()
         email: row.find('td:nth-child(3)').html()
         sentMessages: row.find('td:nth-child(4)').html()
@@ -83,6 +92,16 @@ getEnteredTags = () ->
 
   if newrows.length
     table.rows.add(newrows).draw()
+
+    if selectedrows.length isnt 0
+      settings = table.settings()
+      rowsdata = settings[0]['aoData']
+
+      _.each(selectedrows,(item) ->
+        rowdata = rowsdata[item]
+
+        $(rowdata.nTr).addClass('info')
+      )
 
     # hide loaders
     searchLoader('hide');
@@ -154,6 +173,25 @@ Template.new_campaign.events
           # if there are matches add them to datatables
           matches = parseInt($('#tmp_matched_contacts tr').length)
           if matches
+            # add existing recipients to recipienys list
+            recipients_str = $('#existing-recipients').text()
+
+            if recipients_str.length
+              recipients = recipients_str.split(',')
+
+              _.each(recipients, (email) ->
+                $("#recipients").tagit("createTag", email)
+
+                row = $('#tmp_matched_contacts tr td:contains(' + email + ')').parent()
+                if row.length isnt 0
+                  row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+                
+                else
+                  row = $('#tmp_unmatched_contacts tr td:contains(' + email + ')').parent()
+                  if row.length isnt 0
+                    row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+              )
+
             setTimeout ->
               # populate datatables
               refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
@@ -170,20 +208,6 @@ Template.new_campaign.events
               #     searchLoader('hide');
               #     $('div.loading-contacts').addClass('hidden')
               #   )
-
-              # add existing recipients to recipienys list
-              recipients_str = $('#existing-recipients').text()
-
-              if recipients_str.length
-                recipients = recipients_str.split(',')
-
-                _.each(recipients, (email) ->
-                  console.log email
-                  $("#recipients").tagit("createTag", email)
-
-                  row = $('table.dataTable tbody tr td:contains(' + email + ')').parent()
-                  row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
-                )
 
               button.data('pressed', 0)
             , 2000
