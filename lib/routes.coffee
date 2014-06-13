@@ -12,16 +12,44 @@ IR_BeforeHooks =
 Router.onBeforeAction(IR_BeforeHooks.isLoggedIn, { only: ['feature_select', "edit_user_info", 'new_campaign'] } )
 
 Router.map ->
+  # @route "welcome",
+  #   layoutTemplate: "masterLogoutLayout",
+  #   template: "welcome",
+  #   path: "/welcome",   
+
+  @route "public_welcome",
+    path: '/:user_id/:slug',
+    layoutTemplate: "masterLogoutLayout",
+    template: "welcome",
+    
+    data: ->
+      Meteor.subscribe 'publicCampaigns', @params.user_id, @params.slug, ->
+        console.log 'Public campaigns'
+
+      #user = Meteor.users.findOne({username: @params.username});
+      campaign = Campaigns.findOne {slug: @params.slug, user_id: @params.user_id}
+      console.log campaign
+
+      if campaign isnt `undefined`
+        Session.set "MAIL_TITLE", campaign.subject
+        Session.set "ORIG_MESS", campaign.body
+        #Session.set 'slug', @params.slug
+        #Session.set 'user_id', @params.user_id
+        #Session.set 'STEP', "public_welcome"
+        Session.set 'STEP', "public_signup"
+      console.log Session.get "MAIL_TITLE"
+      campaign
+
   @route "verify-email",
     path: "/verify-email/:token"
     action: ()->
-        Accounts.verifyEmail @params.token, (err)->
-            console.log(err)
-            if(err)
-                Session.set( "errorMessage", err.reason);
-            else
-                Session.set( "successMessage", 'Your mail verified successfully.');
-            Router.go("login")
+      Accounts.verifyEmail @params.token, (err)->
+        console.log(err)
+        if(err)
+            Session.set( "errorMessage", err.reason);
+        else
+            Session.set( "successMessage", 'Your mail verified successfully.');
+        Router.go("login")
 
   @route "home",
     layoutTemplate: "masterLogoutLayout",
@@ -61,8 +89,4 @@ Router.map ->
 
   @route "inbox",
     path: "/inbox",
-
-  @route "welcome",
-    layoutTemplate: "masterLogoutLayout",
-    template: "welcome",
-    path: "/welcome",    
+ 
