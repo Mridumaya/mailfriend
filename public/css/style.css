@@ -59,6 +59,10 @@ input[type=text],input[type=search],input[type=password], textarea {
     margin-left: -14px;
 }
 
+.container {
+    width: 100% !important;
+}
+
 label{
     display: block;
     font-weight: normal;

@@ -435,9 +435,9 @@ a span.my_inbox {
 .manubar .active { border:1px solid #f26662; border-radius:5px; color:#f26662; background:transparent;}
 .manubar .active:hover { background-color:#f26662; color:#fff;}
 .header_part_2 { width:100%; float:left; text-align:center; position:relative; }
-.header_part_2 h2 {font-family: 'SerifaRegular'; font-weight:bold; color:#fff; font-size:90px;margin-top:205px;  }
+.header_part_2 h2 {font-family: 'SerifaRegular'; font-weight:bold; color:#fff; font-size:90px; /*margin-top:205px;*/ margin-top: 10%;  }
 .header_part_2 h2 span { font-family: 'Lato', sans-serif;color:#fff; font-size:90px; font-weight:300;}
-.header_part_2 h3 { font-family: 'Lato', sans-serif;color:#fff; font-size:30px; font-weight:300;  margin-bottom:205px; letter-spacing:3px;}
+.header_part_2 h3 { font-family: 'Lato', sans-serif;color:#fff; font-size:30px; font-weight:300;  /*margin-bottom:205px;*/ margin-bottom: 15%; letter-spacing:3px;}
 .header_part_2 h4 { font-family: 'Lato', sans-serif;color:#fff; font-size:14px; font-weight:bold; text-transform:uppercase; margin-top:35px; margin-bottom:88px;}
 .more_info_part { width:100%;   float:left; margin-bottom: 110px;}
 .more_info_part ul { width:100%; float:left;}
