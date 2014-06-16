@@ -184,7 +184,7 @@ Template.confirm.helpers
     to = []
     $(Session.get "CONF_DATA").each (index, value) -> 
       to.push value
-    emails = to.join(', ')
+    emails = '<span>' + to.join('</span>, <span>') + '</span>'
     emails
 
 

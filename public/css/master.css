@@ -1621,6 +1621,14 @@ p.draft-to {
     padding: 10px;
 }
 
+p.draft-to span {
+    background-color: #D9534F;
+    border-radius: 4px;
+    color: #FFFFFF;
+    margin-right: 1px;
+    padding: 4px 5px;
+}
+
 .email {
     background: url(../images/email_bg.png) no-repeat scroll 58px center #d9534f;
     color: hsl(0, 0%, 100%);
