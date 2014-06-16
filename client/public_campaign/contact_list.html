@@ -1,0 +1,257 @@
+<template name="public_contact_list">
+    <div id="container-inner">
+    <section class="inbox_content" id="contact-list-container">
+        <a class="search-tags hidden">Search</a>
+
+        <div class="text_box">
+            These are your Friends Interested in: <span class="red">{{searchQ}}</span> &nbsp;<span class="green edit-search-term-open" data-toggle="modal" data-target="#searchTermModal">edit search term</span>
+            <br>
+            The people at the top are the most relevant. Select people using these handy buttons.
+        </div>
+        <div class="info_button_box">
+            <a href="#" class="info_button sendToTop15">select top 15</a>
+            <a href="#" class="info_button sendToTop30">Select the top 30 relevant</a>
+            <a href="#" class="info_button sendToAll">Select all</a>
+            <a href="#" class="info_button add-all-relevant">Select all relevant</a>
+            <a href="#" class="info_button selectNone">Select none</a>
+        </div>
+
+        <div class="btn-group select-contact-group">
+            <a href="#matched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab tab-active">Matched Contacts</a>
+            <a href="#unmatched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab">Unatched Contacts</a>
+        </div>
+
+        <div class="alert alert-warning alert-dismissable no-results hidden mt20">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Your search had no results!</strong> Please try again with other keywords or select recipients from the "Unmatched Contacts" list.
+        </div>
+
+        <div class="tab-content table_2">
+            <div class="tab-pane active" id="matched-contacts-tab">
+                <div class="loading-contacts">
+                    <img src="/images/ajax-loader.gif" alt=""><span> Loading search results...</span>
+                </div>
+
+                {{> DataTable
+                    selector=matched_selector
+                    columns=columns
+                }}
+
+                <table id="tmp_matched_contacts" class="hidden">
+                    {{#each matchedContacts}}
+                    <tr class="contact" data-email="{{email}}">
+                        <td class="icon"><i></i></td>
+                        <td>{{name}}</td>
+                        <td>{{email}}</td>
+                        <td>{{sentMessages}}</td>
+                        <td>{{receivedMessages}}</td>
+                        <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                        <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+            </div>
+            <div class="tab-pane" id="unmatched-contacts-tab">
+                <div class="loading-contacts">
+                    <img src="/images/ajax-loader.gif" alt=""><span> Loading search results...</span>
+                </div>
+
+                {{> DataTable
+                    selector=unmatched_selector
+                    columns=columns
+                }}
+
+                <table id="tmp_unmatched_contacts" class="hidden">
+                    {{#each unmatchedContacts}}
+                    <tr class="contact" data-email="{{email}}">
+                        <td class="icon"><i></i></td>
+                        <td>{{name}}</td>
+                        <td>{{email}}</td>
+                        <td>{{sentMessages}}</td>
+                        <td>{{receivedMessages}}</td>
+                        <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                        <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+            </div>            
+        </div>
+
+        <section class="inbox_content">
+            <div class="block_head">
+                <div class="box_left">
+                    <h2>Recipients list</h2>
+                    <img src="/images/arreow_block.png" alt="arreow_box">
+                </div>
+            </div>
+            <div class="block_main_content">
+                <div class="box">
+                    <ul id="recipients"></ul>
+                </div>
+            </div>
+        </section>        
+
+        <div class="row">
+            <label class="pull-right">Step 3 of 4</label>
+        </div>
+        <div class="row">
+            <a href="#" class="button contact-list-to-confirm pull-right">Preview email</a>
+            <a href="#" class="button back_button pull-right contact-list-to-searchq mr10">Back</a>
+        </div>
+    </section>
+    </div>
+
+    <div class="modal fade" id="searchTermModal" tabindex="-1" role="dialog" aria-labelledby="mySearchTermLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header pb70">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1>Edit search term</h1>
+                    
+                    <p>Please add or change search term</p>
+                    <input type="text" id="s_term" value="{{searchQ}}" class="form-control">
+                    <button type="button" class="btn btn-primary edit-search-term pull-right mt10">Change</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+ <!--<article class="contact_list">
+        <h4>These are your friends interested in: <b style="color: rgb(217, 83, 79);">{{searchQ}}</b> <a style="font-size: 15px;" href="#" data-toggle="modal" data-target="#searchTermModal">edit search term</a></h4>
+        <h4>The people at the top are the most relevant. Select people using these handy buttons.</h4>
+
+        <div class="btn-send-group">
+            <div class="btn-group">
+                <a href="#" class="button sendToTop15">select the top 15</a>
+            </div>
+            <div class="btn-group">
+                <a href="#" class="button sendToTop30">select the top 30 relevant</a>
+            </div>
+            <div class="btn-group">
+                <a href="#" class="button sendToAll">select all</a>
+            </div>
+            <div class="btn-group">
+                <a href="#" class="button add-all-relevant">choose all relevant</a>
+            </div>
+            <div class="btn-group">
+                <a href="#" class="button clear-all">clear all</a>
+            </div>
+        </div>
+        {{#constant}}
+         <select data-placeholder="Sort by people I've:" class="chosen-select" multiple style="width: 550px;">
+            <option value="gmail-sent">Sent a message to in the last 3 months</option>
+            <option value="gmail-received">Received a message from the last 3 months</option>
+            <option value="gcontact">Added to my contact list</option>
+            <option value="gmail-contacts">Click to get recipients of all your emails (Or it will only recent recipients)</option>
+        </select>
+
+        {{/constant}}
+
+        <div class="alert alert-warning alert-contact">Warning! Select emails of friends first!</div>
+        <div class="row" style="margin-top: 25px;">
+            {{#if isSearchRunning}}
+                <img src="/images/ajax-loader.gif" alt="Loading...">
+            {{/if}}
+            <div class="well">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#matched-contacts-tab" data-toggle="tab">Matched Contacts</a></li>
+                    <li><a href="#unmatched-contacts-tab" data-toggle="tab">Unmatched Contacts</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="matched-contacts-tab">
+                        <div class="row">
+                            <table id="matched-contacts" class="table table-bordered table-hover contacts">
+                                <thead>
+                                <tr>
+                                    <th style="width: 32px"></th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th style="width: 80px;">Sent in last 90 days</th>
+                                    <th style="width: 80px;">Received in last 90 days</th>
+                                    <th>On Contact list</th>
+                                    <th>Relevant {{#if searchQ}}({{searchQ}}){{/if}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each matchedContacts}}
+                                        <tr class="contact" data-email="{{email}}">
+                                            <td class="icon" ><i></i></td>
+                                            <td>{{name}}</td>
+                                            <td>{{email}}</td>
+                                            <td>{{sentMessages}}</td>
+                                            <td>{{receivedMessages}}</td>
+                                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="unmatched-contacts-tab">
+                        <div class="row">
+                            <table id="unmatched-contacts" class="table table-bordered table-hover contacts">
+                                <thead>
+                                <tr>
+                                    <th style="width: 32px"></th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th style="width: 80px;">Sent in last 90 days</th>
+                                    <th style="width: 80px;">Received in last 90 days</th>
+                                    <th>On Contact list</th>
+                                    <th>Relevant {{#if searchQ}}({{searchQ}}){{/if}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each unmatchedContacts}}
+                                        <tr class="contact" data-email="{{email}}">
+                                            <td class="icon" ><i></i></td>
+                                            <td>{{name}}</td>
+                                            <td>{{email}}</td>
+                                            <td>{{sentMessages}}</td>
+                                            <td>{{receivedMessages}}</td>
+                                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="clear"></div>
+        <div class="row">
+            <label class="pull-right" >Step 3 of 4</label></div>
+        <div class="row">
+            <a href="#" class="button contact-list-to-confirm pull-right">Preview email
+            </a>
+            <a href="#" class="back_button pull-right contact-list-to-searchq" style="margin-right: 10px;">Back
+            </a>
+
+        </div>
+        <div class="row text-right">
+            <div style="font-size: 12px;">no mail will be sent</div>
+        </div>
+        <div class="modal fade" id="searchTermModal" tabindex="-1" role="dialog" aria-labelledby="mySearchTermLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="mySearchTermLabel">Edit search term</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please add or change search term</p>
+                        <input type="text" id="s_term" value="{{searchQ}}" />
+                        <a href="#" class="button edit-search-term">Change</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article> -->
+</template>

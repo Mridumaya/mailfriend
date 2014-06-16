@@ -112,6 +112,45 @@
     {{/if}}
 </template>
 
+<template name="publicMasterLayout">
+    <section class="wrapper public">
+        <header>
+            <div class="mobile-header">
+                <h1 class="logo"><a href="{{pathFor 'feature_select'}}"><img src="/images/logo.png" alt="Mailfriend" title="Mailfriend"></a></h1>
+                <h1 class="logo_2"><a href="{{pathFor 'feature_select'}}"><img src="/images/logo_2.png" alt="Mailfriend" title="Mailfriend"></a></h1>
+                {{#if hasLogin}}
+                <article class="user_pic">
+                    <ul>
+                        <li>
+                            <img src="{{picture}}" alt="user_pic" title="user_pic" height="43" width="40">
+                            <div class="image-mask"></div>
+                        </li>
+                        <li>
+                            <a href="#" class="edit-user-info">{{fullname}}</a>
+                        </li>
+                        <li class="bg_none">
+                            <a href="#" class="logout"><img src="/images/logout_pic.png" alt="Sign out" title="Sign out"></a>
+                        </li>
+                    </ul>
+                </article>
+                {{/if}}
+            </div>
+        </header>
+
+        <div id="container1">
+            <div class="container">
+                <div class="row mrm15">
+                    <div class="col-md-12">
+                        {{ > yield}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{> footer}}
+</template>
+
 <template name="masterLogoutLayout">
     {{> yield}}
 

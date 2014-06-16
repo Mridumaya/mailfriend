@@ -240,8 +240,8 @@
 
 <template name="welcome">
     <section class="welcome_container">
-        <h2>Welcome friend of <span>Mail Friend,</span></h2>
-        <h3>Welcome to mailfriend!</h3>
+        <h2>Welcome friend of <span>{{sender}},</span></h2>
+        <h3>Welcome to Mail Friend!</h3>
         <h4>You have a few options:</h4>
    
         <div class="login_portion">
@@ -268,13 +268,13 @@
                 </div> -->
  
                <h2>Create an account on <br><span>Mail Friend</span></h2>
-               <p>By creating an account, you can save,<br>edit and come back to<br> you messages</p>
+               <p>By creating an account, you can save,<br>edit and come back to<br> you messages.</p>
             </div>
 
             <div class="help_part">
                 <a href="#" class="big-link" data-reveal-id="helpmodle">
                     <div class="demo">
-                        <img src="/images/help_img.png" alt="help" data-toggle="modal" data-target="#help-dialog">
+                        <img src="/images/help_img.png" alt="help" class="public-account">
                     </div>
                 </a>   
 
@@ -294,17 +294,16 @@
                     <a class="close-reveal-modal">&#215;</a>
                 </div> -->
 
-                <h2>I just want to help <br><span>Mail Friend</span></h2>
-                <p>You are ready to go, don't need to save or edit this,<br>you just want to get the word out about<br><a href="#">Mail Friend's</a> Project!<br>(you can always make an account later)</p>
+                <h2>I just want to help <br><span>{{sender}}</span></h2>
+                <p>You are ready to go, don't need to save or edit this,<br>you just want to get the word out about<br><a href="#">{{sender}}'s</a> Project!<br>(you can always make an account later)</p>
             </div>
         </div>
     </section>
 
     {{> register_dialog}}
-    {{> help_dialog}}
 </template>
 
-<template name="help_dialog">
+<!-- <template name="help_dialog">
     <div id="help-dialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="login-dialog-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -325,4 +324,4 @@
             </div>
         </div>
     </div>
-</template>
+</template> -->

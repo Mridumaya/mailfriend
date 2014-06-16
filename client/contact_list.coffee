@@ -254,9 +254,12 @@ Template.contact_list.events
   'click .edit-search-term': (e) ->
     searchQuery = $('#s_term').val().trim()
     if searchQuery
-      searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
-        console.log "search query changed"
-        $("#searchTermModal").modal("hide")
+      Session.set('searchQ', searchQuery)
+
+      $("#searchTermModal").modal("hide")
+
+      $('.search-tags').trigger('click')
+      
 
   'click .contact-list-to-confirm': (e) ->
     menuitemActive()

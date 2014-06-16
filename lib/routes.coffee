@@ -12,11 +12,6 @@ IR_BeforeHooks =
 Router.onBeforeAction(IR_BeforeHooks.isLoggedIn, { only: ['feature_select', "edit_user_info", 'new_campaign'] } )
 
 Router.map ->
-  # @route "welcome",
-  #   layoutTemplate: "masterLogoutLayout",
-  #   template: "welcome",
-  #   path: "/welcome",   
-
   @route "public_welcome",
     path: '/:user_id/:slug',
     layoutTemplate: "masterLogoutLayout",
@@ -30,15 +25,35 @@ Router.map ->
       campaign = Campaigns.findOne {slug: @params.slug, user_id: @params.user_id}
       console.log campaign
 
-      if campaign isnt `undefined`
+      if campaign isnt undefined
         Session.set "MAIL_TITLE", campaign.subject
         Session.set "ORIG_MESS", campaign.body
         #Session.set 'slug', @params.slug
         #Session.set 'user_id', @params.user_id
         #Session.set 'STEP', "public_welcome"
-        Session.set 'STEP', "public_signup"
+        # Session.set 'STEP', "public_signup"
       console.log Session.get "MAIL_TITLE"
       campaign
+
+  @route "publicedit",
+    path: '/public-edit',
+    layoutTemplate: "publicMasterLayout",
+    template: "public_edit"
+
+  @route "publicsearchcontacts",
+    path: '/public-search-contacts',
+    layoutTemplate: "publicMasterLayout",
+    template: "public_search_contacts", 
+
+  @route "publiccontactlist",
+    path: '/public-contact-list',
+    layoutTemplate: "publicMasterLayout",
+    template: "public_contact_list", 
+
+  @route "publicconfirm",
+    path: '/public-confirm',
+    layoutTemplate: "publicMasterLayout",
+    template: "public_confirm", 
 
   @route "verify-email",
     path: "/verify-email/:token"
