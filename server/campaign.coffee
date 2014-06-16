@@ -12,7 +12,15 @@ Meteor.methods
     return campaign_id
 
   updateCampaign:(campaignId, userId, subject, body, search_tags, recipients) ->
-    Campaigns.update({ _id: campaignId }, {$set: { user_id: userId, subject: subject, body: body, search_tags: search_tags, recipients: recipients } })
+    # Generate slug
+    slug = URLify2 subject
+
+    # Now check if the same slug used already
+    count = Campaigns.find(slug: slug, user_id: userId).count()
+    if count > 0
+      slug += "-" + count.toString()
+
+    Campaigns.update({ _id: campaignId }, {$set: { user_id: userId, subject: subject, body: body, search_tags: search_tags, recipients: recipients, slug: slug } })
 
   markCampaignSent:(campaignId, userId) ->
     Campaigns.update({ _id: campaignId }, {$set: { email_sent: 'yes' } })

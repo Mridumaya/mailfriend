@@ -136,16 +136,16 @@ Template.new_campaign.events
     if searchQuery.length
       mixpanel.track("search tag", { });
       
-      if searchQuery is prev_searchQuery
-        # scroll to results
-        results = $('#contact-list-container')
-        if results.length
-          scroll = results.offset().top
-          $('html, body').animate({
-            scrollTop: scroll
-          }, 1000)
+      # if searchQuery is prev_searchQuery
+      #   # scroll to results
+      #   results = $('#contact-list-container')
+      #   if results.length
+      #     scroll = results.offset().top
+      #     $('html, body').animate({
+      #       scrollTop: scroll
+      #     }, 1000)
 
-        return false     
+      #   return false
 
       # show the loaders
       searchLoader('show');
@@ -227,16 +227,20 @@ Template.new_campaign.events
             @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
             # scroll to results
-            results = $('#contact-list-container')
-            if results.length
-              scroll = results.offset().top
-              $('html, body').animate({
-                scrollTop: scroll
-              }, 1000, ->
-                # hide loaders
-                searchLoader('hide');
-                $('div.loading-contacts').addClass('hidden')
-              )
+            # results = $('#contact-list-container')
+            # if results.length
+            #   scroll = results.offset().top
+            #   $('html, body').animate({
+            #     scrollTop: scroll
+            #   }, 1000, ->
+            #     # hide loaders
+            #     searchLoader('hide');
+            #     $('div.loading-contacts').addClass('hidden')
+            #   )
+
+            # hide loaders
+            searchLoader('hide');
+            $('div.loading-contacts').addClass('hidden')
 
             # show the no results warning
             $('div.no-results').removeClass('hidden')
@@ -346,19 +350,29 @@ Template.list_campaign.events
 
 
 initialize = true
+saveInt = ''
 Template.new_campaign.rendered = ->
   menuitemActive('new-campaign')
 
+  # save the campaign periodically
+  clearInterval saveInt
+  saveInt = setInterval(->
+    if $('#own_message').length
+      SaveCampaign()
+  , 17000)   
+
+  # do search when a campaign is opened and there are search tags
   if $('#campaign-tags').val().length
     button = $('a.search-tags')
     pressed = button.data('pressed')
 
     if pressed is 0    
       setTimeout ->
-        console.log 'search-tags click triggered'
+        # console.log 'search-tags click triggered'
         button.trigger('click')
-      , 3000
+      , 2000
 
+  # init wisyhtml5 editor
   if (initialize)
     messageLength = 0
     interval = 0
@@ -375,13 +389,14 @@ Template.new_campaign.rendered = ->
               
               getEnteredTags()
               return
-          ,100)
+          , 100)
 
         blur: () ->
           clearInterval interval
 
     # initialize = false;
 
+  # init tagit
   $("#tags").tagit({
     afterTagAdded: (event,ui) ->
       Session.set("search_tags", $("#tags").tagit("assignedTags"))
@@ -508,7 +523,12 @@ Template.inbox.rendered = ->
 @SaveCampaign = ->
   user = Meteor.user()
   if user
-    recipients = $("#recipients").tagit("assignedTags")
+    # get campaign message recipients
+    recipientsTagit = $("#recipients")
+    if recipientsTagit.length
+      recipients = recipientsTagit.tagit("assignedTags")
+    else
+      recipients = ''
 
     if Session.get("campaign_id")
       Meteor.call 'updateCampaign', Session.get("campaign_id"), user._id, $("#subject").val(), $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), recipients, (e, campaign_id) ->
@@ -522,7 +542,7 @@ Template.inbox.rendered = ->
         Session.set("campaign_id", campaign_id)
         $.gritter.add
           title: "Notification"
-          text: "Campaign Saved!"
+          text: "Campaign saved!"
 
 @searchContacts = (searchQuery, session_id, cb) ->
   if Meteor.user()
