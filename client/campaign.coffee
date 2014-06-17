@@ -42,23 +42,33 @@ getEnteredTags = () ->
   message = $('#own_message').val()
 
   @key_up_delay = setTimeout(->
-    $("#tags").tagit("assignedTags")
+    currentTagsStr = $("#tags").tagit("assignedTags").join(' ')
+
+    searchTags = $('#campaign-tags').val().split(' ')
+    searchTagsStr = searchTags.join(' ')
+
     re = /(?:^|\W)#(\w+)(?!\w)/g
     match
-    tags = new Array()
-
-    # clear tags
-    $("#tags").tagit("removeAll")
-
-    # add predefined tags 
-    searchTags = $('#campaign-tags').val().split(' ')
-    _.each(searchTags || [],(item) ->
-      $("#tags").tagit("createTag", item)
-    )
+    messageTags = new Array()
 
     while (match = re.exec(message))
-      $("#tags").tagit("createTag", match[1]);
-      tags.push match[1]
+      if searchTagsStr.indexOf(match[1]) is -1
+        searchTags.push match[1]
+
+    newTagsStr = searchTags.join(' ') # + ' ' + messageTags.join(' ')
+    newTagsStr.trim()
+
+    # console.log currentTagsStr
+    # console.log newTagsStr
+
+    if currentTagsStr isnt newTagsStr
+      # clear tags
+      $("#tags").tagit("removeAll")
+
+      # add predefined tags 
+      _.each(searchTags || [],(item) ->
+        $("#tags").tagit("createTag", item)
+      )
 
     Session.set("search_tags", tags)
   , 1000)
@@ -312,6 +322,7 @@ Template.list_campaign.events
 
 initialize = true
 saveInt = ''
+triggerTimeout = 0
 Template.new_campaign.rendered = ->
   menuitemActive('new-campaign')
 
@@ -364,25 +375,43 @@ Template.new_campaign.rendered = ->
   # init tagit
   $("#tags").tagit({
     afterTagAdded: (event,ui) ->
-      Session.set("search_tags", $("#tags").tagit("assignedTags"))
-      addedTags = $("#tags").tagit("assignedTags").join(" ")
-      # Session.set("searchQ", addedTags)
-      # console.log Session.get("searchQ")
+      currentTags = $("#tags").tagit("assignedTags")
+      
+      Session.set("search_tags", currentTags)
+      addedTags = currentTags.join(" ")
+
       $('#campaign-tags').val(addedTags)
 
-      $('a.search-tags').trigger('click');
+      if triggerTimeout isnt 0
+        clearTimeout triggerTimeout
+
+      triggerTimeout = setTimeout ->
+        console.log 'trigger the search'
+        $('a.search-tags').trigger('click');
+      , 1000
 
     afterTagRemoved: (event,ui) ->
-      Session.set("search_tags", $("#tags").tagit("assignedTags"))
-      Session.set("searchQ", $("#tags").tagit("assignedTags").join(" "))
+      currentTags = $("#tags").tagit("assignedTags")
+      
+      Session.set("search_tags", currentTags)
+      addedTags = currentTags.join(" ")
+      
+      # $('#campaign-tags').val(addedTags)
+
+      if triggerTimeout isnt 0
+        clearTimeout triggerTimeout
+
+      triggerTimeout = setTimeout ->
+        console.log 'trigger the search'
+        $('a.search-tags').trigger('click');
+      , 1000
   })
 
   if Session.get 'campaign_id'
     getEnteredTags()
 
-    # Meteor.defer ->
-      # message = $('#own_message').val()
-      # getEnteredTags(message)
+    Meteor.defer ->
+      getEnteredTags()
 
 
 @initScrollbar = (scrollcontent) ->
