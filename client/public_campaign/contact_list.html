@@ -28,7 +28,7 @@
 
         <div class="tab-content table_2">
             <div class="tab-pane active" id="matched-contacts-tab">
-                <div class="loading-contacts">
+                <div class="loading-contacts hidden">
                     <img src="/images/ajax-loader.gif" alt=""><span> Loading search results...</span>
                 </div>
 
@@ -38,6 +38,7 @@
                 }}
 
                 <table id="tmp_matched_contacts" class="hidden">
+                    {{#if showContactList}}
                     {{#each matchedContacts}}
                     <tr class="contact" data-email="{{email}}">
                         <td class="icon"><i></i></td>
@@ -49,6 +50,7 @@
                         <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
                     </tr>
                     {{/each}}
+                    {{/if}}
                 </table>
             </div>
             <div class="tab-pane" id="unmatched-contacts-tab">
@@ -62,6 +64,7 @@
                 }}
 
                 <table id="tmp_unmatched_contacts" class="hidden">
+                    {{#if showContactList}}
                     {{#each unmatchedContacts}}
                     <tr class="contact" data-email="{{email}}">
                         <td class="icon"><i></i></td>
@@ -73,6 +76,7 @@
                         <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
                     </tr>
                     {{/each}}
+                    {{/if}}
                 </table>
             </div>            
         </div>

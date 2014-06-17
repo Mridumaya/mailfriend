@@ -1,4 +1,8 @@
 Template.public_contact_list.helpers
+  showContactList: ->
+    console.log "enter list"
+    Session.equals("contact_list", "yes")
+
   matchedContacts: ->
     console.log 'Matched Contacts'
     if Session.get('searchQ')
@@ -256,6 +260,8 @@ Template.public_contact_list.events
     if searchQuery
       Session.set('searchQ', searchQuery)
 
+      console.log 'trigger: ' + searchQuery
+
       $("#searchTermModal").modal("hide")
 
       $('.search-tags').trigger('click')
@@ -348,6 +354,7 @@ Template.public_contact_list.events
 
       console.log 'ezt: ' + searchQuery
 
+      # SearchStatus.insert {session_id: Meteor.default_connection._lastSessionId}
       searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
         console.log("show list")
         Session.set("searchQ", searchQuery)
@@ -450,9 +457,12 @@ loadAllGmails = (isLoadAll) ->
 Template.public_contact_list.rendered = ->
   mixpanel.track("visits step 3 page", { });
 
+  delete Session.keys['contact_list']
+
   setTimeout ->
-    $('a.search-tags').trigger('click')
-  , 2000
+    $('.edit-search-term').trigger('click')
+    console.log 'click'
+  , 500
 
   # set some custom stuff in the datatables layout
   $('div.dataTables_filter input').attr('placeholder', "Sort By Pople l've:").after('<button type="submit"><img src="/images/search_button.png" alt="Search"></button>')

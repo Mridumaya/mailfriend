@@ -18,16 +18,17 @@ Template.public_search_contacts.events
   'click .search-button': (e) ->
     e.preventDefault()
     searchQuery = $("#public-tags").tagit("assignedTags").join(' ')
-    console.log searchQuery
+    
     if searchQuery
       $(e.target).prop('disabled', true)
+      Session.set('searchQ', searchQuery)
       # Meteor.setTimeout ->
       #   $(e.target).prop('disabled', false)
       # , 60*1000
-      SearchStatus.insert {session_id: Meteor.default_connection._lastSessionId}
-      searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
-        Router.go('publiccontactlist')
-        # Session.set('STEP', "public_contact_list")
+      # SearchStatus.insert {session_id: Meteor.default_connection._lastSessionId}
+      # searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
+      Router.go('publiccontactlist')
+      # Session.set('STEP', "public_contact_list")
     else
       apprise('Please add at least one search term!')
 
@@ -39,21 +40,21 @@ Template.public_search_contacts.events
     Router.go('publicedit')
     # Session.set("STEP", "public_welcome")
 
-searchContacts = (searchQuery, session_id, cb) ->
+# searchContacts = (searchQuery, session_id, cb) ->
   #$("#loading").show()
 
   #$.blockUI({ message: '<img src="/images/busy.gif" />  Loading...' });
-  Meteor.setTimeout ->
-    if Meteor.user()
-      Meteor.call 'searchContacts', searchQuery, session_id, (err) ->
-        Session.set('searchQ', searchQuery)
-        #$("#loading").hide()
-        #console.log 'searchContact Error: ', err if err
-        #$.unblockUI()
-        cb()
-    else
-      searchContacts(searchQuery)
-  , 500
+  # Meteor.setTimeout ->
+  #   if Meteor.user()
+  #     Meteor.call 'searchContacts', searchQuery, session_id, (err) ->
+  #       Session.set('searchQ', searchQuery)
+  #       #$("#loading").hide()
+  #       #console.log 'searchContact Error: ', err if err
+  #       #$.unblockUI()
+  #       cb()
+  #   else
+  #     searchContacts(searchQuery)
+  # , 500
 
 clearAllSelection = () ->
   SelectedEmailsHelper.unselectAllEmails()
@@ -125,7 +126,6 @@ Template.contact_list.helpers
 
   isGContact: ->
     @source is 'gcontact'
-
 
 
   isRelevant: ->
