@@ -70,8 +70,8 @@ Template.public_edit.events
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log err if err
           #Session.set "ORIG_MESS", $("#original_message").val() || $("#original_message").html()
-          Session.set "OWN_MESS", $("#own_message").val() 
-          Session.set "MAIL_TITLE", $("#subject").val() 
+          Session.set "OWN_MESS", $("#own_message").val()
+          Session.set "MAIL_TITLE", $("#subject").val()
           # Session.set "STEP", "public_searchq"
 
           Router.go("publicsearchcontacts")

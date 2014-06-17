@@ -11,7 +11,9 @@
                 <h4>Lets choose some friends who may been interested in this topic.<br>Try adding a few keywords, for example "<strong>art</strong>" or "<strong>cookies</strong>", something that is specific to the original topic.</h4>
 
                 <div class="row" style="margin-left:0px">
-                    <input type="search" class="search-query input-full" placeholder="Type in a search term" value="{{searchQ}}">
+                    <input type="hidden" class="search-query input-full" value="{{searchQ}}">
+
+                    <ul id="public-tags"></ul>
 
                     <div class="row mt20">
                         <label class="pull-right">Step 2 of 4</label>

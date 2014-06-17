@@ -328,7 +328,7 @@ Template.public_contact_list.events
     
     searchQuery = Session.get('searchQ')
 
-    console.log searchQuery
+    # console.log searchQuery
 
     prev_searchQuery = Session.get("prev_searchQ")
 
@@ -345,6 +345,8 @@ Template.public_contact_list.events
 
       # switch to matched contacts tab
       $('div.select-contact-group a:first-child').trigger('click')
+
+      console.log 'ezt: ' + searchQuery
 
       searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
         console.log("show list")

@@ -28,11 +28,10 @@ Router.map ->
       if campaign isnt undefined
         Session.set "MAIL_TITLE", campaign.subject
         Session.set "ORIG_MESS", campaign.body
-        #Session.set 'slug', @params.slug
-        #Session.set 'user_id', @params.user_id
-        #Session.set 'STEP', "public_welcome"
-        # Session.set 'STEP', "public_signup"
-      console.log Session.get "MAIL_TITLE"
+        Session.set "SLUG", @params.slug
+        Session.set "searchQ", campaign.search_tags
+        # Session.set 'user_id', @params.user_id
+      # console.log Session.get "MAIL_TITLE"
       campaign
 
   @route "publicedit",

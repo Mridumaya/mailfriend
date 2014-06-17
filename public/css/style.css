@@ -350,6 +350,12 @@ table.contacts td{
     border-radius: 0px 0px 5px 5px;
 }
 
+#public-tags {
+    min-height: 31px;
+    padding: 0 2px 2px 2px;
+    border-radius: 6px;
+}
+
 #recipients,
 #tags {
     min-height: 31px;
@@ -358,6 +364,7 @@ table.contacts td{
     border-radius: 6px;
 }
 
+#public-tags li, 
 #recipients li, 
 #tags li {
     font-size: 14px;

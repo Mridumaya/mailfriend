@@ -1,6 +1,15 @@
 Template.public_search_contacts.rendered = ->
   mixpanel.track("visits step 2 page", { });
 
+  # init tagit
+  $("#public-tags").tagit({})
+
+  # add predefined tags
+  publicTags = $('input.search-query').val().split(' ')
+  _.each(publicTags || [],(item) ->
+    $("#public-tags").tagit("createTag", item)
+  )
+
 Template.public_search_contacts.helpers
   searchQ: ->
     Session.get('searchQ') || ''
@@ -8,7 +17,8 @@ Template.public_search_contacts.helpers
 Template.public_search_contacts.events
   'click .search-button': (e) ->
     e.preventDefault()
-    searchQuery = $('.search-query').val().trim()
+    searchQuery = $("#public-tags").tagit("assignedTags").join(' ')
+    console.log searchQuery
     if searchQuery
       $(e.target).prop('disabled', true)
       # Meteor.setTimeout ->
