@@ -124,7 +124,6 @@ Template.new_campaign.events
     refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
     refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
-
   'click .search-tags': (e) ->
     button = $(e.currentTarget)
     button.data('pressed', 1)
@@ -135,17 +134,6 @@ Template.new_campaign.events
     # do the search if there's a search term and if the current search term is not equal to the previous one
     if searchQuery.length
       mixpanel.track("search tag", { });
-      
-      # if searchQuery is prev_searchQuery
-      #   # scroll to results
-      #   results = $('#contact-list-container')
-      #   if results.length
-      #     scroll = results.offset().top
-      #     $('html, body').animate({
-      #       scrollTop: scroll
-      #     }, 1000)
-
-      #   return false
 
       # show the loaders
       searchLoader('show');
@@ -156,9 +144,6 @@ Template.new_campaign.events
 
       # switch to matched contacts tab
       $('div.select-contact-group a:first-child').trigger('click')
-
-      # clear the tmp tables
-      # $('#tmp_matched_contacts tr, #tmp_unmatched_contacts tr').remove()
 
       searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
         console.log("show list")
@@ -200,18 +185,6 @@ Template.new_campaign.events
               refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
               refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
-              # scroll to results
-              # results = $('#contact-list-container')
-              # if results.length
-              #   scroll = results.offset().top
-              #   $('html, body').animate({
-              #     scrollTop: scroll
-              #   }, 1000, ->
-              #     # hide loaders
-              #     searchLoader('hide');
-              #     $('div.loading-contacts').addClass('hidden')
-              #   )
-
               button.data('pressed', 0)
             , 2000
 
@@ -225,18 +198,6 @@ Template.new_campaign.events
             # clear datatables
             @refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
             @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
-
-            # scroll to results
-            # results = $('#contact-list-container')
-            # if results.length
-            #   scroll = results.offset().top
-            #   $('html, body').animate({
-            #     scrollTop: scroll
-            #   }, 1000, ->
-            #     # hide loaders
-            #     searchLoader('hide');
-            #     $('div.loading-contacts').addClass('hidden')
-            #   )
 
             # hide loaders
             searchLoader('hide');

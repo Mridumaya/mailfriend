@@ -42,7 +42,7 @@ manualLoginOpen = (ev) ->
 
 Template.welcome.helpers
   sender: ->
-    Sharings.findOne(type: 'email')?.senderName || "Someone"
+    Sharings.findOne({type: 'email', slug: Session.get('slug')})?.senderName || "Someone"
 
 Template.welcome.rendered = ->
 
@@ -169,10 +169,10 @@ Template.register_dialog.rendered = ->
 Template.edit_user_info.helpers
   first_name: ->
     # return Meteor.user().profile.first_name
-    return Meteor.user().profile.given_name
+    return Meteor.user().profile.name.split(' ')[0]
   last_name: ->
     # return Meteor.user().profile.last_name
-    return Meteor.user().profile.family_name
+    return Meteor.user().profile.name.split(' ')[1]
 
 
 Template.edit_user_info.events

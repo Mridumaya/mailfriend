@@ -517,3 +517,7 @@ a.contact-tab.tab-active {
     text-align: center;
     width: 22px;
 }
+
+.campaign-share-link {
+    display: block;
+}

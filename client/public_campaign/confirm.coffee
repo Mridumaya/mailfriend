@@ -47,11 +47,14 @@ Template.public_confirm.events
     $('.draft-send').prop('disabled', true)
 
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
+      campaign_id = Session.get("campaign_id")
+      campaign = Campaigns.findOne({_id: campaign_id})
+      
       if err
         console.log err
       else
-        sharing = Sharings.findOne({type: 'email'})
-        message = Messages.findOne()
+        sharing = Sharings.findOne({type: 'email', campaign_id: campaign_id})
+        message = Messages.findOne({campaign_id: campaign_id})
         if sharing
           Sharings.update sharing._id,
             $set:
@@ -61,6 +64,8 @@ Template.public_confirm.events
         else
           Sharings.insert
             type: 'email'
+            campaign_id: campaign_id
+            slug: campaign.slug
             subject: subject
             htmlBody: body
             senderName: Meteor.user()?.profile?.name || ""
@@ -71,9 +76,17 @@ Template.public_confirm.events
               message: Session.get("ORIG_MESS")
         else
           Messages.insert
+            campaign_id: campaign_id
+            slug: campaign.slug
             message: Session.get("ORIG_MESS")
             password: 'queens'
             created_at: new Date()
+
+        # Meteor.call 'markCampaignSent', Session.get("campaign_id"), user._id,(e, campaign_id) ->
+        #   console.log e if e
+          # $.gritter.add
+          #   title: "Email sent"
+          #   text: "Your campaign email was successfully sent!"
 
         mixpanel.track("send email", { });
         console.log 'send mail success'

@@ -12,48 +12,6 @@ IR_BeforeHooks =
 Router.onBeforeAction(IR_BeforeHooks.isLoggedIn, { only: ['feature_select', "edit_user_info", 'new_campaign'] } )
 
 Router.map ->
-  @route "public_welcome",
-    path: '/:user_id/:slug',
-    layoutTemplate: "masterLogoutLayout",
-    template: "welcome",
-    
-    data: ->
-      Meteor.subscribe 'publicCampaigns', @params.user_id, @params.slug, ->
-        console.log 'Public campaigns'
-
-      #user = Meteor.users.findOne({username: @params.username});
-      campaign = Campaigns.findOne {slug: @params.slug, user_id: @params.user_id}
-      console.log campaign
-
-      if campaign isnt undefined
-        Session.set "MAIL_TITLE", campaign.subject
-        Session.set "ORIG_MESS", campaign.body
-        Session.set "SLUG", @params.slug
-        Session.set "searchQ", campaign.search_tags
-        # Session.set 'user_id', @params.user_id
-      # console.log Session.get "MAIL_TITLE"
-      campaign
-
-  @route "publicedit",
-    path: '/public-edit',
-    layoutTemplate: "publicMasterLayout",
-    template: "public_edit"
-
-  @route "publicsearchcontacts",
-    path: '/public-search-contacts',
-    layoutTemplate: "publicMasterLayout",
-    template: "public_search_contacts", 
-
-  @route "publiccontactlist",
-    path: '/public-contact-list',
-    layoutTemplate: "publicMasterLayout",
-    template: "public_contact_list", 
-
-  @route "publicconfirm",
-    path: '/public-confirm',
-    layoutTemplate: "publicMasterLayout",
-    template: "public_confirm", 
-
   @route "verify-email",
     path: "/verify-email/:token"
     action: ()->
@@ -104,3 +62,54 @@ Router.map ->
   @route "inbox",
     path: "/inbox",
  
+  @route "404",
+    path: '/404',
+    layoutTemplate: "publicMasterLayout",
+    template: "notFound",
+
+  # public stuff 
+  @route "public_welcome",
+    path: '/:user_id/:slug',
+    layoutTemplate: "masterLogoutLayout",
+    template: "welcome",
+    
+    data: ->
+      Meteor.subscribe 'publicCampaigns', @params.user_id, @params.slug, ->
+        console.log 'Public campaigns'
+
+      #user = Meteor.users.findOne({username: @params.username});
+      campaign = Campaigns.findOne {slug: @params.slug, user_id: @params.user_id}
+      console.log campaign
+
+      if campaign isnt undefined
+        Session.set "MAIL_TITLE", campaign.subject
+        Session.set "ORIG_MESS", campaign.body
+        Session.set "slug", @params.slug
+        Session.set "senderId", @params.user_id
+        Session.set "searchQ", campaign.search_tags
+        # Session.set 'user_id', @params.user_id
+        # console.log Session.get "MAIL_TITLE"
+      else
+        Router.go("404")
+        return false
+      campaign
+
+  @route "publicedit",
+    path: '/public-edit',
+    layoutTemplate: "publicMasterLayout",
+    template: "public_edit"
+
+  @route "publicsearchcontacts",
+    path: '/public-search-contacts',
+    layoutTemplate: "publicMasterLayout",
+    template: "public_search_contacts", 
+
+  @route "publiccontactlist",
+    path: '/public-contact-list',
+    layoutTemplate: "publicMasterLayout",
+    template: "public_contact_list", 
+
+  @route "publicconfirm",
+    path: '/public-confirm',
+    layoutTemplate: "publicMasterLayout",
+    template: "public_confirm", 

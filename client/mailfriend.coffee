@@ -54,10 +54,6 @@ Template.feature_select.rendered = ->
 Template.feature_select.helpers
   name: ->
     Meteor.user().profile.name
-    # if user
-    #   user.profile.name.split(" ")[0]
-    # else
-      # ''
 
   new_campaign_count: ->
     campaigns = Campaigns.find().fetch()
@@ -219,11 +215,14 @@ Template.confirm.events
     $('.draft-send').prop('disabled', true)
 
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
+      campaign_id = Session.get("campaign_id")
+      campaign = Campaigns.findOne({_id: campaign_id})
+      
       if err
         console.log err
       else
-        sharing = Sharings.findOne({type: 'email'})
-        message = Messages.findOne()
+        sharing = Sharings.findOne({type: 'email', campaign_id: campaign_id})
+        message = Messages.findOne({campaign_id: campaign_id})
         if sharing
           Sharings.update sharing._id,
             $set:
@@ -233,6 +232,8 @@ Template.confirm.events
         else
           Sharings.insert
             type: 'email'
+            campaign_id: campaign_id
+            slug: campaign.slug
             subject: subject
             htmlBody: body
             senderName: Meteor.user()?.profile?.name || ""
@@ -243,6 +244,8 @@ Template.confirm.events
               message: Session.get("ORIG_MESS")
         else
           Messages.insert
+            campaign_id: campaign_id
+            slug: campaign.slug
             message: Session.get("ORIG_MESS")
             password: 'queens'
             created_at: new Date()

@@ -16,14 +16,12 @@ Meteor.methods
     slug = URLify2 subject
 
     # Now check if the same slug used already
-    campaigns = Campaigns.find(slug: slug, user_id: userId)
-    # console.log campaigns
-    count = campaigns.count()
-    # console.log count
-    if count > 0 and campaigns._id isnt campaignId
-      slug += "-" + count.toString()
-
-    # console.log slug
+    count = Campaigns.find(slug: slug, user_id: userId).count()
+    if count > 0
+      # Check if the slug was used at the same campaign
+      campaign = Campaigns.findOne({_id: campaignId})
+      if campaign.slug isnt slug
+        slug += "-" + count.toString()
 
     Campaigns.update({ _id: campaignId }, {$set: { user_id: userId, subject: subject, body: body, search_tags: search_tags, recipients: recipients, slug: slug } })
 
