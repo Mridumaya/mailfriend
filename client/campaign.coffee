@@ -354,6 +354,10 @@ saveInt = ''
 Template.new_campaign.rendered = ->
   menuitemActive('new-campaign')
 
+  $('#tags-popover').popover({ 
+    trigger: 'hover'
+  })
+
   # save the campaign periodically
   clearInterval saveInt
   saveInt = setInterval(->

@@ -505,3 +505,16 @@ a.contact-tab.tab-active {
     top: 87px !important;
     width: 181px !important;
 }
+
+#tags-popover {
+    border: 2px solid #FFFFFF;
+    border-radius: 12px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    height: 22px;
+    margin-left: 5px;
+    padding-left: 1px;
+    text-align: center;
+    width: 22px;
+}
