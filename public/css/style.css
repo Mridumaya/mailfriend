@@ -500,3 +500,8 @@ a.contact-tab.tab-active {
     margin-top:5px;
 }
 
+#gritter-notice-wrapper {
+    right: 16px !important;
+    top: 87px !important;
+    width: 181px !important;
+}
