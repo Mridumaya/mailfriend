@@ -47,29 +47,41 @@ Template.public_confirm.events
     $('.draft-send').prop('disabled', true)
 
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
-      campaign_id = Session.get("campaign_id")
-      campaign = Campaigns.findOne({_id: campaign_id})
-      
       if err
         console.log err
       else
-        sharing = Sharings.findOne({type: 'email', campaign_id: campaign_id})
-        message = Messages.findOne({campaign_id: campaign_id})
-        if sharing
-          Sharings.update sharing._id,
-            $set:
-              subject: subject
-              htmlBody: body
-              senderName: Meteor.user()?.profile?.name || ""
-        else
-          Sharings.insert
-            type: 'email'
-            campaign_id: campaign_id
-            slug: campaign.slug
-            subject: subject
-            htmlBody: body
-            senderName: Meteor.user()?.profile?.name || ""
+        # sharing = Sharings.findOne({type: 'email', campaign_id: campaign_id})
+        # if sharing
+        #   Sharings.update sharing._id,
+        #     $set:
+        #       subject: subject
+        #       htmlBody: body
+        #       senderName: Meteor.user()?.profile?.name || ""
+        # else
 
+        campaign_id = Session.get("campaign_id")
+        # console.log campaign_id
+        # campaign = Campaigns.findOne({_id: campaign_id})
+        # console.log campaign
+        
+        if !!Meteor.user()
+          sender_id = Meteor.user()._id
+        else
+          sender_id = 'guest'
+
+        console.log sender_id
+
+        Sharings.insert
+          type: 'email'
+          campaign_id: campaign_id
+          sender_id: sender_id
+          owner_id: Session.get("senderId")
+          slug: Session.get("slug")
+          subject: subject
+          htmlBody: body
+          senderName: Meteor.user()?.profile?.name || ""
+
+        message = Messages.findOne({campaign_id: campaign_id})
         if message
           Messages.update message._id,
             $set:

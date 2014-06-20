@@ -333,7 +333,7 @@ Template.new_campaign.rendered = ->
   # save the campaign periodically
   clearInterval saveInt
   saveInt = setInterval(->
-    if $('#own_message').length
+    if $('#own_message').length and $('.search-loader').is(':visible') isnt true and $('.modal-dialog').is(':visible') isnt true and $('#gritter-notice-wrapper').length is 0
       SaveCampaign()
   , 17000)   
 

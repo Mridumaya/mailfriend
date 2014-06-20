@@ -55,13 +55,24 @@ Template.feature_select.helpers
   name: ->
     Meteor.user().profile.name
 
-  new_campaign_count: ->
+  campaign_count: ->
     campaigns = Campaigns.find().fetch()
     count = campaigns.length
 
-  past_campaign_count: ->
-    campaigns = Campaigns.find().fetch()
+  sent_campaign_count: ->
+    campaigns = Campaigns.find({sent: 'yes'}).fetch()
     count = campaigns.length
+
+    if count is 1
+      count += ' of these was'
+    else
+      count += ' of these were'
+
+  forwarded_messages: ->
+    userId = Meteor.user()._id
+    forwarded = Sharings.find({type: 'email', owner_id: userId, sender_id: {$ne: userId}}).fetch()
+    count = forwarded.length
+
 
 Template.feature_select.events
   'click .btn-create-campaign': (e) ->
@@ -221,23 +232,25 @@ Template.confirm.events
       if err
         console.log err
       else
-        sharing = Sharings.findOne({type: 'email', campaign_id: campaign_id})
-        message = Messages.findOne({campaign_id: campaign_id})
-        if sharing
-          Sharings.update sharing._id,
-            $set:
-              subject: subject
-              htmlBody: body
-              senderName: Meteor.user()?.profile?.name || ""
-        else
-          Sharings.insert
-            type: 'email'
-            campaign_id: campaign_id
-            slug: campaign.slug
-            subject: subject
-            htmlBody: body
-            senderName: Meteor.user()?.profile?.name || ""
+        # sharing = Sharings.findOne({type: 'email', campaign_id: campaign_id})
+        # if sharing
+        #   Sharings.update sharing._id,
+        #     $set:
+        #       subject: subject
+        #       htmlBody: body
+        #       senderName: Meteor.user()?.profile?.name || ""
+        # else
+        Sharings.insert
+          type: 'email'
+          campaign_id: campaign_id
+          sender_id: Meteor.user()._id
+          owner_id: campaign.user_id
+          slug: campaign.slug
+          subject: subject
+          htmlBody: body
+          senderName: Meteor.user()?.profile?.name || ""
 
+        message = Messages.findOne({campaign_id: campaign_id})
         if message
           Messages.update message._id,
             $set:
@@ -250,11 +263,11 @@ Template.confirm.events
             password: 'queens'
             created_at: new Date()
 
-        # Meteor.call 'markCampaignSent', Session.get("campaign_id"), user._id,(e, campaign_id) ->
-        #   console.log e if e
-          # $.gritter.add
-          #   title: "Email sent"
-          #   text: "Your campaign email was successfully sent!"
+        Meteor.call 'markCampaignSent', Session.get("campaign_id"), (e, campaign_id) ->
+          console.log e if e
+          $.gritter.add
+            title: "Email sent"
+            text: "Your campaign email was successfully sent!"
 
         mixpanel.track("send email", { });
         console.log 'send mail success'

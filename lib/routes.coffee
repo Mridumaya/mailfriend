@@ -87,11 +87,12 @@ Router.map ->
         Session.set "slug", @params.slug
         Session.set "senderId", @params.user_id
         Session.set "searchQ", campaign.search_tags
+        Session.set "campaign_id", campaign._id
         # Session.set 'user_id', @params.user_id
         # console.log Session.get "MAIL_TITLE"
-      else
-        Router.go("404")
-        return false
+      # else
+      #   Router.go("404")
+      #   return false
       campaign
 
   @route "publicedit",

@@ -521,3 +521,11 @@ a.contact-tab.tab-active {
 .campaign-share-link {
     display: block;
 }
+
+.current-status {
+    border-radius: 6px;
+}
+
+.current-status h3 {
+    margin-top: 0;
+}

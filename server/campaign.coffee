@@ -8,7 +8,7 @@ Meteor.methods
     if count > 0
       slug += "-" + count.toString()
 
-    campaign_id = Campaigns.insert user_id: userId, subject: subject,body: body, search_tags: search_tags, recipients: recipients, slug: slug, created_at: new Date(), email_sent: 'no'
+    campaign_id = Campaigns.insert user_id: userId, subject: subject,body: body, search_tags: search_tags, recipients: recipients, slug: slug, created_at: new Date(), sent: 'no'
     return campaign_id
 
   updateCampaign:(campaignId, userId, subject, body, search_tags, recipients) ->
@@ -25,8 +25,8 @@ Meteor.methods
 
     Campaigns.update({ _id: campaignId }, {$set: { user_id: userId, subject: subject, body: body, search_tags: search_tags, recipients: recipients, slug: slug } })
 
-  markCampaignSent:(campaignId, userId) ->
-    Campaigns.update({ _id: campaignId }, {$set: { email_sent: 'yes' } })
+  markCampaignSent:(campaignId) ->
+    Campaigns.update({ _id: campaignId }, {$set: { sent: 'yes', sent_on: new Date() } })
 
   deleteCampaign: (campaignId) ->
     console.log 'Delete a campaign' + campaignId
