@@ -485,6 +485,15 @@ a.contact-tab.tab-active {
     margin: -43px 0 0 3px;
 }
 
+.image-mask-blue {
+    width: 40px;
+    height: 43px;
+    background-image: url('../images/image_mask_blue.png');
+    background-repeat: no-repeat;
+    position: absolute;
+    margin: -43px 0 0 0;
+}
+
 .loading-contacts {
     height: 30px;
     margin: 0 auto;
@@ -529,3 +538,29 @@ a.contact-tab.tab-active {
 .current-status h3 {
     margin-top: 0;
 }
+
+#inbox-messages .inbox-message-actions,
+#inbox-messages .date_table {
+    width: 20%;
+}
+
+.view-inbox-message {
+    border: 1px solid #ced3d7 !important;
+    border-radius: 6px;
+}
+
+.inbox-message {
+    padding: 10px;
+}
+
+tr.no-content-in-list td {
+    text-align: center;
+    padding: 10px;
+}
+
+#inbox-messages div.tags {
+    border-bottom: 1px solid #ced3d7;
+    margin: 0 auto 10px;
+    padding-bottom: 10px;
+    width: 100%;
+} 

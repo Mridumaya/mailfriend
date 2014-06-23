@@ -3,13 +3,17 @@ Template.masterLayout.helpers
     user = Meteor.user()
     if user and user.profile and user.profile.picture
       return user.profile.picture
-    return 'images/default_user.jpg'
+    return '/images/default_user.jpg'
 
   fullname: ->
     return Meteor.user().profile.name
 
   hasLogin: ->
     !!Meteor.user()
+
+  new_messages: ->
+    email = Meteor.user().profile.email
+    messages = Messages.find({to: email, new_message: 'yes'}).count()
 
 
 Template.masterLayout.events
@@ -72,6 +76,10 @@ Template.feature_select.helpers
     userId = Meteor.user()._id
     forwarded = Sharings.find({type: 'email', owner_id: userId, sender_id: {$ne: userId}}).fetch()
     count = forwarded.length
+
+  new_messages: ->
+    email = Meteor.user().profile.email
+    messages = Messages.find({to: email, new_message: 'yes'}).count()
 
 
 Template.feature_select.events
@@ -250,18 +258,26 @@ Template.confirm.events
           htmlBody: body
           senderName: Meteor.user()?.profile?.name || ""
 
-        message = Messages.findOne({campaign_id: campaign_id})
-        if message
-          Messages.update message._id,
-            $set:
-              message: Session.get("ORIG_MESS")
-        else
-          Messages.insert
-            campaign_id: campaign_id
-            slug: campaign.slug
-            message: Session.get("ORIG_MESS")
-            password: 'queens'
-            created_at: new Date()
+        _.each(to,(email) ->
+          message = Messages.findOne({campaign_id: campaign_id, to: email})
+          if message
+            Messages.update message._id,
+              $set:
+                message: body
+                subject: subject
+                new_message: 'yes'
+          else
+            Messages.insert
+              campaign_id: campaign_id
+              slug: campaign.slug
+              from: Meteor.user()._id
+              to: email
+              message: body
+              subject: subject
+              password: ''
+              new_message: 'yes'
+              created_at: new Date()
+        )
 
         Meteor.call 'markCampaignSent', Session.get("campaign_id"), (e, campaign_id) ->
           console.log e if e

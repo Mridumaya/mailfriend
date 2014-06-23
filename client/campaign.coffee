@@ -246,14 +246,20 @@ Template.new_campaign.events
 
 Template.list_campaign.events
   'click .delete-campaign': (e) ->
+      e.preventDefault()
+      campaignsTable = $('#list1')
       # console.log $(e.currentTarget).data('id')
       apprise('Are you sure to delete this campaign?', {'verify':true}, (r) ->
         if r
           Meteor.call 'deleteCampaign', $(e.currentTarget).data('id')
+
+        if campaignsTable.find('tr').length is 0
+          campaignsTable.append('<tr class="no-content-in-list"><td>You have currently no campaigns.</td></tr>')
       )
       # if (confirm('Are you sure?'))
 
   'click .edit-campaign': (e) ->
+      e.preventDefault()
       delete Session.keys['searchQ']
       delete Session.keys['prev_searchQ']
       delete Session.keys['contact_list']
@@ -261,6 +267,7 @@ Template.list_campaign.events
       Router.go 'new_campaign'
 
   'click .send-campaign': (e) ->
+      e.preventDefault()
       menuitemActive()
 
       # get campaign data
@@ -415,7 +422,6 @@ Template.new_campaign.rendered = ->
 
 
 @initScrollbar = (scrollcontent) ->
-  console.log scrollcontent
   $(scrollcontent).mCustomScrollbar
     scrollButtons:
       enable: true,
@@ -438,6 +444,8 @@ Template.new_campaign.rendered = ->
   _.each(list,(item) ->
     elem = $(item)
     created = new Date(elem.data('created'))
+
+    # console.log created
 
     created_hours = created.getHours()
     created_minutes = created.getMinutes()
@@ -484,26 +492,120 @@ Template.list_campaign.rendered = ->
   menuitemActive('campaign-list')
 
   listInt = setInterval(->
-    list1 = $('#list1 td.info_content span.created.raw')
+    list = $('#list1 td.info_content span.created.raw')
 
-    if list1.length
-      displayDate(list1)
+    if list.length
+      displayDate(list)
 
-      if list1.length > 4
+      if list.length > 4
         initScrollbar('#content_1')
-        clearInterval listInt
+
+      clearInterval listInt
 
   , 750)
 
 
-Template.inbox.helpers = ->
+Template.inbox.helpers
+  messages: ->
+    email = Meteor.user().profile.email
+    messages = Messages.find({to: email}).fetch()
+
+  sender: ->
+    Meteor.call 'getSenderName', @from, (e, resp) ->
+      console.log e if e
+
+      name = resp[0]
+      senderId = resp[1]
+      Session.set('name' + senderId, name)
+
+    name = Session.get('name' + @from)
+    delete Session.keys['name' + @from]
+
+    if @from is Meteor.user()._id
+      name += ' (me)'
+
+    return name
+
+  picture: ->
+    Meteor.call 'getSenderProfilePicture', @from, (e, resp) ->
+      console.log e if e
+      
+      picture = resp[0]
+      senderId = resp[1]
+      Session.set('picture' + senderId, picture)
+
+    picture = Session.get('picture' + @from)
+    delete Session.keys['picture' + @from]
+
+    return picture
+
+  tags: ->
+    Meteor.call 'getMessageTags', @campaign_id, (e, resp) ->
+      console.log e if e
+      
+      tags = resp[0]
+      campaignId = resp[1]
+      Session.set('tags' + campaignId, tags)
+
+    tags = Session.get('tags' + @campaign_id)
+    delete Session.keys['tags' + @campaign_id]
+
+    return tags
 
 
-Template.inbox.events = ->
+Template.inbox.events
+  'click tr.message-header': (e) ->
+    currTr = $(e.currentTarget)
+    messageId = currTr.data('id')
+    messageContent = currTr.next()
+
+    console.log messageId
+
+    # mark current message as read
+    Messages.update messageId,
+      $set:
+        new_message: 'no'
+
+    if messageContent.is(':visible')
+      messageContent.hide()
+    else
+      messageContent.show()
+
+  'click a.delete-message': (e) ->
+    e.preventDefault()
+    messageId = $(e.currentTarget).data('id')
+    inboxMessagesTable = $('#inbox-messages tr')
+
+    apprise('Are you sure to delete this message?', {'verify':true}, (r) ->
+      if r
+        Messages.remove({_id: messageId})
+
+        if inboxMessagesTable.find('tr').length is 0
+          inboxMessagesTable.append('<tr class="no-content-in-list"><td>There are currently no messages in your Inbox.</td></tr>')
+    )
+
+  'click a.forward-message': (e) ->
+    e.preventDefault()
+
+    messageId = $(e.currentTarget).data('id')
+
 
 
 Template.inbox.rendered = ->
   menuitemActive('my-inbox')
+
+  listInt = setInterval(->
+    list = $('#inbox-messages td.date_table span.created.raw')
+
+    if list.length
+      displayDate(list)
+
+      # if list.length > 4
+      #   initScrollbar('#content_1')
+        
+      clearInterval listInt
+
+  , 750)
 
 
 @searchLoader = (action) ->

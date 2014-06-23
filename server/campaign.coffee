@@ -1,4 +1,6 @@
 Meteor.methods
+  # campaigns -----------------------------------------------------------------------------------------------------------------------------
+  
   createCampaign:(userId, subject, body, search_tags, recipients) ->
     # Generate slug
     slug = URLify2 subject
@@ -34,3 +36,26 @@ Meteor.methods
 
   addSentUsersToCampaign:(campaignId, sent_to) ->
     Campaigns.update({ _id: campaignId }, {$addToSet: { sent_to: { $each: sent_to} } } )
+
+  # messages ------------------------------------------------------------------------------------------------------------------------------
+
+  getSenderName: (senderId) ->
+    user = Meteor.users.findOne({_id: senderId})
+    name = user.profile.name
+
+    return [name, senderId]
+
+  getSenderProfilePicture: (senderId) ->
+    user = Meteor.users.findOne({_id: senderId})
+    picture = user.profile.picture
+
+    if picture
+      return [picture, senderId]
+    else
+      return ['/images/default_user.jpg', senderId]
+
+  getMessageTags: (campaignId) ->
+    campaign = Campaigns.findOne({_id: campaignId})
+    tags = campaign.search_tags
+
+    return [tags, campaignId]    

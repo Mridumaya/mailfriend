@@ -47,6 +47,7 @@
             <div id="content_1" class="content">
                 <div class="existing_main_content">
                     <table class="scrollable" id="list1">
+                        {{#if campaigns}}
                         {{#each campaigns}}
                         <tr>
                             <td class="info_content">
@@ -67,6 +68,11 @@
                             </td>                            
                         </tr>
                         {{/each}}
+                        {{else}}
+                        <tr class="no-content-in-list">
+                            <td>You have currently no campaigns.</td>
+                        </tr>
+                        {{/if}}                        
                     </table>
                 </div>
             </div>
@@ -83,17 +89,37 @@
                     <img src="/images/arreow_block.png" alt="arreow_box">
                 </div>
             </div>
-            <div class="block_main_content">
-                <div class="box" id="box1">
-                    <table class="scrollable">
-                        <tr>
+            <div id="content_1" class="content">
+                <div class="existing_main_content">
+                    <table class="scrollable" id="inbox-messages">
+                        {{#if messages}}
+                        {{#each messages}}
+                        <tr class="message-header" data-id="{{_id}}">
                             <td class="img_table">
-                                <img src="/images/content_img.png" alt="img-1">
+                                <img src="{{picture}}" alt="user_pic" height="43" width="40">
+                                <div class="image-mask-blue"></div>
                             </td>
-                            <td class="name_table">Jeremy Sallee</td>
-                            <td class="info_table">Theories of Design</td>
-                            <td class="date_table">Today 8.30pm</td>
+                            <td class="name_table">{{sender}}</td>
+                            <td class="info_table">{{subject}}</td>
+                            <td class="date_table"><span class="created raw" data-created="{{created_at}}"></span></td>
                         </tr>
+                        <tr class="view-inbox-message" style="display:none;">
+                            <td class="inbox-message" colspan="3">
+                                <div class="tags"><strong>Tags: </strong>{{tags}}</div>
+                                <div class="message">{{{message}}}</div>
+                            </td>
+                            <td class="inbox-message-actions">
+                                <a href="#" class="forward-message f_button pull-right" data-id="{{_id}}"><span class="forward"></span> Forward</a>
+                                <div class="clearfix"></div>
+                                <a href="#" class="delete-message d_button pull-right" data-id="{{_id}}"><span class="delete"></span> Delete</a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                        {{else}}
+                        <tr class="no-content-in-list">
+                            <td>There are currently no messages in your Inbox.</td>
+                        </tr>
+                        {{/if}}
                     </table>
                 </div>
             </div>
