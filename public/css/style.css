@@ -544,6 +544,10 @@ a.contact-tab.tab-active {
     width: 20%;
 }
 
+#inbox-messages .inbox-message-actions {
+    vertical-align: top;
+}
+
 .view-inbox-message {
     border: 1px solid #ced3d7 !important;
     border-radius: 6px;
@@ -564,3 +568,13 @@ tr.no-content-in-list td {
     padding-bottom: 10px;
     width: 100%;
 } 
+
+a.forward-message {
+    margin-top: 14px;
+}
+
+#inbox-messages tr.new_message {
+    border: 1px solid #f26662 !important;
+    border-radius: 6px;
+    background-color: #feebea;
+}

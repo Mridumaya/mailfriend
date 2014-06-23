@@ -37,16 +37,20 @@ Template.public_confirm.events
   'click #linkedin': (e) ->
     window.open("http://www.linkedin.com/shareArticle?mini=true&url=http://mailfriend.meteor.com/", '', "width=620, height=432");
 
-  'click a.draft-send': (e) ->
+  'click .draft-send': (e) ->
     e.preventDefault()
+
     subject = Session.get "MAIL_TITLE"
     body = Session.get("OWN_MESS") + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
     to = Session.get "CONF_DATA"
 
-    console.log subject, body, to
+    # console.log subject, body, to
     $('.draft-send').prop('disabled', true)
 
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
+      campaign_id = Session.get("campaign_id")
+      campaign = Campaigns.findOne({_id: campaign_id})
+
       if err
         console.log err
       else
@@ -58,11 +62,6 @@ Template.public_confirm.events
         #       htmlBody: body
         #       senderName: Meteor.user()?.profile?.name || ""
         # else
-
-        campaign_id = Session.get("campaign_id")
-        # console.log campaign_id
-        # campaign = Campaigns.findOne({_id: campaign_id})
-        # console.log campaign
         
         if !!Meteor.user()
           sender_id = Meteor.user()._id
@@ -81,28 +80,50 @@ Template.public_confirm.events
           htmlBody: body
           senderName: Meteor.user()?.profile?.name || ""
 
-        message = Messages.findOne({campaign_id: campaign_id})
-        if message
-          Messages.update message._id,
-            $set:
-              message: Session.get("ORIG_MESS")
-        else
-          Messages.insert
-            campaign_id: campaign_id
-            slug: campaign.slug
-            message: Session.get("ORIG_MESS")
-            password: 'queens'
-            created_at: new Date()
+        _.each(to,(email) ->
+          # message = Messages.findOne({campaign_id: campaign_id, to: email})
+          
+          # if message
+          #   Messages.update message._id,
+          #     $set:
+          #       message: body
+          #       subject: subject
+          #       new_message: 'yes'
+          # else
+            Messages.insert
+              campaign_id: campaign_id
+              slug: Session.get("slug")
+              from: sender_id
+              to: email
+              message: body
+              subject: subject
+              # password: ''
+              new_message: 'yes'
+              created_at: new Date()
+        )
 
-        # Meteor.call 'markCampaignSent', Session.get("campaign_id"), user._id,(e, campaign_id) ->
-        #   console.log e if e
-          # $.gritter.add
-          #   title: "Email sent"
-          #   text: "Your campaign email was successfully sent!"
+        # message = Messages.findOne({campaign_id: campaign_id})
+        # if message
+        #   Messages.update message._id,
+        #     $set:
+        #       message: Session.get("ORIG_MESS")
+        # else
+        #   Messages.insert
+        #     campaign_id: campaign_id
+        #     slug: campaign.slug
+        #     message: Session.get("ORIG_MESS")
+        #     password: 'queens'
+        #     created_at: new Date()
+
+        $.gritter.add
+          title: "Email sent"
+          text: "Your have successfully forwarded this campaign email!"
 
         mixpanel.track("send email", { });
+
         console.log 'send mail success'
-        $(".success").removeClass("hidden")
+
+        # $(".success").removeClass("hidden")
         $('.draft-send').prop('disabled', false)
         $('.draft-close').trigger('click')
         

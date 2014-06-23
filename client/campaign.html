@@ -94,7 +94,7 @@
                     <table class="scrollable" id="inbox-messages">
                         {{#if messages}}
                         {{#each messages}}
-                        <tr class="message-header" data-id="{{_id}}">
+                        <tr class="message-header {{#if is_new_message}}new_message{{/if}}" data-id="{{_id}}">
                             <td class="img_table">
                                 <img src="{{picture}}" alt="user_pic" height="43" width="40">
                                 <div class="image-mask-blue"></div>

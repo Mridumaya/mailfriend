@@ -62,7 +62,7 @@ Meteor.methods
 
 # common functions ------------------------------------------------------------------------------------------------------------------------
 
-  formatDate: (created, campaignId) ->
+  formatDate: (created, id) ->
     weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
@@ -109,4 +109,4 @@ Meteor.methods
     else
       formated += ', ' + created_month + ' ' + created_monthday + ' ' + created_year
 
-    return [formated, campaignId]
+    return [formated, id]

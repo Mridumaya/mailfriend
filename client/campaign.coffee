@@ -459,6 +459,7 @@ Template.inbox.helpers
   messages: ->
     email = Meteor.user().profile.email
     messages = Messages.find({to: email}).fetch()
+    messages = _.sortBy messages, (m) -> -m.created_at || 0
 
   sender: ->
     Meteor.call 'getSenderName', @from, (e, resp) ->
@@ -469,7 +470,7 @@ Template.inbox.helpers
       Session.set('name' + senderId, name)
 
     name = Session.get('name' + @from)
-    delete Session.keys['name' + @from]
+    # delete Session.keys['name' + @from]
 
     if @from is Meteor.user()._id
       name += ' (me)'
@@ -485,7 +486,7 @@ Template.inbox.helpers
       Session.set('picture' + senderId, picture)
 
     picture = Session.get('picture' + @from)
-    delete Session.keys['picture' + @from]
+    # delete Session.keys['picture' + @from]
 
     return picture
 
@@ -498,7 +499,7 @@ Template.inbox.helpers
       Session.set('tags' + campaignId, tags)
 
     tags = Session.get('tags' + @campaign_id)
-    delete Session.keys['tags' + @campaign_id]
+    # delete Session.keys['tags' + @campaign_id]
 
     return tags
 
@@ -511,9 +512,15 @@ Template.inbox.helpers
       Session.set('date' + messageId, date)
 
     date = Session.get('date' + @_id)
-    delete Session.keys['date' + @_id]
+    # delete Session.keys['date' + @_id]
 
     return date
+
+  is_new_message: ->
+    if @new_message is 'yes'
+      return true
+    else
+      return false
 
 
 Template.inbox.events

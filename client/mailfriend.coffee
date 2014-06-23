@@ -226,8 +226,9 @@ Template.confirm.events
 
   'click .draft-send': (e) ->
     e.preventDefault()
+
     subject = Session.get "MAIL_TITLE"
-    body = Session.get "OWN_MESS" # + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
+    body = Session.get "OWN_MESS"
     to = Session.get "CONF_DATA"
 
     # console.log subject, body, to
@@ -248,6 +249,7 @@ Template.confirm.events
         #       htmlBody: body
         #       senderName: Meteor.user()?.profile?.name || ""
         # else
+
         Sharings.insert
           type: 'email'
           campaign_id: campaign_id
@@ -259,14 +261,15 @@ Template.confirm.events
           senderName: Meteor.user()?.profile?.name || ""
 
         _.each(to,(email) ->
-          message = Messages.findOne({campaign_id: campaign_id, to: email})
-          if message
-            Messages.update message._id,
-              $set:
-                message: body
-                subject: subject
-                new_message: 'yes'
-          else
+          # message = Messages.findOne({campaign_id: campaign_id, to: email})
+          
+          # if message
+          #   Messages.update message._id,
+          #     $set:
+          #       message: body
+          #       subject: subject
+          #       new_message: 'yes'
+          # else
             Messages.insert
               campaign_id: campaign_id
               slug: campaign.slug
@@ -274,7 +277,7 @@ Template.confirm.events
               to: email
               message: body
               subject: subject
-              password: ''
+              # password: ''
               new_message: 'yes'
               created_at: new Date()
         )
@@ -286,8 +289,10 @@ Template.confirm.events
             text: "Your campaign email was successfully sent!"
 
         mixpanel.track("send email", { });
+
         console.log 'send mail success'
-        $(".success").removeClass("hidden")
+
+        # $(".success").removeClass("hidden")
         $('.draft-send').prop('disabled', false)
         $('.draft-close').trigger('click')
 
