@@ -54,7 +54,7 @@
                                 {{subject}}
                                 <br>
                                 <img src="/images/time_img.png" alt="time">
-                                <span class="created raw" data-created="{{created_at}}"></span>
+                                <span class="created" data-created="{{created_at}}">{{create_date}}</span>
                                 <a class="campaign-share-link" href="{{rooturl}}{{user_id}}/{{slug}}">Share Campaign</a>
                             </td>
                             <td class="edit_button">
@@ -101,7 +101,7 @@
                             </td>
                             <td class="name_table">{{sender}}</td>
                             <td class="info_table">{{subject}}</td>
-                            <td class="date_table"><span class="created raw" data-created="{{created_at}}"></span></td>
+                            <td class="date_table"><span class="created" data-created="{{created_at}}">{{send_date}}</span></td>
                         </tr>
                         <tr class="view-inbox-message" style="display:none;">
                             <td class="inbox-message" colspan="3">

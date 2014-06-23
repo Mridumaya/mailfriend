@@ -33,6 +33,18 @@ Template.list_campaign.helpers
   rooturl: ->
     Meteor.absoluteUrl ""
 
+  create_date: ->
+    Meteor.call 'formatDate', @created_at, @_id, (e, resp) ->
+      console.log e if e
+      
+      date = resp[0]
+      campaignId = resp[1]
+      Session.set('date' + campaignId, date)
+
+    date = Session.get('date' + @_id)
+    delete Session.keys['date' + @_id]
+
+    return date
 
 @key_up_delay = 0;
 getEnteredTags = () ->
@@ -429,76 +441,14 @@ Template.new_campaign.rendered = ->
       horizontalScroll: true
 
 
-@displayDate = (list) ->
-  weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-  months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-
-  curr_date = new Date()
-  curr_monthday = curr_date.getDate()
-  curr_day = weekdays[curr_date.getDay()]
-  curr_month = months[curr_date.getMonth()]
-  curr_year = curr_date.getFullYear()
-
-  # console.log curr_year + ' ' + curr_month + ' ' + curr_day + ' ' + curr_monthday
-
-  _.each(list,(item) ->
-    elem = $(item)
-    created = new Date(elem.data('created'))
-
-    # console.log created
-
-    created_hours = created.getHours()
-    created_minutes = created.getMinutes()
-
-    if created_minutes < 10
-      created_minutes = '0' + created_minutes
-
-    if created_hours > 11
-      ampm = 'pm'
-    else
-      ampm = 'am'  
-
-    if created_hours > 12
-      created_hours -= 12      
-
-    created_time = created_hours + ':' + created_minutes + ampm
-    created_monthday = created.getDate()
-    created_day = weekdays[created.getDay()]
-    created_month = months[created.getMonth()]
-    created_year = created.getFullYear()
-
-    # console.log created
-    # console.log created_year + ' ' + created_month + ' ' + created_day + ' ' + created_time + ' ' + created_monthday
-
-    formated = created_day + ' ' + created_time
-
-    if curr_year is created_year
-      if curr_month is created_month
-        if curr_monthday is created_monthday
-          formated = 'Today ' + created_time
-        else if curr_month - 1 is created_monthday
-          formated = 'Yesterday ' + created_time
-        else formated += ', ' + created_month + ' ' + created_monthday
-      else
-        formated += ', ' + created_month + ' ' + created_monthday
-    else
-      formated += ', ' + created_month + ' ' + created_monthday + ' ' + created_year
-
-    elem.removeClass('raw').text(formated)
-  )
-
-
 Template.list_campaign.rendered = ->
   menuitemActive('campaign-list')
 
   listInt = setInterval(->
     list = $('#list1 td.info_content span.created.raw')
 
-    if list.length
-      displayDate(list)
-
-      if list.length > 4
-        initScrollbar('#content_1')
+    if list.length > 4
+      initScrollbar('#content_1')
 
       clearInterval listInt
 
@@ -552,6 +502,19 @@ Template.inbox.helpers
 
     return tags
 
+  send_date: ->
+    Meteor.call 'formatDate', @created_at, @_id, (e, resp) ->
+      console.log e if e
+      
+      date = resp[0]
+      messageId = resp[1]
+      Session.set('date' + messageId, date)
+
+    date = Session.get('date' + @_id)
+    delete Session.keys['date' + @_id]
+
+    return date
+
 
 Template.inbox.events
   'click tr.message-header': (e) ->
@@ -597,11 +560,8 @@ Template.inbox.rendered = ->
   listInt = setInterval(->
     list = $('#inbox-messages td.date_table span.created.raw')
 
-    if list.length
-      displayDate(list)
-
-      # if list.length > 4
-      #   initScrollbar('#content_1')
+    if list.length > 4
+      initScrollbar('#content_1')
         
       clearInterval listInt
 
