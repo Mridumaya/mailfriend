@@ -625,10 +625,14 @@ p.draft-body textarea {
     min-height: 150px;
 }
 
+.share-draft-to {
+    padding: 8px 10px 8px 10px !important;
+}
+
 #recipients-tagit {
     border:none;
     padding: 0;
-    height: 26px;
+    min-height: 26px;
 }
 
 #recipients-tagit li.tagit-choice {
@@ -638,6 +642,14 @@ p.draft-body textarea {
     height: 24px;
     margin: 3px 2px 0 0;
     padding: 1px 18px 0 0;
+}
+
+#recipients-tagit li.tagit-new {
+    padding: 3px 0 0 0;
+}
+
+#recipients-tagit li.tagit-new input {
+    font-size: 15px;
 }
 
 #recipients-tagit li.tagit-choice span {
