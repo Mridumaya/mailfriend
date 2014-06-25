@@ -485,13 +485,37 @@ a.contact-tab.tab-active {
     margin: -43px 0 0 3px;
 }
 
-.image-mask-blue {
+.inbox-profile-pic {
+    border-radius: 8px;
+}
+
+.image-mask-color {
     width: 40px;
     height: 43px;
-    background-image: url('../images/image_mask_blue.png');
     background-repeat: no-repeat;
     position: absolute;
     margin: -43px 0 0 0;
+    border-radius: 6px;
+}
+
+.color1 {
+    background-image: url('../images/image_mask_blue1.png');
+}
+
+.color2 {
+    background-image: url('../images/image_mask_blue2.png');
+}
+
+.color3 {
+    background-image: url('../images/image_mask_red.png');
+}
+
+.color4 {
+    background-image: url('../images/image_mask_yellow.png');
+}
+
+.color5 {
+    background-image: url('../images/image_mask_white.png');
 }
 
 .loading-contacts {

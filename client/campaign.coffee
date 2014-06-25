@@ -517,6 +517,9 @@ Template.list_campaign.rendered = ->
 
 
 Template.inbox.helpers
+  randomnumber: ->
+    random = Math.floor((Math.random() * 5) + 1)
+
   messages: ->
     email = Meteor.user().profile.email
     messages = Messages.find({to: email}).fetch()
@@ -531,7 +534,6 @@ Template.inbox.helpers
       Session.set('name' + senderId, name)
 
     name = Session.get('name' + @from)
-    # delete Session.keys['name' + @from]
 
     if @from is Meteor.user()._id
       name += ' (me)'
@@ -547,7 +549,6 @@ Template.inbox.helpers
       Session.set('picture' + senderId, picture)
 
     picture = Session.get('picture' + @from)
-    # delete Session.keys['picture' + @from]
 
     return picture
 
