@@ -641,3 +641,41 @@ p.draft-body textarea {
     font-weight: normal;
     font-size: 15px;
 }
+
+.message-status {
+    background: url("../images/sent_unsent.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    display: inline-block;
+    float: left;
+    height: 13px;
+    margin-right: 5px;
+    margin-top: 6px;
+    width: 19px;
+}
+
+.message-sent {
+    background-position: 0 0;
+}
+
+.message-unsent {
+    background-position: 0 -13px;
+}
+
+.recipients-count {
+    background: none repeat scroll 0 0 #38a6a6;
+    border-radius: 10px;
+    color: #fff;
+    float: left;
+    font-family: 'Lato',sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    height: 17px;
+    line-height: 17px;
+    margin-top: 4px;
+    text-align: center;
+    width: 17px;
+    margin-left:10px;
+}
+
+.campaign-subject {
+    float: left;
+}

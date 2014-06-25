@@ -281,6 +281,21 @@ Template.list_campaign.helpers
 
     return date
 
+  is_message_sent: ->
+    if @sent is 'yes'
+      return true
+    else 
+      return false
+
+  recipients_count: ->
+    count = 0
+
+    _.each(@recipients || [], (item) ->
+      count++
+    )
+
+    return count
+
 
 Template.list_campaign.events
   'click .delete-campaign': (e) ->

@@ -51,11 +51,21 @@
                         {{#each campaigns}}
                         <tr>
                             <td class="info_content">
+                                {{#if is_message_sent}}
+                                <div class="message-status message-sent" title="Message is sent"></div>
+                                {{else}}
+                                <div class="message-status message-unsent" title="Message is not sent"></div>
+                                {{/if}}
+
+                                <div class="campaign-subject">
                                 {{#if subject}}
                                     {{subject}}
                                 {{else}}
                                     - no subject -
                                 {{/if}}
+                                </div>
+
+                                <div class="recipients-count" title="{{recipients_count}} recipient(s)">{{recipients_count}}</div>
                                 <br>
                                 <img src="/images/time_img.png" alt="time">
                                 <span class="created" data-created="{{created_at}}">{{create_date}}</span>
