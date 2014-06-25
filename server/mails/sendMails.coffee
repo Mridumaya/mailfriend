@@ -82,14 +82,14 @@ Meteor.methods
             "html": body
             "text": body
             "subject": subject
-            "from_email": "message.from_email@example.com"
-            #"from_name": "Example Name"
+            "from_email": "no-reply@mailfriend.com"
+            "from_name": "Mailfriend Registration"
             "to":[
                 "email": to
                 #"name": "Recipient Name"
             ]
             "headers":
-                "Reply-To": "message.reply@example.com"
+                "Reply-To": "no-reply@mailfriend.com"
             "important": false
             "track_opens": null
             "track_clicks": null
@@ -106,5 +106,3 @@ Meteor.methods
             console.log(err)
             done err, null
     response.result || response.err
-
-
