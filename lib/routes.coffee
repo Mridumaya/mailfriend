@@ -15,7 +15,7 @@ Router.map ->
   @route "verify-email",
     path: "/verify-email/:token"
     action: ()->
-      Accounts.verifyEmail @params.token, (err)->
+      Meteor.call "verifyEmailCode", @params.token, (err)->
         console.log(err)
         if(err)
             Session.set( "errorMessage", err.reason);
@@ -64,18 +64,18 @@ Router.map ->
 
   @route "inbox",
     path: "/inbox",
- 
+
   @route "404",
     path: '/404',
     layoutTemplate: "publicMasterLayout",
     template: "notFound",
 
-  # public stuff 
+  # public stuff
   @route "public_welcome",
     path: '/:user_id/:slug',
     layoutTemplate: "masterLogoutLayout",
     template: "welcome",
-    
+
     data: ->
       Meteor.subscribe 'publicCampaigns', @params.user_id, @params.slug, ->
         console.log 'Public campaigns'
@@ -106,14 +106,14 @@ Router.map ->
   @route "publicsearchcontacts",
     path: '/public-search-contacts',
     layoutTemplate: "publicMasterLayout",
-    template: "public_search_contacts", 
+    template: "public_search_contacts",
 
   @route "publiccontactlist",
     path: '/public-contact-list',
     layoutTemplate: "publicMasterLayout",
-    template: "public_contact_list", 
+    template: "public_contact_list",
 
   @route "publicconfirm",
     path: '/public-confirm',
     layoutTemplate: "publicMasterLayout",
-    template: "public_confirm", 
+    template: "public_confirm",

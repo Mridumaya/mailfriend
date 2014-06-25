@@ -25,6 +25,8 @@ Accounts.onCreateUser( (options,user)->
     user.profile = profile
     user
   else
+    user.customVerified = false
+    user.customVerificationCode = Random.hexString(20).toLowerCase()
     console.log "accounts.coffee: "
     #console.log user
     console.log options
