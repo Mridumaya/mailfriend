@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/javascript" href="/css/jquery.mCustomScrollbar.css">
     <script type="text/javascript" src="/js/jquery.mCustomScrollbar.concat.min.js"></script> 
 
-    <script type="text/javascript" src="/js/apprise.min.js"></script>   
+    <script type="text/javascript" src="/js/apprise.min.js"></script>
 
     <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
@@ -56,6 +56,7 @@
 
 <template name="masterLayout">
     {{#if hasLogin}}
+
     <section class="wrapper">
         <header>
             <div class="mobile-header">
@@ -290,7 +291,7 @@
                             <h3 class="text-center">Current status:</h3>
                             <ul>
                                 <li>{{forwarded_messages}} people forwarded your campaign</li>
-                                <li>You have {{new_messages}} unread message(s)</li>
+                                <li>{{#if new_messages gt 1}}You have {{new_messages}} unread message{{#if new_messages gt 1}}s{{/if}}{{else}}You have no unread messages{{/if}}</li>
                                 <li>You have {{campaign_count}} campaigns total, {{sent_campaign_count}} already sent</li>
                             </ul>
                         </div>
@@ -348,6 +349,39 @@
                                 <img src="/images/linkedin_icon.png">
                             </a>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</template>
+
+<template name="share_via_email">
+    <div id="container-inner">
+        <section class="inbox_content">
+            <div class="block_head">
+                <div class="box_left">
+                    <h2>Review and modify your email</h2>
+                    <img src="/images/arreow_block.png" alt="arreow_box">
+                </div>
+            </div>
+            <div class="content2">
+                <div class="existing_main_content">
+                    <div class="preview">
+                        <h4>Subject:</h4>
+                        <p class="draft-subject"><input type="text" id="share-subject" value="{{subject}}"></p>
+
+                        <h4>Body:</h4>
+                        <p class="draft-body">
+                            <textarea id="share-message" autofocus>Check out this cool application!<br><br>{{shareurl}}</textarea>
+                        </p>
+
+                        <h4>Send To:</h4>
+                        <p class="draft-to"><input type="hidden" id="recipients" value="{{recipients}}"><ul id="recipients-tagit"></ul></p>
+                    </div>
+
+                    <div class="row">
+                        <button class="btn btn-primary pull-right draft-send" style="margin-right: 10px;" type="button">Share campaign</button>
                     </div>
                 </div>
             </div>

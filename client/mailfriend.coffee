@@ -211,18 +211,6 @@ Template.confirm.events
     delete Session.keys['contact_list']    
     Router.go 'new_campaign'
     # Session.set("STEP", "contact_list")
-  
-  'click #facebook': (e) ->
-    window.open('https://www.facebook.com/sharer/sharer.php?u=http://mailfriend.meteor.com/', 'facebook-share-dialog', 'width=626,height=436');
-  
-  'click #twitter': (e) ->
-    window.open("http://twitter.com/share?text=" + encodeURIComponent("Check this cool pictures application http://mailfriend.meteor.com/"), 'twitter', "width=575, height=400");
-  
-  'click #google': (e) ->
-    window.open('https://plus.google.com/share?url=http://mailfriend.meteor.com/', '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');
-  
-  'click #linkedin': (e) ->
-    window.open("http://www.linkedin.com/shareArticle?mini=true&url=http://mailfriend.meteor.com/", '', "width=620, height=432");
 
   'click .draft-send': (e) ->
     e.preventDefault()
@@ -292,9 +280,113 @@ Template.confirm.events
 
         console.log 'send mail success'
 
-        # $(".success").removeClass("hidden")
         $('.draft-send').prop('disabled', false)
         $('.draft-close').trigger('click')
+
+
+Template.share_via_email.rendered = ->
+  menuitemActive()
+
+  $('#share-message').wysihtml5({"image":false, "font-styles": false});
+
+  $("#recipients-tagit").tagit({})
+
+  _.each($('#recipients').val().split(',') || [],(item) ->
+    $("#recipients-tagit").tagit("createTag", item)
+  )
+
+
+Template.share_via_email.helpers
+  subject: ->
+    Meteor.call 'getCampaignSubject', Session.get('campaign_id'), (e, resp) ->
+      console.log e if e
+
+      subject = resp[0]
+      campaignId = resp[1]
+      Session.set('subject' + campaignId, subject)
+
+    subject = Session.get('subject' + Session.get('campaign_id'))
+
+    return subject
+
+  recipients: ->
+    Meteor.call 'getCampaignRecipients', Session.get('campaign_id'), (e, resp) ->
+      console.log e if e
+
+      recipients = resp[0]
+      campaignId = resp[1]
+      Session.set('recipients' + campaignId, recipients)
+
+    recipients = Session.get('recipients' + Session.get('campaign_id'))
+
+    return recipients
+
+  shareurl: ->
+    Meteor.call 'getCampaignSlug', Session.get('campaign_id'), (e, resp) ->
+      console.log e if e
+
+      slug = resp[0]
+      campaignId = resp[1]
+      Session.set('slug' + campaignId, slug)
+
+    slug = Session.get('slug' + Session.get('campaign_id'))
+
+    return Meteor.absoluteUrl "" + Meteor.user()._id + '/' + slug
+
+
+Template.share_via_email.events
+  'click .draft-send': (e) ->
+    e.preventDefault()
+
+    subject = $('#share-subject').val()
+    body = $('#share-message').val()
+    to = $('#recipients-tagit').tagit("assignedTags")
+
+    # console.log subject, body, to
+    $('.draft-send').prop('disabled', true)
+
+    Meteor.call 'sendMail', subject, body, to, (err, result) ->
+      campaign_id = Session.get("campaign_id")
+      campaign = Campaigns.findOne({_id: campaign_id})
+      
+      if err
+        console.log err
+      else
+        # insert into sharings
+        Sharings.insert
+          type: 'email'
+          campaign_id: campaign_id
+          sender_id: Meteor.user()._id
+          owner_id: campaign.user_id
+          slug: campaign.slug
+          subject: subject
+          htmlBody: body
+          senderName: Meteor.user()?.profile?.name || ""
+
+        # insert into messages
+        _.each(to,(email) ->
+            Messages.insert
+              campaign_id: campaign_id
+              slug: campaign.slug
+              from: Meteor.user()._id
+              to: email
+              message: body
+              subject: subject
+              new_message: 'yes'
+              created_at: new Date()
+        )
+
+        $.gritter.add
+          title: "Email sent"
+          text: "Your email was successfully sent!"
+
+        mixpanel.track("send email", { });
+
+        console.log 'send mail success'
+
+        $('.draft-send').prop('disabled', false)
+        $('.draft-close').trigger('click')
+
 
 @menuitemActive = (elcl) ->
   list = $('.left_nav ul')

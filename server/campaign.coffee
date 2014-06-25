@@ -37,7 +37,7 @@ Meteor.methods
   addSentUsersToCampaign:(campaignId, sent_to) ->
     Campaigns.update({ _id: campaignId }, {$addToSet: { sent_to: { $each: sent_to} } } )
 
-  # inbox ------------------------------------------------------------------------------------------------------------------------------
+  # inbox ---------------------------------------------------------------------------------------------------------------------------------
 
   getSenderName: (senderId) ->
     user = Meteor.users.findOne({_id: senderId})
@@ -59,6 +59,26 @@ Meteor.methods
     tags = campaign.search_tags
 
     return [tags, campaignId]   
+
+# share via email -------------------------------------------------------------------------------------------------------------------------
+
+  getCampaignSubject: (campaignId) ->
+    campaign = Campaigns.findOne({_id: campaignId})
+    subject = campaign.subject
+
+    return [subject, campaignId] 
+
+  getCampaignRecipients: (campaignId) ->
+    campaign = Campaigns.findOne({_id: campaignId})
+    recipients = campaign.recipients
+
+    return [recipients, campaignId] 
+
+  getCampaignSlug: (campaignId) ->
+    campaign = Campaigns.findOne({_id: campaignId})
+    slug = campaign.slug
+
+    return [slug, campaignId] 
 
 # common functions ------------------------------------------------------------------------------------------------------------------------
 

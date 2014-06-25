@@ -10,7 +10,7 @@
             <div class="block_main_content">
                 <div class="mailbox_left">
                     <input type="text" placeholder="Type the subject of this message..." id="subject" value="{{#if _id}}{{subject}}{{/if}}">
-                    <textarea id="own_message" name="own_message">{{#if _id}}{{body}}{{/if}}</textarea>
+                    <textarea id="own_message" name="own_message" autofocus>{{#if _id}}{{body}}{{/if}}</textarea>
                     <a href="#" class="button btn-save-campaign">Save</a>
                 </div>
                 <div class="mail_content">
@@ -51,11 +51,20 @@
                         {{#each campaigns}}
                         <tr>
                             <td class="info_content">
-                                {{subject}}
+                                {{#if subject}}
+                                    {{subject}}
+                                {{else}}
+                                    - no subject -
+                                {{/if}}
                                 <br>
                                 <img src="/images/time_img.png" alt="time">
                                 <span class="created" data-created="{{created_at}}">{{create_date}}</span>
-                                <a class="campaign-share-link" href="{{rooturl}}{{user_id}}/{{slug}}">Share Campaign</a>
+
+                                {{#if subject}}
+                                <!-- <a class="campaign-share-link" href="{{rooturl}}{{user_id}}/{{slug}}">Share Campaign</a> -->
+                                <br>
+                                <a class="campaign-share-link" href="#" data-toggle="modal" data-target="#share-dialog" data-shareurl="{{rooturl}}{{user_id}}/{{slug}}" data-sharesubject="{{subject}}" data-campaignid="{{_id}}">Share Campaign</a>
+                                {{/if}}
                             </td>
                             <td class="edit_button">
                                 <a href="#" class="edit-campaign e_button" data-id="{{_id}}"><span class="edit"></span> Edit</a>
@@ -77,6 +86,42 @@
                 </div>
             </div>
         </section>
+    </div>
+
+    {{> share_modal}}
+</template>
+
+<template name="share_modal">
+    <div id="share-dialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="share-dialog-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header pb70">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1>Share your campaign</h1>
+                    
+                    <p>Please choose a method to share your campaign:</p>
+                    <div class="row text-center success">
+                        <div class="mt20">
+                            <input type="hidden" id="share-url">
+                            <input type="hidden" id="share-subject">
+                            <input type="hidden" id="share-id">
+
+                            <a id="share-email" href="#" class="active">
+                                <img src="/images/gmail_icon.png">
+                            </a> 
+
+                            <a id="share-facebook" href="#" target="_blank" class="active">
+                                <img src="/images/facebook_icon.png">
+                            </a>
+
+                            <a id="share-twitter" href="#" class="active">
+                                <img src="/images/twitter_icon.png">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 

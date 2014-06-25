@@ -527,9 +527,9 @@ a.contact-tab.tab-active {
     width: 22px;
 }
 
-.campaign-share-link {
+/*.campaign-share-link {
     display: block;
-}
+}*/
 
 .current-status {
     border-radius: 6px;
@@ -577,4 +577,43 @@ a.forward-message {
     border: 1px solid #f26662 !important;
     border-radius: 6px;
     background-color: #feebea;
+}
+
+#share-email, #share-facebook {
+    margin-right: 20px;
+}
+
+p.draft-subject input {
+    border:none; 
+    padding:0; 
+    margin:0
+}
+
+p.draft-body textarea {
+    border:none;
+    padding:none;
+    margin:none;
+    width:100%;
+    min-height: 150px;
+}
+
+#recipients-tagit {
+    border:none;
+    padding: 0;
+    height: 26px;
+}
+
+#recipients-tagit li.tagit-choice {
+    background: none repeat scroll 0 0 #d9534f;
+    border: medium none;
+    border-radius: 4px;
+    height: 24px;
+    margin: 3px 2px 0 0;
+    padding: 1px 18px 0 0;
+}
+
+#recipients-tagit li.tagit-choice span {
+    background-color: transparent;
+    font-weight: normal;
+    font-size: 15px;
 }

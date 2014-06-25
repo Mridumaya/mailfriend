@@ -25,18 +25,6 @@ Template.public_confirm.events
     Router.go('publiccontactlist')
     # Session.set("STEP", "public_contact_list")
 
-  'click #facebook': (e) ->
-    window.open('https://www.facebook.com/sharer/sharer.php?u=http://mailfriend.meteor.com/', 'facebook-share-dialog', 'width=626,height=436');
-
-  'click #twitter': (e) ->
-    window.open("http://twitter.com/share?text=" + encodeURIComponent("Check this cool pictures application http://mailfriend.meteor.com/"), 'twitter', "width=575, height=400");
-
-  'click #google': (e) ->
-    window.open('https://plus.google.com/share?url=http://mailfriend.meteor.com/', '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');
-
-  'click #linkedin': (e) ->
-    window.open("http://www.linkedin.com/shareArticle?mini=true&url=http://mailfriend.meteor.com/", '', "width=620, height=432");
-
   'click .draft-send': (e) ->
     e.preventDefault()
 
@@ -123,7 +111,6 @@ Template.public_confirm.events
 
         console.log 'send mail success'
 
-        # $(".success").removeClass("hidden")
         $('.draft-send').prop('disabled', false)
         $('.draft-close').trigger('click')
         

@@ -1,6 +1,7 @@
 Meteor.startup ->
   GlobalConfiguration.init()
 
+
 Meteor.methods
   loadAllGmails: (userId, isLoadAll) ->
     Meteor.users.update userId, {$set: {'profile.isLoadAll': isLoadAll}}, (err, num) ->
@@ -29,3 +30,18 @@ Meteor.methods
       else
         index = index + 1
         uniqueUsername = username + '_' + index
+
+
+# Meteor.headly.config({
+#   facebook: (data) ->
+#     tags = '<meta property="og:image" content="http://jacint.meteor.com/images/logo.png"/>'
+#     tags += '<meta property="og:title" content="Mailfriend"/>'
+#     tags += '<meta property="og:url" content="http://jacint.meteor.com"/>'
+#     tags += '<meta property="og:site_name" content="Mailfriend"/>'
+#     tags += '<meta property="og:type" content="website"/>'
+
+#     return tags
+  
+#   twitter: (data) ->
+#     return '<meta name="twitter:card" content="summary">'
+# })

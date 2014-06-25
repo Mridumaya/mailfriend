@@ -12,7 +12,8 @@
       "npm": {},
       "trail": {},
       "iron-router-progress": {},
-      "jquery-datatables": {}
+      "jquery-datatables": {},
+      "headly": {}
     },
     "packages": {
       "google-contacts": {
@@ -57,8 +58,13 @@
       },
       "jquery-datatables": {
         "git": "https://github.com/lumapictures/meteor-jquery-datatables",
-        "tag": "v1.0.3",
-        "commit": "37d0995035f6e2915bab29556a69543ae93c54bc"
+        "tag": "v1.0.5",
+        "commit": "fe4fb3178386f88eeac9139b7680646b320e321d"
+      },
+      "headly": {
+        "git": "https://github.com/ayal/headly",
+        "tag": "v0.1.1",
+        "commit": "f14effc81eab10efb876664bc010a5341ac95358"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

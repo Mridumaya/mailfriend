@@ -8,6 +8,7 @@
     "npm": {},
     "trail": {},
     "iron-router-progress": {},
-    "jquery-datatables": {}
+    "jquery-datatables": {},
+    "headly": {}
   }
 }

@@ -53,6 +53,7 @@ getEnteredTags = () ->
 
   message = $('#own_message').val()
 
+  @tag_replaced = ''
   @key_up_delay = setTimeout(->
     currentTagsStr = $("#tags").tagit("assignedTags").join(' ')
 
@@ -77,10 +78,27 @@ getEnteredTags = () ->
       # clear tags
       $("#tags").tagit("removeAll")
 
+      textarea = $('#own_message')
+
+      w5ref = textarea.data('wysihtml5');
+
+      @tag_replaced = textarea.val()
+
       # add predefined tags 
       _.each(searchTags || [],(item) ->
         $("#tags").tagit("createTag", item)
+        
+        @tag_replaced = @tag_replaced.replace('#' + item + ' ', '<span style="color:rgb(150, 150, 150)">'+item+'</span> ')
       )
+
+      if w5ref
+        w5ref.editor.setValue('')
+      else
+        ta.val('')
+
+      w5ref.editor.composer.element.focus()
+
+      window.frames[0].document.execCommand("InsertHTML", false, @tag_replaced)
 
     Session.set("search_tags", tags)
   , 1000)
@@ -336,7 +354,50 @@ Template.list_campaign.events
       Router.go 'new_campaign'
 
   'click .back-to-feature-select': (e) ->
-    Router.go 'feature_select'      
+    Router.go 'feature_select'
+
+  'click a.campaign-share-link': (e) ->
+    el = $(e.currentTarget)
+
+    shareURL = el.data('shareurl')
+    $('#share-url').val(shareURL)
+
+    shareSubject = el.data('sharesubject')
+    $('#share-subject').val(shareSubject)
+
+    campaignId = el.data('campaignid')
+    $('#share-id').val(campaignId)  
+
+    # $('.fb-share-button').attr('data-href', shareURL)
+
+  'click #share-email': (e) ->
+    e.preventDefault()
+
+    $('#share-dialog button.close').trigger('click')
+
+    campaignId = $('#share-id').val()
+    Session.set('campaign_id', campaignId)
+
+    Meteor.setTimeout ->
+      Router.go("share_via_email")
+    , 1000
+
+
+  'click #share-facebook': (e) ->
+    e.preventDefault()
+    shareURL = $('#share-url').val()
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + shareURL, 'facebook-share-dialog', 'width=626,height=436');
+  
+  'click #share-twitter': (e) ->
+    e.preventDefault()
+    shareURL = $('#share-url').val()
+    window.open("http://twitter.com/share?text=" + encodeURIComponent("Check out this cool application! " + shareURL), 'twitter', "width=575, height=400");
+  
+  # 'click #google': (e) ->
+  #   window.open('https://plus.google.com/share?url=http://mailfriend.meteor.com/', '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');
+  
+  # 'click #linkedin': (e) ->
+  #   window.open("http://www.linkedin.com/shareArticle?mini=true&url=http://mailfriend.meteor.com/", '', "width=620, height=432");
 
 
 initialize = true

@@ -59,6 +59,9 @@ Router.map ->
   @route "confirm",
     path: "/campaign/confirm",
 
+  @route "share_via_email",
+    path: "/campaign/share_via_email",
+
   @route "inbox",
     path: "/inbox",
  
