@@ -182,8 +182,10 @@ clearAllSelection = () ->
   searchQ: ->
     Session.get('searchQ') || ''
 
+
 Template.confirm.rendered = ->
   mixpanel.track("visits step 4 page", { });
+
 
 Template.confirm.helpers 
   subject: ->
@@ -193,7 +195,8 @@ Template.confirm.helpers
     Session.get "ORIG_MESS" || ""
 
   user_message: ->
-    Session.get "OWN_MESS" || ""
+    message = Session.get "OWN_MESS" || ""
+    message = message.replace('<span style="color:rgb(150, 150, 150)">', '').replace('</span>', '')
 
   emails: ->
     to = []
