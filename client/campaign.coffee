@@ -1,3 +1,99 @@
+# new campaign stuff ----------------------------------------------------------------------------------------------------------------------
+
+initialize = true
+saveInt = ''
+triggerTimeout = 0
+Template.new_campaign.rendered = ->
+  menuitemActive('new-campaign')
+
+  $('#tags-popover').popover({ 
+    trigger: 'hover'
+  })
+
+  # save the campaign periodically
+  clearInterval saveInt
+  saveInt = setInterval(->
+    if $('#own_message').length and $('.search-loader').is(':visible') isnt true and $('.modal-dialog').is(':visible') isnt true and $('#gritter-notice-wrapper').length is 0
+      SaveCampaign()
+  , 17000)   
+
+  # do search when a campaign is opened and there are search tags
+  if $('#campaign-tags').val().length
+    button = $('a.search-tags')
+    pressed = button.data('pressed')
+
+    if pressed is 0    
+      setTimeout ->
+        # console.log 'search-tags click triggered'
+        button.trigger('click')
+      , 2000
+
+  # init wisyhtml5 editor
+  if (initialize)
+    messageLength = 0
+    interval = 0
+
+    $("#own_message").wysihtml5
+      image: false
+      "font-styles": false
+      events:
+        focus: () ->
+          interval = setInterval(->
+            tmpLength = $('#own_message').val().length
+            if (tmpLength isnt messageLength)
+              messageLength = tmpLength
+              
+              getEnteredTags()
+              return
+          , 100)
+
+        blur: () ->
+          clearInterval interval
+
+    # initialize = false;
+
+  # init tagit
+  $("#tags").tagit({
+    afterTagAdded: (event,ui) ->
+      currentTags = $("#tags").tagit("assignedTags")
+      
+      Session.set("search_tags", currentTags)
+      addedTags = currentTags.join(" ")
+
+      $('#campaign-tags').val(addedTags)
+
+      if triggerTimeout isnt 0
+        clearTimeout triggerTimeout
+
+      triggerTimeout = setTimeout ->
+        console.log 'trigger the search'
+        $('a.search-tags').trigger('click');
+      , 1000
+
+    afterTagRemoved: (event,ui) ->
+      currentTags = $("#tags").tagit("assignedTags")
+      
+      Session.set("search_tags", currentTags)
+      addedTags = currentTags.join(" ")
+      
+      # $('#campaign-tags').val(addedTags)
+
+      if triggerTimeout isnt 0
+        clearTimeout triggerTimeout
+
+      triggerTimeout = setTimeout ->
+        console.log 'trigger the search'
+        $('a.search-tags').trigger('click');
+      , 1000
+  })
+
+  if Session.get 'campaign_id'
+    getEnteredTags()
+
+    Meteor.defer ->
+      getEnteredTags()
+
+
 Template.new_campaign.helpers
   own_message: ->
     return Session.get("OWN_MESS", '')
@@ -23,132 +119,6 @@ Template.new_campaign.helpers
         return ''
     else
       return ''
-
-
-Template.list_campaign.helpers
-  campaigns: ->
-    campaigns = Campaigns.find().fetch()
-    campaigns = _.sortBy campaigns, (c) -> -c.created_at || 0
-
-  rooturl: ->
-    Meteor.absoluteUrl ""
-
-  create_date: ->
-    Meteor.call 'formatDate', @created_at, @_id, (e, resp) ->
-      console.log e if e
-      
-      date = resp[0]
-      campaignId = resp[1]
-      Session.set('date' + campaignId, date)
-
-    date = Session.get('date' + @_id)
-    delete Session.keys['date' + @_id]
-
-    return date
-
-@key_up_delay = 0;
-getEnteredTags = () ->
-  if (@key_up_delay)
-    clearTimeout @key_up_delay
-
-  message = $('#own_message').val()
-
-  @tag_replaced = ''
-  @key_up_delay = setTimeout(->
-    currentTagsStr = $("#tags").tagit("assignedTags").join(' ')
-
-    searchTags = $('#campaign-tags').val().split(' ')
-    searchTagsStr = searchTags.join(' ')
-
-    re = /(?:^|\W)#(\w+)(?!\w)/g
-    match
-    messageTags = new Array()
-
-    while (match = re.exec(message))
-      if searchTagsStr.indexOf(match[1]) is -1
-        searchTags.push match[1]
-
-    newTagsStr = searchTags.join(' ') # + ' ' + messageTags.join(' ')
-    newTagsStr.trim()
-
-    # console.log currentTagsStr
-    # console.log newTagsStr
-
-    if currentTagsStr isnt newTagsStr
-      # clear tags
-      $("#tags").tagit("removeAll")
-
-      textarea = $('#own_message')
-
-      w5ref = textarea.data('wysihtml5');
-
-      @tag_replaced = textarea.val()
-
-      # add predefined tags 
-      _.each(searchTags || [],(item) ->
-        $("#tags").tagit("createTag", item)
-        
-        @tag_replaced = @tag_replaced.replace('#' + item + ' ', '<span style="color:rgb(150, 150, 150)">'+item+'</span> ')
-      )
-
-      if w5ref
-        w5ref.editor.setValue('')
-      else
-        ta.val('')
-
-      w5ref.editor.composer.element.focus()
-
-      window.frames[0].document.execCommand("InsertHTML", false, @tag_replaced)
-
-    Session.set("search_tags", tags)
-  , 1000)
-
-
-@refreshDataTable = (table, source) ->
-  table = table.DataTable()
-  table.clear().draw()
-
-  newrows = []
-  selectedrows = []
-  rowcount = 0
-  if source.length isnt 0
-    _.each(source,(item) ->
-      row = $(item)
-
-      checked = row.find('td:nth-child(1)').html()
-      if checked isnt '<i></i>'
-        selectedrows.push(rowcount)
-
-      rowcount++
-
-      newrow =
-        checked: row.find('td:nth-child(1)').html()
-        name: row.find('td:nth-child(2)').html()
-        email: row.find('td:nth-child(3)').html()
-        sentMessages: row.find('td:nth-child(4)').html()
-        receivedMessages: row.find('td:nth-child(5)').html()
-        isGContact: row.find('td:nth-child(6)').html()
-        isRelevant: row.find('td:nth-child(7)').html()
-      
-      newrows.push(newrow)
-    )
-
-  if newrows.length
-    table.rows.add(newrows).draw()
-
-    if selectedrows.length isnt 0
-      settings = table.settings()
-      rowsdata = settings[0]['aoData']
-
-      _.each(selectedrows,(item) ->
-        rowdata = rowsdata[item]
-
-        $(rowdata.nTr).addClass('info')
-      )
-
-    # hide loaders
-    searchLoader('hide');
-    $('div.loading-contacts').addClass('hidden')
 
 
 Template.new_campaign.events
@@ -274,6 +244,44 @@ Template.new_campaign.events
     $('li.tagit-new input').focus()
 
 
+# campaign list stuff ---------------------------------------------------------------------------------------------------------------------
+
+Template.list_campaign.rendered = ->
+  menuitemActive('campaign-list')
+
+  listInt = setInterval(->
+    list = $('#list1 td.info_content span.created.raw')
+
+    if list.length > 4
+      initScrollbar('#content_1')
+
+      clearInterval listInt
+
+  , 750)
+
+
+Template.list_campaign.helpers
+  campaigns: ->
+    campaigns = Campaigns.find().fetch()
+    campaigns = _.sortBy campaigns, (c) -> -c.created_at || 0
+
+  rooturl: ->
+    Meteor.absoluteUrl ""
+
+  create_date: ->
+    Meteor.call 'formatDate', @created_at, @_id, (e, resp) ->
+      console.log e if e
+      
+      date = resp[0]
+      campaignId = resp[1]
+      Session.set('date' + campaignId, date)
+
+    date = Session.get('date' + @_id)
+    delete Session.keys['date' + @_id]
+
+    return date
+
+
 Template.list_campaign.events
   'click .delete-campaign': (e) ->
       e.preventDefault()
@@ -392,125 +400,19 @@ Template.list_campaign.events
     e.preventDefault()
     shareURL = $('#share-url').val()
     window.open("http://twitter.com/share?text=" + encodeURIComponent("Check out this cool application! " + shareURL), 'twitter', "width=575, height=400");
-  
-  # 'click #google': (e) ->
-  #   window.open('https://plus.google.com/share?url=http://mailfriend.meteor.com/', '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');
-  
-  # 'click #linkedin': (e) ->
-  #   window.open("http://www.linkedin.com/shareArticle?mini=true&url=http://mailfriend.meteor.com/", '', "width=620, height=432");
 
 
-initialize = true
-saveInt = ''
-triggerTimeout = 0
-Template.new_campaign.rendered = ->
-  menuitemActive('new-campaign')
+# inbox stuff -----------------------------------------------------------------------------------------------------------------------------
 
-  $('#tags-popover').popover({ 
-    trigger: 'hover'
-  })
-
-  # save the campaign periodically
-  clearInterval saveInt
-  saveInt = setInterval(->
-    if $('#own_message').length and $('.search-loader').is(':visible') isnt true and $('.modal-dialog').is(':visible') isnt true and $('#gritter-notice-wrapper').length is 0
-      SaveCampaign()
-  , 17000)   
-
-  # do search when a campaign is opened and there are search tags
-  if $('#campaign-tags').val().length
-    button = $('a.search-tags')
-    pressed = button.data('pressed')
-
-    if pressed is 0    
-      setTimeout ->
-        # console.log 'search-tags click triggered'
-        button.trigger('click')
-      , 2000
-
-  # init wisyhtml5 editor
-  if (initialize)
-    messageLength = 0
-    interval = 0
-
-    $("#own_message").wysihtml5
-      image: false
-      "font-styles": false
-      events:
-        focus: () ->
-          interval = setInterval(->
-            tmpLength = $('#own_message').val().length
-            if (tmpLength isnt messageLength)
-              messageLength = tmpLength
-              
-              getEnteredTags()
-              return
-          , 100)
-
-        blur: () ->
-          clearInterval interval
-
-    # initialize = false;
-
-  # init tagit
-  $("#tags").tagit({
-    afterTagAdded: (event,ui) ->
-      currentTags = $("#tags").tagit("assignedTags")
-      
-      Session.set("search_tags", currentTags)
-      addedTags = currentTags.join(" ")
-
-      $('#campaign-tags').val(addedTags)
-
-      if triggerTimeout isnt 0
-        clearTimeout triggerTimeout
-
-      triggerTimeout = setTimeout ->
-        console.log 'trigger the search'
-        $('a.search-tags').trigger('click');
-      , 1000
-
-    afterTagRemoved: (event,ui) ->
-      currentTags = $("#tags").tagit("assignedTags")
-      
-      Session.set("search_tags", currentTags)
-      addedTags = currentTags.join(" ")
-      
-      # $('#campaign-tags').val(addedTags)
-
-      if triggerTimeout isnt 0
-        clearTimeout triggerTimeout
-
-      triggerTimeout = setTimeout ->
-        console.log 'trigger the search'
-        $('a.search-tags').trigger('click');
-      , 1000
-  })
-
-  if Session.get 'campaign_id'
-    getEnteredTags()
-
-    Meteor.defer ->
-      getEnteredTags()
-
-
-@initScrollbar = (scrollcontent) ->
-  $(scrollcontent).mCustomScrollbar
-    scrollButtons:
-      enable: true,
-      scrollType: "pixels",
-      horizontalScroll: true
-
-
-Template.list_campaign.rendered = ->
-  menuitemActive('campaign-list')
+Template.inbox.rendered = ->
+  menuitemActive('my-inbox')
 
   listInt = setInterval(->
-    list = $('#list1 td.info_content span.created.raw')
+    list = $('#inbox-messages td.date_table span.created.raw')
 
     if list.length > 4
       initScrollbar('#content_1')
-
+        
       clearInterval listInt
 
   , 750)
@@ -622,19 +524,116 @@ Template.inbox.events
     messageId = $(e.currentTarget).data('id')
 
 
+# functions -------------------------------------------------------------------------------------------------------------------------------
 
-Template.inbox.rendered = ->
-  menuitemActive('my-inbox')
+@key_up_delay = 0;
+getEnteredTags = () ->
+  if (@key_up_delay)
+    clearTimeout @key_up_delay
 
-  listInt = setInterval(->
-    list = $('#inbox-messages td.date_table span.created.raw')
+  message = $('#own_message').val()
 
-    if list.length > 4
-      initScrollbar('#content_1')
+  @tag_replaced = ''
+  @key_up_delay = setTimeout(->
+    currentTagsStr = $("#tags").tagit("assignedTags").join(' ')
+
+    searchTags = $('#campaign-tags').val().split(' ')
+    searchTagsStr = searchTags.join(' ')
+
+    re = /(?:^|\W)#(\w+)(?!\w)/g
+    match
+    messageTags = new Array()
+
+    while (match = re.exec(message))
+      if searchTagsStr.indexOf(match[1]) is -1
+        searchTags.push match[1]
+
+    newTagsStr = searchTags.join(' ') # + ' ' + messageTags.join(' ')
+    newTagsStr.trim()
+
+    if currentTagsStr isnt newTagsStr
+      # clear tags
+      $("#tags").tagit("removeAll")
+
+      textarea = $('#own_message')
+
+      w5ref = textarea.data('wysihtml5');
+
+      @tag_replaced = textarea.val()
+
+      # add predefined tags 
+      _.each(searchTags || [],(item) ->
+        $("#tags").tagit("createTag", item)
         
-      clearInterval listInt
+        @tag_replaced = @tag_replaced.replace('#' + item + ' ', '<span style="color:rgb(150, 150, 150)">'+item+'</span> ')
+      )
 
-  , 750)
+      if w5ref
+        w5ref.editor.setValue('')
+      else
+        ta.val('')
+
+      # trick to update the content of the editor
+      w5ref.editor.composer.element.focus()
+      window.frames[0].document.execCommand("InsertHTML", false, @tag_replaced)
+
+    Session.set("search_tags", tags)
+  , 1000)
+
+
+@refreshDataTable = (table, source) ->
+  table = table.DataTable()
+  table.clear().draw()
+
+  newrows = []
+  selectedrows = []
+  rowcount = 0
+  if source.length isnt 0
+    _.each(source,(item) ->
+      row = $(item)
+
+      checked = row.find('td:nth-child(1)').html()
+      if checked isnt '<i></i>'
+        selectedrows.push(rowcount)
+
+      rowcount++
+
+      newrow =
+        checked: row.find('td:nth-child(1)').html()
+        name: row.find('td:nth-child(2)').html()
+        email: row.find('td:nth-child(3)').html()
+        sentMessages: row.find('td:nth-child(4)').html()
+        receivedMessages: row.find('td:nth-child(5)').html()
+        isGContact: row.find('td:nth-child(6)').html()
+        isRelevant: row.find('td:nth-child(7)').html()
+      
+      newrows.push(newrow)
+    )
+
+  if newrows.length
+    table.rows.add(newrows).draw()
+
+    if selectedrows.length isnt 0
+      settings = table.settings()
+      rowsdata = settings[0]['aoData']
+
+      _.each(selectedrows,(item) ->
+        rowdata = rowsdata[item]
+
+        $(rowdata.nTr).addClass('info')
+      )
+
+    # hide loaders
+    searchLoader('hide');
+    $('div.loading-contacts').addClass('hidden')
+
+
+@initScrollbar = (scrollcontent) ->
+  $(scrollcontent).mCustomScrollbar
+    scrollButtons:
+      enable: true,
+      scrollType: "pixels",
+      horizontalScroll: true
 
 
 @searchLoader = (action) ->
@@ -669,6 +668,7 @@ Template.inbox.rendered = ->
           title: "Notification"
           text: "Campaign saved!"
 
+
 @searchContacts = (searchQuery, session_id, cb) ->
   if Meteor.user()
     SearchStatus.insert {session_id: session_id}
@@ -681,6 +681,7 @@ Template.inbox.rendered = ->
       #$("#loading").hide()
       #console.log 'searchContact Error: ', err if err
       #$.unblockUI()
+
 
 @CampaignController = RouteController.extend
     onBeforeAction:->
