@@ -41,7 +41,7 @@ Meteor.methods
 #     tags += '<meta property="og:type" content="website"/>'
 
 #     return tags
-  
+
 #   twitter: (data) ->
 #     return '<meta name="twitter:card" content="summary">'
 # })

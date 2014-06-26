@@ -15,7 +15,7 @@ Router.map ->
   @route "verify-email",
     path: "/verify-email/:token"
     action: ()->
-      Accounts.verifyEmail @params.token, (err)->
+      Meteor.call "verifyEmailCode", @params.token, (err)->
         console.log(err)
         if(err)
             Session.set( "errorMessage", err.reason);
@@ -67,7 +67,6 @@ Router.map ->
     data: ->
       Meteor.subscribe 'allcampaigns', ->
 
-
   @route "404",
     path: '/404',
     layoutTemplate: "publicMasterLayout",
@@ -97,7 +96,7 @@ Router.map ->
     path: '/:user_id/:slug',
     layoutTemplate: "masterLogoutLayout",
     template: "welcome",
-    
+
     data: ->
       Meteor.subscribe 'publicCampaigns', @params.user_id, @params.slug, ->
         console.log 'Public campaigns'
