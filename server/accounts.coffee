@@ -1,5 +1,5 @@
 Accounts.config
-  sendVerificationEmail: true
+  sendVerificationEmail: false
   forbidClientAccountCreation: true
 
 Accounts.onCreateUser( (options,user)->
