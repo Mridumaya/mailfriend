@@ -20,6 +20,7 @@ Template.masterLayout.events
   'click .logout': (e) ->
     e.preventDefault
     Meteor.logout()
+    Router.go('home')
     return true
 
   'click .edit-user-info': (e) ->
@@ -149,7 +150,6 @@ clearAllSelection = () ->
 
 
   receivedMessages: ->
-    #@uids?.length || 0
     if @uids
       _.filter @uids, (uid) ->
         today = new Date()
@@ -161,7 +161,6 @@ clearAllSelection = () ->
       0
 
   sentMessages: ->
-    #@sent_uids?.length || 0
     if @sent_uids
       _.filter @sent_uids, (uid) ->
         today = new Date()

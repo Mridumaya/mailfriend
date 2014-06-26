@@ -72,7 +72,7 @@ Template.welcome.events
 
   'click .public-account': (e) ->
     delete Session.keys["OWN_MESS"]
-    
+
     Router.go("publicedit")
 
 
