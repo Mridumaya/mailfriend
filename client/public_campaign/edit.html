@@ -3,12 +3,20 @@
         <section class="inbox_content">
             <div class="block_head">
                 <div class="box_left">
+                    {{#if is_public}}
                     <h2>Welcome{{#if name}} {{name}}{{/if}}</h2>
+                    {{else}}
+                    <h2>Forward {{sender}} message</h2>
+                    {{/if}}
                     <img src="/images/arreow_block.png" alt="arreow_box">
                 </div>
             </div>
             <div class="block_main_content">
-                <h4><strong>{{sender}}</strong> would like you to spread the word about <strong>"{{mail_title}}"</strong>.<br><br>Check out the message:</h4>
+                {{#if is_public}}
+                <h4><strong>{{sender_public}}</strong> would like you to spread the word about <strong>"{{mail_title}}"</strong>.<br><br>Check out the message:</h4>
+                {{else}}
+                <h4>Original message:</h4>
+                {{/if}}
 
                 <div id="original-message-holder">
                     <div class="original-message" id="original_message">{{{orig_message}}}</div>

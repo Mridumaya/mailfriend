@@ -367,11 +367,12 @@ a span.my_inbox {
     font-size: 18px;
     text-transform: uppercase;
     color: #333645;
-    padding-bottom: 13px;
+    padding-bottom: 18px;
     float: left;
     padding-right: 17px;
     margin: 0;
     font-weight: bold;
+    margin-top: -2px;
 }
 .ie7 .block_head .box_left h2 {
     font-family: 'Lato', sans-serif;
@@ -1088,6 +1089,10 @@ ie9 .scrollable tr {
 
     .public .inbox_content {
         margin-bottom: 100px;
+    }
+
+    #public-recipients-list {
+        margin-bottom: 20px !important;
     }
 }
 @media (min-width: 1281px) {

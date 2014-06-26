@@ -7,10 +7,11 @@ Template.public_confirm.helpers
     Session.get "MAIL_TITLE" || ""
 
   forwaded_message: ->
-    Session.get "ORIG_MESS" || ""
+    message = Session.get "ORIG_MESS" || ""
+    message = message.replace(/style="color:rgb\(150, 150, 150\)"/g, '')
 
   user_message: ->
-    Session.get "OWN_MESS" || ""
+    message = Session.get "OWN_MESS" || ""
 
   emails: ->
     to = []
@@ -22,14 +23,19 @@ Template.public_confirm.helpers
 Template.public_confirm.events
   'click .confirm-to-contact-list': (e) ->
     mixpanel.track("click on cancel/back button", { });
-    Router.go('publiccontactlist')
-    # Session.set("STEP", "public_contact_list")
+
+    is_public = Session.get('public')
+    if is_public is 'yes'
+      Router.go('publiccontactlist')
+    else
+      Router.go('contactlist')
 
   'click .draft-send': (e) ->
     e.preventDefault()
 
     subject = Session.get "MAIL_TITLE"
     body = Session.get("OWN_MESS") + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
+    body = body.replace(/style="color:rgb\(150, 150, 150\)"/g, '')
     to = Session.get "CONF_DATA"
 
     # console.log subject, body, to

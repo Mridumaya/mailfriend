@@ -228,7 +228,6 @@ Template.new_campaign.events
     $('#campaign-tags').val(addedTags)
 
   'click .btn-save-campaign': (e) ->
-    console.log "save campaign"
     Session.set("OWN_MESS", $("#own_message").val())
     Session.set("MAIL_TITLE", $("#subject").val())
     SaveCampaign()
@@ -508,8 +507,6 @@ Template.inbox.events
     messageId = currTr.data('id')
     messageContent = currTr.next()
 
-    console.log messageId
-
     # mark current message as read
     Messages.update messageId,
       $set:
@@ -538,6 +535,20 @@ Template.inbox.events
 
     messageId = $(e.currentTarget).data('id')
 
+    message = Messages.findOne({_id: messageId})
+    campaign = Campaigns.findOne({_id: message.campaign_id})
+
+    Session.set "MAIL_TITLE", message.subject
+    Session.set "ORIG_MESS", message.message
+    Session.set "slug", message.slug
+    Session.set "senderId", message.from
+    Session.set "searchQ", campaign.search_tags
+    Session.set "campaign_id", message.campaign_id
+    Session.set "public", 'no'
+
+    delete Session.keys["OWN_MESS"]
+
+    Router.go('edit')
 
 # functions -------------------------------------------------------------------------------------------------------------------------------
 

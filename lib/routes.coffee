@@ -64,13 +64,35 @@ Router.map ->
 
   @route "inbox",
     path: "/inbox",
- 
+    data: ->
+      Meteor.subscribe 'allcampaigns', ->
+
+
   @route "404",
     path: '/404',
     layoutTemplate: "publicMasterLayout",
     template: "notFound",
 
-  # public stuff 
+# non-public stuff ------------------------------------------------------------------------------------------------------------------------
+
+  @route "edit",
+    path: '/edit',
+    template: "public_edit"
+
+  @route "searchcontacts",
+    path: '/search-contacts',
+    template: "public_search_contacts"
+
+  @route "contactlist",
+    path: '/contact-list',
+    template: "public_contact_list"
+
+  @route "forwardconfirm",
+    path: '/confirm',
+    template: "public_confirm"
+
+# public forward --------------------------------------------------------------------------------------------------------------------------
+
   @route "public_welcome",
     path: '/:user_id/:slug',
     layoutTemplate: "masterLogoutLayout",
@@ -91,6 +113,7 @@ Router.map ->
         Session.set "senderId", @params.user_id
         Session.set "searchQ", campaign.search_tags
         Session.set "campaign_id", campaign._id
+        Session.set "public", 'yes'
         # Session.set 'user_id', @params.user_id
         # console.log Session.get "MAIL_TITLE"
       # else
@@ -106,14 +129,14 @@ Router.map ->
   @route "publicsearchcontacts",
     path: '/public-search-contacts',
     layoutTemplate: "publicMasterLayout",
-    template: "public_search_contacts", 
+    template: "public_search_contacts"
 
   @route "publiccontactlist",
     path: '/public-contact-list',
     layoutTemplate: "publicMasterLayout",
-    template: "public_contact_list", 
+    template: "public_contact_list"
 
   @route "publicconfirm",
     path: '/public-confirm',
     layoutTemplate: "publicMasterLayout",
-    template: "public_confirm", 
+    template: "public_confirm"

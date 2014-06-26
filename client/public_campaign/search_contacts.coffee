@@ -14,47 +14,35 @@ Template.public_search_contacts.helpers
   searchQ: ->
     Session.get('searchQ') || ''
 
+
 Template.public_search_contacts.events
   'click .search-button': (e) ->
     e.preventDefault()
+
     searchQuery = $("#public-tags").tagit("assignedTags").join(' ')
     
     if searchQuery
       $(e.target).prop('disabled', true)
+
       Session.set('searchQ', searchQuery)
-      # Meteor.setTimeout ->
-      #   $(e.target).prop('disabled', false)
-      # , 60*1000
-      # SearchStatus.insert {session_id: Meteor.default_connection._lastSessionId}
-      # searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
-      Router.go('publiccontactlist')
-      # Session.set('STEP', "public_contact_list")
+
+      is_public = Session.get('public')
+      if is_public is 'yes'
+        Router.go('publiccontactlist')
+      else
+        Router.go('contactlist')
     else
       apprise('Please add at least one search term!')
 
-  # 'keypress .search-query': (e) ->
-  #   $("#sq_error").addClass("hidden")
-
   'click .searchq-to-welcome': (e) ->
     e.preventDefault()
-    Router.go('publicedit')
-    # Session.set("STEP", "public_welcome")
 
-# searchContacts = (searchQuery, session_id, cb) ->
-  #$("#loading").show()
+    is_public = Session.get('public')
+    if is_public is 'yes'
+      Router.go('publicedit')
+    else
+      Router.go('edit')
 
-  #$.blockUI({ message: '<img src="/images/busy.gif" />  Loading...' });
-  # Meteor.setTimeout ->
-  #   if Meteor.user()
-  #     Meteor.call 'searchContacts', searchQuery, session_id, (err) ->
-  #       Session.set('searchQ', searchQuery)
-  #       #$("#loading").hide()
-  #       #console.log 'searchContact Error: ', err if err
-  #       #$.unblockUI()
-  #       cb()
-  #   else
-  #     searchContacts(searchQuery)
-  # , 500
 
 clearAllSelection = () ->
   SelectedEmailsHelper.unselectAllEmails()

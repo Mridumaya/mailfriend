@@ -196,7 +196,8 @@ Template.confirm.helpers
 
   user_message: ->
     message = Session.get "OWN_MESS" || ""
-    message = message.replace('<span style="color:rgb(150, 150, 150)">', '').replace('</span>', '')
+
+    message = message.replace(/style="color:rgb\(150, 150, 150\)"/g, '')
 
   emails: ->
     to = []
@@ -213,16 +214,15 @@ Template.confirm.events
     delete Session.keys['prev_searchQ']
     delete Session.keys['contact_list']    
     Router.go 'new_campaign'
-    # Session.set("STEP", "contact_list")
 
   'click .draft-send': (e) ->
     e.preventDefault()
 
     subject = Session.get "MAIL_TITLE"
-    body = Session.get "OWN_MESS"
+    body = Session.get("OWN_MESS")
+    body = body.replace(/style="color:rgb\(150, 150, 150\)"/g, '')
     to = Session.get "CONF_DATA"
 
-    # console.log subject, body, to
     $('.draft-send').prop('disabled', true)
 
     Meteor.call 'sendMail', subject, body, to, (err, result) ->

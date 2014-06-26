@@ -317,11 +317,20 @@ Template.public_contact_list.events
       return false
 
     clickSendMessages()
-    Router.go('publicconfirm')
-    # Session.set("STEP", "public_confirm")
+
+    is_public = Session.get('public')
+    if is_public is 'yes'
+      Router.go('publicconfirm')
+    else
+      Router.go('forwardconfirm')
 
   'click .contact-list-to-searchq': (e) ->
-    Router.go("publicsearchcontacts")
+    is_public = Session.get('public')
+    if is_public is 'yes'
+      Router.go("publicsearchcontacts")
+    else
+      Router.go('searchcontacts')
+
     # Session.set("STEP", "public_searchq")
 
   # 'click .back-to-editing': (e) ->
