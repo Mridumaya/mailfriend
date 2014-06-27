@@ -46,5 +46,5 @@ Meteor.methods
 
   checkIfEmailVerified: (email) ->
     user = Meteor.users.findOne({ emails: { $elemMatch: { address: email } } })
-    console.log user
-    user.customVerified
+    #console.log user
+    return user.customVerified

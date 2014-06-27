@@ -104,8 +104,9 @@ Template.login_dialog.events
 Template.manual_login_dialog.events
   'click .btn-try-login': (e) ->
     e.preventDefault()
-    Meteor.call "checkIfEmailVerified", $("#login-email").val(), (verified) ->
-      if verified
+    Meteor.call "checkIfEmailVerified", $("#login-email").val(), (err, data) ->
+      #console.log data
+      if data
         Meteor.loginWithPassword($("#login-email").val(), $("#login-password").val(), (err) ->
           console.log err
           if err && (err.error == 403 or err.error == 400)
