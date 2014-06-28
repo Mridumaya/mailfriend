@@ -31,7 +31,7 @@
 
         {{#if showContactList}}
         {{> contact_list}}
-        {{/if}}        
+        {{/if}}
     </div>
 </template>
 
@@ -80,18 +80,18 @@
                                 <a href="#" class="edit-campaign e_button" data-id="{{_id}}"><span class="edit"></span> Edit</a>
                             </td>
                             <td class="send_button">
-                                <a href="#" class="send-campaign s_button" data-id="{{_id}}"><span class="send"></span> Send</a>
+                                <a href="#" class="send-campaign s_button" data-id="{{_id}}" data-shareurl="{{rooturl}}{{user_id}}/{{slug}}"><span class="send"></span> Send</a>
                             </td>
                             <td class="delete_button">
                                 <a href="#" class="delete-campaign d_button" data-id="{{_id}}"><span class="delete"></span> Delete</a>
-                            </td>                            
+                            </td>
                         </tr>
                         {{/each}}
                         {{else}}
                         <tr class="no-content-in-list">
                             <td>You have currently no campaigns.</td>
                         </tr>
-                        {{/if}}                        
+                        {{/if}}
                     </table>
                 </div>
             </div>
@@ -108,7 +108,7 @@
                 <div class="modal-header pb70">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h1>Share your campaign</h1>
-                    
+
                     <p>Please choose a method to share your campaign:</p>
                     <div class="row text-center success">
                         <div class="mt20">
@@ -118,7 +118,7 @@
 
                             <a id="share-email" href="#" class="active">
                                 <img src="/images/gmail_icon.png">
-                            </a> 
+                            </a>
 
                             <a id="share-facebook" href="#" target="_blank" class="active">
                                 <img src="/images/facebook_icon.png">

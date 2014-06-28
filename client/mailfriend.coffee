@@ -205,6 +205,17 @@ Template.confirm.helpers
     emails = '<span>' + to.join('</span>, <span>') + '</span>'
     emails
 
+  shareurl: ->
+    Meteor.call 'getCampaignSlug', Session.get('campaign_id'), (e, resp) ->
+      console.log e if e
+
+      slug = resp[0]
+      campaignId = resp[1]
+      Session.set('slug' + campaignId, slug)
+
+    slug = Session.get('slug' + Session.get('campaign_id'))
+
+    return Meteor.absoluteUrl "" + Meteor.user()._id + '/' + slug
 
 Template.confirm.events
   'click .confirm-to-contact-list': (e) ->
@@ -216,16 +227,7 @@ Template.confirm.events
 
   'click .draft-send': (e) ->
     e.preventDefault()
-
-    Meteor.call 'getCampaignSlug', Session.get('campaign_id'), (e, resp) ->
-      console.log e if e
-      console.log Session.get('campaign_id')
-      console.log resp
-      slug = resp[0]
-      campaignId = resp[1]
-      Session.set('slug' + campaignId, slug)
-
-    slug = Meteor.absoluteUrl "" + Meteor.user()._id + '/' + Session.get('slug' + Session.get('campaign_id'))
+    slug = $(e.currentTarget).data('shareurl')
 
     subject = Session.get "MAIL_TITLE"
     body = Session.get("OWN_MESS")
@@ -335,16 +337,7 @@ Template.share_via_email.helpers
     return recipients
 
   shareurl: ->
-    Meteor.call 'getCampaignSlug', Session.get('campaign_id'), (e, resp) ->
-      console.log e if e
-
-      slug = resp[0]
-      campaignId = resp[1]
-      Session.set('slug' + campaignId, slug)
-
-    slug = Session.get('slug' + Session.get('campaign_id'))
-
-    return Meteor.absoluteUrl "" + Meteor.user()._id + '/' + slug
+    return Session.get('shareThisUrl')
 
 
 Template.share_via_email.events

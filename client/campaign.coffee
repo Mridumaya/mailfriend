@@ -6,7 +6,7 @@ triggerTimeout = 0
 Template.new_campaign.rendered = ->
   menuitemActive('new-campaign')
 
-  $('#tags-popover').popover({ 
+  $('#tags-popover').popover({
     trigger: 'hover'
   })
 
@@ -15,14 +15,14 @@ Template.new_campaign.rendered = ->
   saveInt = setInterval(->
     if $('#own_message').length and $('.search-loader').is(':visible') isnt true and $('.modal-dialog').is(':visible') isnt true and $('#gritter-notice-wrapper').length is 0
       SaveCampaign()
-  , 17000)   
+  , 17000)
 
   # do search when a campaign is opened and there are search tags
   if $('#campaign-tags').val().length
     button = $('a.search-tags')
     pressed = button.data('pressed')
 
-    if pressed is 0    
+    if pressed is 0
       setTimeout ->
         # console.log 'search-tags click triggered'
         button.trigger('click')
@@ -42,7 +42,7 @@ Template.new_campaign.rendered = ->
             tmpLength = $('#own_message').val().length
             if (tmpLength isnt messageLength)
               messageLength = tmpLength
-              
+
               getEnteredTags()
               return
           , 100)
@@ -56,7 +56,7 @@ Template.new_campaign.rendered = ->
   $("#tags").tagit({
     afterTagAdded: (event,ui) ->
       currentTags = $("#tags").tagit("assignedTags")
-      
+
       Session.set("search_tags", currentTags)
       addedTags = currentTags.join(" ")
 
@@ -72,10 +72,10 @@ Template.new_campaign.rendered = ->
 
     afterTagRemoved: (event,ui) ->
       currentTags = $("#tags").tagit("assignedTags")
-      
+
       Session.set("search_tags", currentTags)
       addedTags = currentTags.join(" ")
-      
+
       # $('#campaign-tags').val(addedTags)
 
       if triggerTimeout isnt 0
@@ -97,14 +97,14 @@ Template.new_campaign.rendered = ->
 Template.new_campaign.helpers
   own_message: ->
     return Session.get("OWN_MESS", '')
-  
+
   showContactList: ->
     console.log "enter list"
     Session.equals("contact_list", "yes")
-  
+
   searchTags: ->
     Session.get("search_tags") || []
-  
+
   mail_title: ->
     return Session.get("MAIL_TITLE", '')
 
@@ -137,7 +137,7 @@ Template.new_campaign.events
   'click .search-tags': (e) ->
     button = $(e.currentTarget)
     button.data('pressed', 1)
-    
+
     searchQuery = $("#tags").tagit("assignedTags").join(" ");
     prev_searchQuery = Session.get("prev_searchQ")
 
@@ -183,7 +183,7 @@ Template.new_campaign.events
                 row = $('#tmp_matched_contacts tr td:contains(' + email + ')').parent()
                 if row.length isnt 0
                   row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
-                
+
                 else
                   row = $('#tmp_unmatched_contacts tr td:contains(' + email + ')').parent()
                   if row.length isnt 0
@@ -220,7 +220,7 @@ Template.new_campaign.events
           destroyContactInt = button.data('destroyContactInt')
           if destroyContactInt is 1
             clearInterval contactInt
-        
+
         , 750)
 
   'click .tagit-close': (e) ->
@@ -270,7 +270,7 @@ Template.list_campaign.helpers
   create_date: ->
     Meteor.call 'formatDate', @created_at, @_id, (e, resp) ->
       console.log e if e
-      
+
       date = resp[0]
       campaignId = resp[1]
       Session.set('date' + campaignId, date)
@@ -283,7 +283,7 @@ Template.list_campaign.helpers
   is_message_sent: ->
     if @sent is 'yes'
       return true
-    else 
+    else
       return false
 
   recipients_count: ->
@@ -321,6 +321,8 @@ Template.list_campaign.events
   'click .send-campaign': (e) ->
       e.preventDefault()
       menuitemActive()
+      el = $(e.currentTarget)
+      Session.set('shareThisUrl', el.data('shareurl'))
 
       # get campaign data
       campaign_id = $(e.currentTarget).data('id')
@@ -331,7 +333,7 @@ Template.list_campaign.events
           if r
             delete Session.keys['searchQ']
             delete Session.keys['prev_searchQ']
-            delete Session.keys['contact_list']           
+            delete Session.keys['contact_list']
             Session.set('campaign_id', campaign_id)
             Router.go('new_campaign')
         )
@@ -342,7 +344,7 @@ Template.list_campaign.events
           if r
             delete Session.keys['searchQ']
             delete Session.keys['prev_searchQ']
-            delete Session.keys['contact_list']          
+            delete Session.keys['contact_list']
             Session.set('campaign_id', campaign_id)
             Router.go('new_campaign')
         )
@@ -388,8 +390,8 @@ Template.list_campaign.events
     $('#share-subject').val(shareSubject)
 
     campaignId = el.data('campaignid')
-    $('#share-id').val(campaignId)  
-
+    $('#share-id').val(campaignId)
+    Session.set('shareThisUrl', el.data('shareurl'))
     # $('.fb-share-button').attr('data-href', shareURL)
 
   'click #share-email': (e) ->
@@ -409,7 +411,7 @@ Template.list_campaign.events
     e.preventDefault()
     shareURL = $('#share-url').val()
     window.open('https://www.facebook.com/sharer/sharer.php?u=' + shareURL, 'facebook-share-dialog', 'width=626,height=436');
-  
+
   'click #share-twitter': (e) ->
     e.preventDefault()
     shareURL = $('#share-url').val()
@@ -426,7 +428,7 @@ Template.inbox.rendered = ->
 
     if list.length > 4
       initScrollbar('#content_1')
-        
+
       clearInterval listInt
 
   , 750)
@@ -459,7 +461,7 @@ Template.inbox.helpers
   picture: ->
     Meteor.call 'getSenderProfilePicture', @from, (e, resp) ->
       console.log e if e
-      
+
       picture = resp[0]
       senderId = resp[1]
       Session.set('picture' + senderId, picture)
@@ -471,7 +473,7 @@ Template.inbox.helpers
   tags: ->
     Meteor.call 'getMessageTags', @campaign_id, (e, resp) ->
       console.log e if e
-      
+
       tags = resp[0]
       campaignId = resp[1]
       Session.set('tags' + campaignId, tags)
@@ -484,7 +486,7 @@ Template.inbox.helpers
   send_date: ->
     Meteor.call 'formatDate', @created_at, @_id, (e, resp) ->
       console.log e if e
-      
+
       date = resp[0]
       messageId = resp[1]
       Session.set('date' + messageId, date)
@@ -587,10 +589,10 @@ getEnteredTags = () ->
 
       @tag_replaced = textarea.val()
 
-      # add predefined tags 
+      # add predefined tags
       _.each(searchTags || [],(item) ->
         $("#tags").tagit("createTag", item)
-        
+
         @tag_replaced = @tag_replaced.replace('#' + item + ' ', '<span style="color:rgb(150, 150, 150)">'+item+'</span> ')
       )
 
@@ -632,7 +634,7 @@ getEnteredTags = () ->
         receivedMessages: row.find('td:nth-child(5)').html()
         isGContact: row.find('td:nth-child(6)').html()
         isRelevant: row.find('td:nth-child(7)').html()
-      
+
       newrows.push(newrow)
     )
 
