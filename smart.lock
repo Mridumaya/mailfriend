@@ -13,7 +13,8 @@
       "trail": {},
       "iron-router-progress": {},
       "jquery-datatables": {},
-      "ms-seo": {}
+      "ms-seo": {},
+      "accounts-merge": {}
     },
     "packages": {
       "google-contacts": {
@@ -28,8 +29,8 @@
       },
       "bootstrap-3": {
         "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
-        "tag": "v3.1.1-1",
-        "commit": "63dd38968828bb8963636df93e9a1c45e2dfe67e"
+        "tag": "v3.2.0-1",
+        "commit": "17a63902fc6cf1096c5289d963c66cf28b474727"
       },
       "bootstrap3-wysihtml5": {
         "git": "https://github.com/andreioprisan/meteor-bootstrap3-wysihtml5.git",
@@ -53,8 +54,8 @@
       },
       "iron-router-progress": {
         "git": "https://github.com/Multiply/iron-router-progress.git",
-        "tag": "v0.4.0",
-        "commit": "02f78bdaca4c13d59f548d5a0ce83408c34b56d1"
+        "tag": "v0.4.1",
+        "commit": "496fcda9a6ec352b4733725f60c6f280250c3541"
       },
       "jquery-datatables": {
         "git": "https://github.com/lumapictures/meteor-jquery-datatables",
@@ -65,6 +66,11 @@
         "git": "https://github.com/DerMambo/ms-seo",
         "tag": "v0.2.6",
         "commit": "1a4ba31a1f6f29009d3941e9dd883829ff4e4b8b"
+      },
+      "accounts-merge": {
+        "git": "https://github.com/lirbank/meteor-accounts-merge.git",
+        "tag": "v0.0.7",
+        "commit": "ae5c08bb1574858257291fa11982733e6e1937f0"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

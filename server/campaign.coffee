@@ -1,6 +1,6 @@
 Meteor.methods
   # campaigns -----------------------------------------------------------------------------------------------------------------------------
-  
+
   createCampaign:(userId, subject, body, search_tags, recipients) ->
     # Generate slug
     slug = URLify2 subject
@@ -58,7 +58,7 @@ Meteor.methods
     campaign = Campaigns.findOne({_id: campaignId})
     tags = campaign.search_tags
 
-    return [tags, campaignId]   
+    return [tags, campaignId]
 
 # share via email -------------------------------------------------------------------------------------------------------------------------
 
@@ -66,19 +66,19 @@ Meteor.methods
     campaign = Campaigns.findOne({_id: campaignId})
     subject = campaign.subject
 
-    return [subject, campaignId] 
+    return [subject, campaignId]
 
   getCampaignRecipients: (campaignId) ->
     campaign = Campaigns.findOne({_id: campaignId})
     recipients = campaign.recipients
 
-    return [recipients, campaignId] 
+    return [recipients, campaignId]
 
   getCampaignSlug: (campaignId) ->
     campaign = Campaigns.findOne({_id: campaignId})
     slug = campaign.slug
 
-    return [slug, campaignId] 
+    return [slug, campaignId]
 
 # common functions ------------------------------------------------------------------------------------------------------------------------
 
@@ -101,10 +101,10 @@ Meteor.methods
     if created_hours > 11
       ampm = 'pm'
     else
-      ampm = 'am'  
+      ampm = 'am'
 
     if created_hours > 12
-      created_hours -= 12      
+      created_hours -= 12
 
     created_time = created_hours + ':' + created_minutes + ampm
     created_monthday = created.getDate()

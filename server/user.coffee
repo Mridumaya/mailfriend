@@ -48,3 +48,10 @@ Meteor.methods
     user = Meteor.users.findOne({ emails: { $elemMatch: { address: email } } })
     #console.log user
     return user.customVerified
+
+  checkIfUserLoggedInWithGoogle: (userId) ->
+    user = Meteor.users.findOne({'_id':userId})
+    user.loggedInWithGoogle
+
+  setUserToLoggedInWithGoogle: (userId) ->
+    Meteor.users.update({'_id':Meteor.userId()}, {$set : {'loggedInWithGoogle' : true}})
