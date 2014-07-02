@@ -298,6 +298,11 @@ Template.list_campaign.rendered = ->
 
   , 750)
 
+  if Session.get 'sent_campaign_id'
+    console.log Session.get 'sent_campaign_id'
+    $("table#list1").find("[data-campaignid='" + Session.get('sent_campaign_id') + "']").click()
+    delete Session.keys['sent_campaign_id']
+
 
 Template.list_campaign.helpers
   campaigns: ->

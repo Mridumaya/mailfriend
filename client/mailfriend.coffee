@@ -125,7 +125,7 @@ Template.home.events
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log 'Calling callback function'
           console.log err if err
-          Router.go("feature_select")
+          Router.go "list_campaign"
           #Session.set("STEP", "feature_select")
     )
 
@@ -295,8 +295,9 @@ Template.confirm.events
 
         console.log 'send mail success'
 
-        $('.draft-send').prop('disabled', false)
-        $('.draft-close').trigger('click')
+        Session.set("sent_campaign_id", Session.get("campaign_id"))
+        
+        Router.go 'list_campaign'
 
 
 Template.share_via_email.rendered = ->
