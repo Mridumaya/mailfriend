@@ -23,8 +23,9 @@ Router.map ->
         if(err)
             Session.set( "errorMessage", err.reason);
         else
-            Session.set( "successMessage", 'Your mail verified successfully.');
-        Router.go("login")
+            Session.set( "successMessage", 'Your email verified successfully, you can now log in.');
+            Session.set 'afterEmailVerified', true
+        Router.go("home")
     onAfterAction: ->
       SEO.set
         title: 'Verify your email address'
@@ -212,6 +213,7 @@ Router.map ->
         Session.set "senderId", @params.user_id
         Session.set "searchQ", campaign.search_tags
         Session.set "campaign_id", campaign._id
+        Session.set "sent_campaign_id", campaign._id
         Session.set "public", 'yes'
 
       return {'campaign': campaign}

@@ -102,7 +102,10 @@ Template.feature_select.events
 
 Template.home.rendered = ->
   mixpanel.track("view front page", { });
-
+  if Session.get 'afterEmailVerified'
+    delete Session.keys['afterEmailVerified']
+    apprise(Session.get('successMessage'))
+    $('#manual-login-dialog').modal('show')
 
 Template.home.events
   'click .add-google-oauth': (e) ->
@@ -296,7 +299,7 @@ Template.confirm.events
         console.log 'send mail success'
 
         Session.set("sent_campaign_id", Session.get("campaign_id"))
-        
+
         Router.go 'list_campaign'
 
 

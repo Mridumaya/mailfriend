@@ -149,7 +149,7 @@
                     <table class="scrollable" id="inbox-messages">
                         {{#if messages}}
                         {{#each messages}}
-                        <tr class="message-header {{#if is_new_message}}new_message{{/if}}" data-id="{{_id}}">
+                        <tr class="message-header {{#if is_new_message}}new_message{{/if}}" data-id="{{_id}}" data-campaignid={{campaign_id}}>
                             <td class="img_table">
                                 <img src="{{picture}}" alt="user_pic" height="43" width="40" class="inbox-profile-pic">
                                 <div class="image-mask-color color{{randomnumber}}"></div>
