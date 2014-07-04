@@ -487,9 +487,12 @@ Template.inbox.rendered = ->
   , 750)
 
   if Session.get 'sent_campaign_id'
-    console.log Session.get 'sent_campaign_id'
     $("table#inbox-messages").find("[data-campaignid='" + Session.get('sent_campaign_id') + "']")[0].click()
     delete Session.keys['sent_campaign_id']
+    delete Session.keys['afterEmailVerified']
+
+  if Session.get 'afterEmailVerified'
+    delete Session.keys['afterEmailVerified']
 
 
 Template.inbox.helpers

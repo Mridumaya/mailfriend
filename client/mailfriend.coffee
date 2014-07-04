@@ -103,7 +103,7 @@ Template.feature_select.events
 Template.home.rendered = ->
   mixpanel.track("view front page", { });
   if Session.get 'afterEmailVerified'
-    delete Session.keys['afterEmailVerified']
+    # delete Session.keys['afterEmailVerified']
     apprise(Session.get('successMessage'))
     $('#manual-login-dialog').modal('show')
 
