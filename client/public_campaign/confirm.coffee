@@ -19,6 +19,18 @@ Template.public_confirm.helpers
       to.push {'email': value}
     to
 
+  shareurl: ->
+    Meteor.call 'getCampaignSlug', Session.get('campaign_id'), (e, resp) ->
+      console.log e if e
+
+      slug = resp[0]
+      campaignId = resp[1]
+      Session.set('slug' + campaignId, slug)
+
+    slug = Session.get('slug' + Session.get('campaign_id'))
+
+    return Meteor.absoluteUrl "" + Meteor.user()._id + '/' + slug
+
 Template.public_confirm.events
   'click .confirm-to-contact-list': (e) ->
     mixpanel.track("click on cancel/back button", { });
@@ -31,11 +43,12 @@ Template.public_confirm.events
 
   'click .draft-send': (e) ->
     e.preventDefault()
+    slug = $(e.currentTarget).data('shareurl')
 
     subject = Session.get "MAIL_TITLE"
     body = Session.get("OWN_MESS") + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
     body = body.replace(/style="color:rgb\(150, 150, 150\)"/g, '')
-
+    body = body + '<br><br>Support this idea by sending it to people who care by clicking on this link:<br>' + slug
     to = Session.get "CONF_DATA"
 
     # console.log subject, body, to
@@ -111,7 +124,7 @@ Template.public_confirm.events
 
         $.gritter.add
           title: "Email sent"
-          text: "Your have successfully forwarded this campaign email!"
+          text: "You have successfully forwarded this campaign email!"
 
         mixpanel.track("send email", { });
 
