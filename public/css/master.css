@@ -732,7 +732,8 @@ ie9 .scrollable tr {
 }
 
 .public #container1 {
-    margin-right: 250px;
+    margin: 0 auto !important;
+    width: 65%;
 }
 
 #container-inner {
