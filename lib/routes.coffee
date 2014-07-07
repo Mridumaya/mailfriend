@@ -36,6 +36,8 @@ Router.map ->
     template: "home",
     path: "/home"
     onAfterAction: ->
+      baseurl = Meteor.absoluteUrl("")
+      
       SEO.set
         title: 'Welcome to Mailfriend'
         meta:
@@ -43,9 +45,9 @@ Router.map ->
           'description': 'Mailfriend - send mail to people who care'
           'keywords':    'mailfriend, email, friend'
         og:
-          'image':     'http://jacint.meteor.com/images/logo.png'
+          'image':     baseurl + 'images/logo.png'
           'title':     'Mailfriend'
-          'url':       'http://jacint.meteor.com'
+          'url':       baseurl + 'home/'
           'site_name': 'Mailfriend'
           'type':      'website'
 
@@ -55,6 +57,8 @@ Router.map ->
     template: "about",
     path: "/about"
     onAfterAction: ->
+      baseurl = Meteor.absoluteUrl("")
+
       SEO.set
         title: 'About Mailfriend'
         meta:
@@ -62,9 +66,9 @@ Router.map ->
           'description': 'Mailfriend - send mail to people who care'
           'keywords':    'mailfriend, email, friend'
         og:
-          'image':     'http://jacint.meteor.com/images/logo.png'
+          'image':     baseurl + 'images/logo.png'
           'title':     'About Mailfriend'
-          'url':       'http://jacint.meteor.com/about'
+          'url':       baseurl + 'about/'
           'site_name': 'Mailfriend'
           'type':      'website'
 
@@ -74,6 +78,8 @@ Router.map ->
     template: "faq",
     path: "/faq"
     onAfterAction: ->
+      baseurl = Meteor.absoluteUrl("")
+
       SEO.set
         title: 'Mailfriend FAQ'
         meta:
@@ -81,9 +87,9 @@ Router.map ->
           'description': 'Mailfriend - send mail to people who care'
           'keywords':    'mailfriend, email, friend'
         og:
-          'image':     'http://jacint.meteor.com/images/logo.png'
+          'image':     baseurl + 'images/logo.png'
           'title':     'Mailfriend FAQ'
-          'url':       'http://jacint.meteor.com/faq'
+          'url':       baseurl + 'faq/'
           'site_name': 'Mailfriend'
           'type':      'website'
 
@@ -205,6 +211,7 @@ Router.map ->
 
     data: ->
       campaign = Campaigns.findOne({slug: @params.slug, user_id: @params.user_id})
+      sender = Meteor.users.findOne({_id: @params.user_id})
 
       if campaign isnt undefined
         Session.set "MAIL_TITLE", campaign.subject
@@ -216,22 +223,40 @@ Router.map ->
         Session.set "sent_campaign_id", campaign._id
         Session.set "public", 'yes'
 
-      return {'campaign': campaign}
+      return {'campaign': campaign, 'sender': sender}
 
     onAfterAction: ->
-      SEO.set
-        title: 'Get the word out for [name] mailfriend campaign'
-        meta:
-          'title':       'Get the word out for [name] mailfriend campaign'
-          'description': 'Get the word out for [name] mailfriend campaign'
-          'keywords':    'mailfriend, email, friend'
-        og:
-          'image':     'http://jacint.meteor.com/images/logo.png'
-          'title':     'Get the word out for [name] mailfriend campaign'
-          'url':       Meteor.absoluteUrl("") + @params.user_id + '/' + @params.slug
-          'site_name': 'Mailfriend'
-          'type':      'website'
+      campaign = @data().campaign
+      sender = @data().sender
+      baseurl = Meteor.absoluteUrl("")
 
+      if campaign isnt undefined
+        sender_name = sender.profile.name + "'s"
+        SEO.set
+          title: 'Get the word out for ' + sender_name + ' mailfriend campaign'
+          meta:
+            'title':       'Get the word out for ' + sender_name + ' mailfriend campaign'
+            'description': 'Get the word out for ' + sender_name + ' mailfriend campaign'
+            'keywords':    'mailfriend, email, friend'
+          og:
+            'image':     baseurl + 'images/logo.png'
+            'title':     'Get the word out for ' + sender_name + ' mailfriend campaign'
+            'url':       baseurl + @params.user_id + '/' + @params.slug + '/'
+            'site_name': 'Mailfriend'
+            'type':      'website'
+      else
+        SEO.set
+          title: 'Get the word out for this mailfriend campaign'
+          meta:
+            'title':       'Get the word out for this mailfriend campaign'
+            'description': 'Get the word out for this mailfriend campaign'
+            'keywords':    'mailfriend, email, friend'
+          og:
+            'image':     baseurl + 'images/logo.png'
+            'title':     'Get the word out for this mailfriend campaign'
+            'url':       baseurl + @params.user_id + '/' + @params.slug + '/'
+            'site_name': 'Mailfriend'
+            'type':      'website'      
 
   @route "publicedit",
     path: '/public-edit',
