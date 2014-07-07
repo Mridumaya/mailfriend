@@ -133,7 +133,7 @@ Template.manual_login_dialog.events
                 Router.go "feature_select"
         )
       else
-        apprise("Email not verified.")
+        apprise("Your email address was not yet verified!")
 
 
 Template.register_dialog.events
