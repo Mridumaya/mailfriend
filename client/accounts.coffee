@@ -21,6 +21,8 @@ googleOauthOpen = (ev) ->
       Meteor.call 'loadContacts', Meteor.userId(), (err) ->
         console.log err if err
 
+        Session.set('GOOGLE_LOGIN', true)
+
         Router.go("feature_select")
   )
 

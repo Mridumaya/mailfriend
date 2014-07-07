@@ -20,6 +20,9 @@ Template.masterLayout.events
   'click .logout': (e) ->
     e.preventDefault
     Meteor.logout()
+
+    delete Session.keys['GOOGLE_LOGIN']
+
     Router.go('home')
     return true
 
@@ -53,7 +56,8 @@ Template.feature_select.rendered = ->
   $('#manual-login-dialog').modal('hide')
   $('#login-dialog').modal('hide')
   $('#register-dialog').modal('hide')
-  # $('#help-dialog').modal('hide')
+
+  console.log Meteor.user()
 
 
 Template.feature_select.helpers
@@ -111,10 +115,11 @@ Template.home.events
     button = $(e.currentTarget)
     $(button).prop('disabled', true)
     Meteor.loginWithGoogle({
-      requestPermissions: ["https://mail.google.com/", # imap
-                           "https://www.googleapis.com/auth/userinfo.profile", # profile
-                           "https://www.googleapis.com/auth/userinfo.email", # email
-                           "https://www.google.com/m8/feeds/" # contacts
+      requestPermissions: [
+        "https://mail.google.com/", # imap
+        "https://www.googleapis.com/auth/userinfo.profile", # profile
+        "https://www.googleapis.com/auth/userinfo.email", # email
+        "https://www.google.com/m8/feeds/" # contacts
       ]
       requestOfflineToken: true
       forceApprovalPrompt: true
@@ -125,8 +130,10 @@ Template.home.events
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log 'Calling callback function'
           console.log err if err
+
+          Session.set('GOOGLE_LOGIN', true)
+          
           Router.go("feature_select")
-          #Session.set("STEP", "feature_select")
     )
 
   'click #nav_down': (e) ->

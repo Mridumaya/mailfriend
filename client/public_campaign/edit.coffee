@@ -102,11 +102,12 @@ Template.public_edit.events
     # login user
     else
       Meteor.loginWithGoogle({
-        requestPermissions: ["https://mail.google.com/", # imap
-                             "https://www.googleapis.com/auth/userinfo.profile", # profile
-                             "https://www.googleapis.com/auth/userinfo.email", # email
-                             "https://www.google.com/m8/feeds/" # contacts
-                           ]
+        requestPermissions: [
+          "https://mail.google.com/", # imap
+          "https://www.googleapis.com/auth/userinfo.profile", # profile
+          "https://www.googleapis.com/auth/userinfo.email", # email
+          "https://www.google.com/m8/feeds/" # contacts
+        ]
         requestOfflineToken: true
         forceApprovalPrompt: true
       }, (err) ->
@@ -121,6 +122,8 @@ Template.public_edit.events
             Session.set "OWN_MESS", $("#own_message").val()
             Session.set "MAIL_TITLE", $("#subject").val()
             # Session.set "STEP", "public_searchq"
+
+            Session.set('GOOGLE_LOGIN', true)
 
             is_public = Session.get('public')
             if is_public is 'yes'
