@@ -1,5 +1,5 @@
 # new campaign stuff ----------------------------------------------------------------------------------------------------------------------
-googleOauthOpen = (ev) ->
+googleOauthOpen = (ev, search) ->
   ev.preventDefault()
   mixpanel.track("logs in", { });
   console.log Session.get 'loggedInWithGoogle'
@@ -33,7 +33,11 @@ googleOauthOpen = (ev) ->
           Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
             Session.set 'loggedInWithGoogle', res
 
-          Router.go 'new_campaign'
+          if search isnt undefined
+            setTimeout ->
+              Router.go 'new_campaign'
+              $('.search-tags').trigger('click')
+            , 2000
     )
   else
     true
@@ -286,7 +290,7 @@ Template.new_campaign.events
 #           )
 #       ) 
 # =======
-    success = googleOauthOpen(e)
+    success = googleOauthOpen(e, true)
     if success
       button = $(e.currentTarget)
       button.data('pressed', 1)
