@@ -133,14 +133,8 @@ Template.home.events
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log 'Calling callback function'
           console.log err if err
-# <<<<<<< HEAD
-
-#           Session.set('GOOGLE_LOGIN', true)
           
-#           Router.go("feature_select")
-# =======
           Router.go "list_campaign"
-          #Session.set("STEP", "feature_select")
     )
 
   'click #nav_down': (e) ->
