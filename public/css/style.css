@@ -116,7 +116,7 @@ article{
     position: absolute;
     right: 13px;
     top: 37px;
-} 
+}
 
 .modal-header h1 { color:#333645; font-family: 'Lato', sans-serif;font-size: 18px;text-align:left; font-weight:bold !important; text-transform:uppercase; border-bottom:1px solid #d1d6da; padding-bottom:16px;}
 
@@ -364,8 +364,8 @@ table.contacts td{
     border-radius: 6px;
 }
 
-#public-tags li, 
-#recipients li, 
+#public-tags li,
+#recipients li,
 #tags li {
     font-size: 14px;
     height: 25px;
@@ -382,7 +382,7 @@ table.contacts td{
 
 .reset-tags {
     background-color: #D9534F !important;
-    margin-right: 3px;    
+    margin-right: 3px;
 }
 
 #login-dialog .modal-header h3 {
@@ -591,7 +591,7 @@ tr.no-content-in-list td {
     margin: 0 auto 10px;
     padding-bottom: 10px;
     width: 100%;
-} 
+}
 
 a.forward-message {
     margin-top: 14px;
@@ -612,8 +612,8 @@ a.forward-message {
 }
 
 p.draft-subject input {
-    border:none; 
-    padding:0; 
+    border:none;
+    padding:0;
     margin:0
 }
 
@@ -694,4 +694,12 @@ p.draft-body textarea {
 
 .campaign-subject {
     float: left;
+}
+
+#featureSelectButton button {
+    margin-top: 30px;
+    font-size: 33px;
+    padding: 20px 16px;
+    margin-bottom: 20px;
+    white-space: normal;
 }

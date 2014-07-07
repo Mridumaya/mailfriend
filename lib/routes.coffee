@@ -23,8 +23,9 @@ Router.map ->
         if(err)
             Session.set( "errorMessage", err.reason);
         else
-            Session.set( "successMessage", 'Your mail verified successfully.');
-        Router.go("login")
+            Session.set( "successMessage", 'Your email verified successfully, you can now log in.');
+            Session.set 'afterEmailVerified', true
+        Router.go("home")
     onAfterAction: ->
       SEO.set
         title: 'Verify your email address'
@@ -37,7 +38,7 @@ Router.map ->
     onAfterAction: ->
       SEO.set
         title: 'Welcome to Mailfriend'
-        meta: 
+        meta:
           'title':       'Mailfriend'
           'description': 'Mailfriend - send mail to people who care'
           'keywords':    'mailfriend, email, friend'
@@ -56,7 +57,7 @@ Router.map ->
     onAfterAction: ->
       SEO.set
         title: 'About Mailfriend'
-        meta: 
+        meta:
           'title':       'About Mailfriend'
           'description': 'Mailfriend - send mail to people who care'
           'keywords':    'mailfriend, email, friend'
@@ -75,7 +76,7 @@ Router.map ->
     onAfterAction: ->
       SEO.set
         title: 'Mailfriend FAQ'
-        meta: 
+        meta:
           'title':       'Mailfriend FAQ'
           'description': 'Mailfriend - send mail to people who care'
           'keywords':    'mailfriend, email, friend'
@@ -84,7 +85,7 @@ Router.map ->
           'title':     'Mailfriend FAQ'
           'url':       'http://jacint.meteor.com/faq'
           'site_name': 'Mailfriend'
-          'type':      'website'    
+          'type':      'website'
 
 
   @route "feature_select",
@@ -92,14 +93,14 @@ Router.map ->
     path: "/"
     onAfterAction: ->
       SEO.set
-        title: 'Welcome to Mailfriend'    
+        title: 'Welcome to Mailfriend'
 
 
   @route "edit_user_info",
     path: "/user/edit",
     onAfterAction: ->
       SEO.set
-        title: 'Edit your profile data'    
+        title: 'Edit your profile data'
 
 
   @route "new_campaign",
@@ -113,7 +114,7 @@ Router.map ->
       else
         title = 'New campaign'
       SEO.set
-        title: title      
+        title: title
 
 
   @route "delete_campaign",
@@ -124,7 +125,7 @@ Router.map ->
     path: "/campaigns"
     onAfterAction: ->
       SEO.set
-        title: 'Existing campaigns'    
+        title: 'Existing campaigns'
 
 
   @route "confirm",
@@ -141,7 +142,7 @@ Router.map ->
       Meteor.subscribe 'allcampaigns', ->
     onAfterAction: ->
       SEO.set
-        title: 'My inbox'        
+        title: 'My inbox'
 
 
   @route "404",
@@ -150,7 +151,7 @@ Router.map ->
     template: "notFound",
     onAfterAction: ->
       SEO.set
-        title: '404 - Page not found'     
+        title: '404 - Page not found'
 
 
 # non-public stuff ------------------------------------------------------------------------------------------------------------------------
@@ -160,7 +161,7 @@ Router.map ->
     template: "public_edit"
     onAfterAction: ->
       SEO.set
-        title: 'Forward a message'    
+        title: 'Forward a message'
 
 
   @route "searchcontacts",
@@ -168,7 +169,7 @@ Router.map ->
     template: "public_search_contacts"
     onAfterAction: ->
       SEO.set
-        title: 'Forward a message'     
+        title: 'Forward a message'
 
 
   @route "contactlist",
@@ -176,7 +177,7 @@ Router.map ->
     template: "public_contact_list"
     onAfterAction: ->
       SEO.set
-        title: 'Forward a message'     
+        title: 'Forward a message'
 
 
   @route "forwardconfirm",
@@ -184,7 +185,7 @@ Router.map ->
     template: "public_confirm"
     onAfterAction: ->
       SEO.set
-        title: 'Forward a message'     
+        title: 'Forward a message'
 
 
 # public forward --------------------------------------------------------------------------------------------------------------------------
@@ -195,7 +196,7 @@ Router.map ->
     # template: "welcome",
     waitOn: ->
       return [ Meteor.subscribe 'publicCampaigns', @params.user_id, @params.slug ]
-    
+
     action: ->
       if @ready()
         @render('welcome')
@@ -212,6 +213,7 @@ Router.map ->
         Session.set "senderId", @params.user_id
         Session.set "searchQ", campaign.search_tags
         Session.set "campaign_id", campaign._id
+        Session.set "sent_campaign_id", campaign._id
         Session.set "public", 'yes'
 
       return {'campaign': campaign}
@@ -219,7 +221,7 @@ Router.map ->
     onAfterAction: ->
       SEO.set
         title: 'Get the word out for [name] mailfriend campaign'
-        meta: 
+        meta:
           'title':       'Get the word out for [name] mailfriend campaign'
           'description': 'Get the word out for [name] mailfriend campaign'
           'keywords':    'mailfriend, email, friend'
@@ -228,7 +230,7 @@ Router.map ->
           'title':     'Get the word out for [name] mailfriend campaign'
           'url':       Meteor.absoluteUrl("") + @params.user_id + '/' + @params.slug
           'site_name': 'Mailfriend'
-          'type':      'website' 
+          'type':      'website'
 
 
   @route "publicedit",

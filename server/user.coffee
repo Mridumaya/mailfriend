@@ -36,8 +36,22 @@ Meteor.methods
   verifyEmailCode: (code) ->
     user = Meteor.users.findOne({"customVerificationCode":code})
     if not user
-      return err.reason = "Wrong verification code"
+      return {reason: "Wrong verification code"}
     else
       Meteor.users.update({_id: user._id}, $set: { "customVerified": true, "emails": [{"address": user.emails[0].address, "verified": true}] })
-    #console.log user
+      console.log user
+      return false
+    # console.log user.services.email.verificationTokens
     #code
+
+  checkIfEmailVerified: (email) ->
+    user = Meteor.users.findOne({ emails: { $elemMatch: { address: email } } })
+    #console.log user
+    return user.customVerified
+
+  checkIfUserLoggedInWithGoogle: (userId) ->
+    user = Meteor.users.findOne({'_id':userId})
+    user.loggedInWithGoogle
+
+  setUserToLoggedInWithGoogle: (userId) ->
+    Meteor.users.update({'_id':Meteor.userId()}, {$set : {'loggedInWithGoogle' : true}})

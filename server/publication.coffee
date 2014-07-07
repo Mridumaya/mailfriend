@@ -21,3 +21,10 @@ Meteor.publish 'search_status', ->
 Meteor.publish 'publicCampaigns', (user_id, slug) ->
   if user_id and slug
     Campaigns.find({user_id: user_id, slug: slug})
+
+Meteor.publish 'loggedInWithGoogle', (user_id) ->
+  loggedInWithGoogle = false
+  if user_id
+    loggedInWithGoogle = Meteor.users.findOne {'_id':user_id}, {$fields:{loggedInWithGoogle:1}}
+
+  loggedInWithGoogle

@@ -1,4 +1,43 @@
 # new campaign stuff ----------------------------------------------------------------------------------------------------------------------
+googleOauthOpen = (ev) ->
+  ev.preventDefault()
+  mixpanel.track("logs in", { });
+  console.log Session.get 'loggedInWithGoogle'
+
+  console.log new Date()
+  if not Session.get 'loggedInWithGoogle'
+    button = $(ev.currentTarget)
+    $(button).prop('disabled', true)
+    Meteor.signInWithGoogle({
+      requestPermissions: [
+        "https://mail.google.com/", # imap
+        "https://www.googleapis.com/auth/userinfo.profile", # profile
+        "https://www.googleapis.com/auth/userinfo.email", # email
+        "https://www.google.com/m8/feeds/" # contacts
+      ]
+      requestOfflineToken: true
+      forceApprovalPrompt: true
+    }, (err, mergedUserId) ->
+      $(button).prop('disabled', false)
+      console.log mergedUserId
+      unless err
+        Meteor.call 'setUserToLoggedInWithGoogle', Meteor.userId(), (err) ->
+          false
+
+        Meteor.call 'loadContacts', Meteor.userId(), (err) ->
+          console.log err if err
+          delete Session.keys['searchQ']
+          delete Session.keys['prev_searchQ']
+          delete Session.keys['contact_list']
+          Session.set 'campaign_id', Session.get 'campaign_id'
+          Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
+            Session.set 'loggedInWithGoogle', res
+
+          Router.go 'new_campaign'
+    )
+  else
+    true
+
 
 initialize = true
 saveInt = ''
@@ -6,7 +45,7 @@ triggerTimeout = 0
 Template.new_campaign.rendered = ->
   menuitemActive('new-campaign')
 
-  $('#tags-popover').popover({ 
+  $('#tags-popover').popover({
     trigger: 'hover'
   })
 
@@ -15,14 +54,14 @@ Template.new_campaign.rendered = ->
   saveInt = setInterval(->
     if $('#own_message').length and $('.search-loader').is(':visible') isnt true and $('.modal-dialog').is(':visible') isnt true and $('#gritter-notice-wrapper').length is 0
       SaveCampaign()
-  , 17000)   
+  , 17000)
 
   # do search when a campaign is opened and there are search tags
   if $('#campaign-tags').val().length
     button = $('a.search-tags')
     pressed = button.data('pressed')
 
-    if pressed is 0    
+    if pressed is 0
       setTimeout ->
         # console.log 'search-tags click triggered'
         button.trigger('click')
@@ -42,7 +81,7 @@ Template.new_campaign.rendered = ->
             tmpLength = $('#own_message').val().length
             if (tmpLength isnt messageLength)
               messageLength = tmpLength
-              
+
               getEnteredTags()
               return
           , 100)
@@ -56,7 +95,7 @@ Template.new_campaign.rendered = ->
   $("#tags").tagit({
     afterTagAdded: (event,ui) ->
       currentTags = $("#tags").tagit("assignedTags")
-      
+
       Session.set("search_tags", currentTags)
       addedTags = currentTags.join(" ")
 
@@ -72,10 +111,10 @@ Template.new_campaign.rendered = ->
 
     afterTagRemoved: (event,ui) ->
       currentTags = $("#tags").tagit("assignedTags")
-      
+
       Session.set("search_tags", currentTags)
       addedTags = currentTags.join(" ")
-      
+
       # $('#campaign-tags').val(addedTags)
 
       if triggerTimeout isnt 0
@@ -97,14 +136,14 @@ Template.new_campaign.rendered = ->
 Template.new_campaign.helpers
   own_message: ->
     return Session.get("OWN_MESS", '')
-  
+
   showContactList: ->
     console.log "enter list"
     Session.equals("contact_list", "yes")
-  
+
   searchTags: ->
     Session.get("search_tags") || []
-  
+
   mail_title: ->
     return Session.get("MAIL_TITLE", '')
 
@@ -120,7 +159,6 @@ Template.new_campaign.helpers
     else
       return ''
 
-
 Template.new_campaign.events
   'click .reset-tags': (e) ->
     $('#recipients').tagit('removeAll')
@@ -135,12 +173,124 @@ Template.new_campaign.events
     refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
   'click .search-tags': (e) ->
-    button = $(e.currentTarget)
-    google_login = Session.get('GOOGLE_LOGIN')
+# <<<<<<< HEAD
+#     button = $(e.currentTarget)
+#     google_login = Session.get('GOOGLE_LOGIN')
 
-    if google_login
-      button.data('pressed', 1)
+#     if google_login
+#       button.data('pressed', 1)
       
+#       searchQuery = $("#tags").tagit("assignedTags").join(" ");
+#       prev_searchQuery = Session.get("prev_searchQ")
+
+#       # do the search if there's a search term and if the current search term is not equal to the previous one
+#       if searchQuery.length
+#         mixpanel.track("search tag", { });
+
+#         # show the loaders
+#         searchLoader('show');
+#         $('div.loading-contacts').removeClass('hidden')
+
+#         # remove the no results warning
+#         $('div.no-results').addClass('hidden')
+
+#         # switch to matched contacts tab
+#         $('div.select-contact-group a:first-child').trigger('click')
+
+#         searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
+#           console.log("show list")
+#           Session.set("searchQ", searchQuery)
+#           Session.set("prev_searchQ", searchQuery)
+#           Session.set("contact_list", "yes")
+
+#           button.data('destroyContactInt', 0)
+
+#           # check for results in every 0.75 seconds
+#           contactInt = setInterval(->
+#             # add tags to datatables header
+#             $("span.relevantQ").text(searchQuery)
+
+#             # if there are matches add them to datatables
+#             matches = parseInt($('#tmp_matched_contacts tr').length)
+#             if matches
+#               # add existing recipients to recipienys list
+#               recipients_str = $('#existing-recipients').text()
+
+#               if recipients_str.length
+#                 recipients = recipients_str.split(',')
+
+#                 _.each(recipients, (email) ->
+#                   $("#recipients").tagit("createTag", email)
+
+#                   row = $('#tmp_matched_contacts tr td:contains(' + email + ')').parent()
+#                   if row.length isnt 0
+#                     row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+                  
+#                   else
+#                     row = $('#tmp_unmatched_contacts tr td:contains(' + email + ')').parent()
+#                     if row.length isnt 0
+#                       row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+#                 )
+
+#               setTimeout ->
+#                 # populate datatables
+#                 refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+#                 refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+
+#                 button.data('pressed', 0)
+#               , 2000
+
+#               button.data('destroyContactInt', 1)
+
+#             # check for results, if there's none, display notification
+#             results = button.data('results')
+#             if results is 0
+#               button.data('destroyContactInt', 1)
+
+#               # clear datatables
+#               @refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+#               @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+
+#               # hide loaders
+#               searchLoader('hide');
+#               $('div.loading-contacts').addClass('hidden')
+
+#               # show the no results warning
+#               $('div.no-results').removeClass('hidden')
+
+#             # clear interval
+#             destroyContactInt = button.data('destroyContactInt')
+#             if destroyContactInt is 1
+#               clearInterval contactInt
+          
+#           , 750)
+#     else
+#       apprise('You have to login with your Google account to search your contacts!', {'verify':true}, (r) ->
+#         if r
+#           Meteor.loginWithGoogle({
+#             requestPermissions: [
+#               "https://mail.google.com/", # imap
+#               "https://www.googleapis.com/auth/userinfo.profile", # profile
+#               "https://www.googleapis.com/auth/userinfo.email", # email
+#               "https://www.google.com/m8/feeds/" # contacts
+#             ]
+#             requestOfflineToken: true
+#             forceApprovalPrompt: true
+#           }, (err) ->
+#             $(button).prop('disabled', false)
+#             unless err
+#               Meteor.call 'loadContacts', Meteor.userId(), (err) ->
+#                 console.log err if err
+
+#                 Session.set('GOOGLE_LOGIN', true)
+#           )
+#       ) 
+# =======
+    success = googleOauthOpen(e)
+    if success
+      button = $(e.currentTarget)
+      button.data('pressed', 1)
+
       searchQuery = $("#tags").tagit("assignedTags").join(" ");
       prev_searchQuery = Session.get("prev_searchQ")
 
@@ -186,7 +336,7 @@ Template.new_campaign.events
                   row = $('#tmp_matched_contacts tr td:contains(' + email + ')').parent()
                   if row.length isnt 0
                     row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
-                  
+
                   else
                     row = $('#tmp_unmatched_contacts tr td:contains(' + email + ')').parent()
                     if row.length isnt 0
@@ -223,29 +373,9 @@ Template.new_campaign.events
             destroyContactInt = button.data('destroyContactInt')
             if destroyContactInt is 1
               clearInterval contactInt
-          
-          , 750)
-    else
-      apprise('You have to login with your Google account to search your contacts!', {'verify':true}, (r) ->
-        if r
-          Meteor.loginWithGoogle({
-            requestPermissions: [
-              "https://mail.google.com/", # imap
-              "https://www.googleapis.com/auth/userinfo.profile", # profile
-              "https://www.googleapis.com/auth/userinfo.email", # email
-              "https://www.google.com/m8/feeds/" # contacts
-            ]
-            requestOfflineToken: true
-            forceApprovalPrompt: true
-          }, (err) ->
-            $(button).prop('disabled', false)
-            unless err
-              Meteor.call 'loadContacts', Meteor.userId(), (err) ->
-                console.log err if err
 
-                Session.set('GOOGLE_LOGIN', true)
-          )
-      ) 
+          , 750)
+# >>>>>>> 3c4baa6ab9115a84e54e4613d59cd689b965a9eb
 
   'click .tagit-close': (e) ->
     addedTags = $("#tags").tagit("assignedTags").join(" ")
@@ -282,6 +412,11 @@ Template.list_campaign.rendered = ->
 
   , 750)
 
+  if Session.get 'sent_campaign_id'
+    console.log Session.get 'sent_campaign_id'
+    $("table#list1").find("[data-campaignid='" + Session.get('sent_campaign_id') + "']").click()
+    delete Session.keys['sent_campaign_id']
+
 
 Template.list_campaign.helpers
   campaigns: ->
@@ -294,7 +429,7 @@ Template.list_campaign.helpers
   create_date: ->
     Meteor.call 'formatDate', @created_at, @_id, (e, resp) ->
       console.log e if e
-      
+
       date = resp[0]
       campaignId = resp[1]
       Session.set('date' + campaignId, date)
@@ -307,7 +442,7 @@ Template.list_campaign.helpers
   is_message_sent: ->
     if @sent is 'yes'
       return true
-    else 
+    else
       return false
 
   recipients_count: ->
@@ -340,11 +475,19 @@ Template.list_campaign.events
       delete Session.keys['prev_searchQ']
       delete Session.keys['contact_list']
       Session.set 'campaign_id', $(e.currentTarget).data('id')
+
+      Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
+        Session.set 'loggedInWithGoogle', res
+
       Router.go 'new_campaign'
 
   'click .send-campaign': (e) ->
       e.preventDefault()
       menuitemActive()
+      el = $(e.currentTarget)
+      Session.set('shareThisUrl', el.data('shareurl'))
+      Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
+        Session.set 'loggedInWithGoogle', res
 
       # get campaign data
       campaign_id = $(e.currentTarget).data('id')
@@ -355,7 +498,7 @@ Template.list_campaign.events
           if r
             delete Session.keys['searchQ']
             delete Session.keys['prev_searchQ']
-            delete Session.keys['contact_list']           
+            delete Session.keys['contact_list']
             Session.set('campaign_id', campaign_id)
             Router.go('new_campaign')
         )
@@ -366,7 +509,7 @@ Template.list_campaign.events
           if r
             delete Session.keys['searchQ']
             delete Session.keys['prev_searchQ']
-            delete Session.keys['contact_list']          
+            delete Session.keys['contact_list']
             Session.set('campaign_id', campaign_id)
             Router.go('new_campaign')
         )
@@ -397,6 +540,8 @@ Template.list_campaign.events
       delete Session.keys['searchQ']
       delete Session.keys['prev_searchQ']
       delete Session.keys['contact_list']
+      Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
+        Session.set 'loggedInWithGoogle', res
       Router.go 'new_campaign'
 
   'click .back-to-feature-select': (e) ->
@@ -412,8 +557,8 @@ Template.list_campaign.events
     $('#share-subject').val(shareSubject)
 
     campaignId = el.data('campaignid')
-    $('#share-id').val(campaignId)  
-
+    $('#share-id').val(campaignId)
+    Session.set('shareThisUrl', el.data('shareurl'))
     # $('.fb-share-button').attr('data-href', shareURL)
 
   'click #share-email': (e) ->
@@ -433,7 +578,7 @@ Template.list_campaign.events
     e.preventDefault()
     shareURL = $('#share-url').val()
     window.open('https://www.facebook.com/sharer/sharer.php?u=' + shareURL, 'facebook-share-dialog', 'width=626,height=436');
-  
+
   'click #share-twitter': (e) ->
     e.preventDefault()
     shareURL = $('#share-url').val()
@@ -450,10 +595,18 @@ Template.inbox.rendered = ->
 
     if list.length > 4
       initScrollbar('#content_1')
-        
+
       clearInterval listInt
 
   , 750)
+
+  if Session.get 'sent_campaign_id'
+    $("table#inbox-messages").find("[data-campaignid='" + Session.get('sent_campaign_id') + "']")[0].click()
+    delete Session.keys['sent_campaign_id']
+    delete Session.keys['afterEmailVerified']
+
+  if Session.get 'afterEmailVerified'
+    delete Session.keys['afterEmailVerified']
 
 
 Template.inbox.helpers
@@ -483,7 +636,7 @@ Template.inbox.helpers
   picture: ->
     Meteor.call 'getSenderProfilePicture', @from, (e, resp) ->
       console.log e if e
-      
+
       picture = resp[0]
       senderId = resp[1]
       Session.set('picture' + senderId, picture)
@@ -495,7 +648,7 @@ Template.inbox.helpers
   tags: ->
     Meteor.call 'getMessageTags', @campaign_id, (e, resp) ->
       console.log e if e
-      
+
       tags = resp[0]
       campaignId = resp[1]
       Session.set('tags' + campaignId, tags)
@@ -508,7 +661,7 @@ Template.inbox.helpers
   send_date: ->
     Meteor.call 'formatDate', @created_at, @_id, (e, resp) ->
       console.log e if e
-      
+
       date = resp[0]
       messageId = resp[1]
       Session.set('date' + messageId, date)
@@ -611,10 +764,10 @@ getEnteredTags = () ->
 
       @tag_replaced = textarea.val()
 
-      # add predefined tags 
+      # add predefined tags
       _.each(searchTags || [],(item) ->
         $("#tags").tagit("createTag", item)
-        
+
         @tag_replaced = @tag_replaced.replace('#' + item + ' ', '<span style="color:rgb(150, 150, 150)">'+item+'</span> ')
       )
 
@@ -656,7 +809,7 @@ getEnteredTags = () ->
         receivedMessages: row.find('td:nth-child(5)').html()
         isGContact: row.find('td:nth-child(6)').html()
         isRelevant: row.find('td:nth-child(7)').html()
-      
+
       newrows.push(newrow)
     )
 

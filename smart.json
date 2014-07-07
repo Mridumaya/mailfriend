@@ -9,6 +9,8 @@
     "trail": {},
     "iron-router-progress": {},
     "jquery-datatables": {},
-    "ms-seo": {}
+    "ms-seo": {},
+    "accounts-merge": {},
+    "urlify2": {}
   }
 }

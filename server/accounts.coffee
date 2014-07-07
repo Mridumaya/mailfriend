@@ -1,5 +1,5 @@
 Accounts.config
-  sendVerificationEmail: true
+  sendVerificationEmail: false
   forbidClientAccountCreation: true
 
 Accounts.onCreateUser( (options,user)->
@@ -23,9 +23,11 @@ Accounts.onCreateUser( (options,user)->
     profile = _.pick(result.data, 'name','given_name','family_name','profile','picture','email','email_verified','birthdate','gender','locale','hd')
 
     user.profile = profile
+    user.loggedInWithGoogle = true
     user
   else
     user.customVerified = false
+    user.loggedInWithGoogle = false
     user.customVerificationCode = Random.hexString(20).toLowerCase()
     console.log "accounts.coffee: "
     #console.log user

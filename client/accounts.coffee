@@ -1,9 +1,9 @@
 googleOauthOpen = (ev) ->
   ev.preventDefault()
   mixpanel.track("logs in", { });
-  
+
   console.log new Date()
-  
+
   button = $(ev.currentTarget)
   $(button).prop('disabled', true)
   Meteor.loginWithGoogle({
@@ -20,25 +20,32 @@ googleOauthOpen = (ev) ->
     unless err
       Meteor.call 'loadContacts', Meteor.userId(), (err) ->
         console.log err if err
+# <<<<<<< HEAD
 
-        Session.set('GOOGLE_LOGIN', true)
+#         Session.set('GOOGLE_LOGIN', true)
 
-        Router.go("feature_select")
+#         Router.go("feature_select")
+# =======
+        $('#login-dialog').modal('hide')
+        $('#register-dialog').modal('hide')
+        if Session.get 'sent_campaign_id'
+          Router.go("inbox")
+        else
+          Router.go "feature_select"
   )
 
 
 registerOpen = (ev) ->
   ev.preventDefault()
   mixpanel.track("click goto registration button", { });
-  
+
   $('#login-dialog').modal('hide')
   $('#register-dialog').modal('show')
-
 
 manualLoginOpen = (ev) ->
   ev.preventDefault()
   mixpanel.track("click goto standard login button", { });
-  
+
   $('#login-dialog').modal('hide')
   $('#manual-login-dialog').modal('show')
 
@@ -107,19 +114,26 @@ Template.login_dialog.events
 Template.manual_login_dialog.events
   'click .btn-try-login': (e) ->
     e.preventDefault()
-
-    Meteor.loginWithPassword($("#login-email").val(), $("#login-password").val(), (err) ->
-      console.log err
-      if err && (err.error == 403 or err.error == 400)
-        apprise(err.reason)
-        return
-      unless err
-        mixpanel.track("logs in with password", { });
-        Meteor.call 'loadContacts', Meteor.userId(), (err) ->
-          console.log err if err
-          
-          Router.go("feature_select")
-    )
+    Meteor.call "checkIfEmailVerified", $("#login-email").val(), (err, data) ->
+      #console.log data
+      if data
+        Meteor.loginWithPassword($("#login-email").val(), $("#login-password").val(), (err) ->
+          console.log err
+          if err && (err.error == 403 or err.error == 400)
+            apprise(err.reason)
+            return
+          unless err
+            mixpanel.track("logs in with password", { });
+            Meteor.call 'loadContacts', Meteor.userId(), (err) ->
+              console.log err if err
+              if Session.get 'afterEmailVerified'
+                $('#manual-login-dialog').modal('hide')
+                Router.go("inbox")
+              else
+                Router.go "feature_select"
+        )
+      else
+        apprise("Email not verified.")
 
 
 Template.register_dialog.events
@@ -160,25 +174,28 @@ Template.register_dialog.rendered = ->
 
       Meteor.call "create_user", profile, (err, user) ->
         console.log('[ERROR] create_user:', err) if err
-        
+
         if err?.reason == "Email already exist."
           apprise("Email already exists, try again.")
           return
 
+        apprise("You have been succefully registered, please check your email for confirmation code.")
+        $(".close").click()
         mixpanel.track("new user", { });
+        return
 
-        Meteor.loginWithPassword($(form).find("#email").val(), $(form).find("#password").val(), (err) ->
-          if err && err.error == 403
-            apprise(err.reason)
-            return
-          unless err
-            mixpanel.track("logs in with password", { });
-            Meteor.call 'loadContacts', Meteor.userId(), (err) ->
-              
-              Router.go("feature_select")
-        )
-
-        Router.go("feature_select")
+        # Meteor.loginWithPassword($(form).find("#email").val(), $(form).find("#password").val(), (err) ->
+        #   if err && err.error == 403
+        #     apprise(err.reason)
+        #     return
+        #   unless err
+        #     mixpanel.track("logs in with password", { });
+        #     Meteor.call 'loadContacts', Meteor.userId(), (err) ->
+        #
+        #       Router.go("feature_select")
+        # )
+        #
+        # Router.go("feature_select")
 
 
 Template.edit_user_info.helpers

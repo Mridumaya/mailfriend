@@ -32,7 +32,7 @@ Template.masterLayout.events
     Router.go "edit_user_info"
 
   'click .back-to-feature-select': (e) ->
-    Router.go 'feature_select'    
+    Router.go 'feature_select'
 
   'click .btn-create-campaign': (e) ->
     mixpanel.track("visit new campaign", { });
@@ -106,7 +106,10 @@ Template.feature_select.events
 
 Template.home.rendered = ->
   mixpanel.track("view front page", { });
-
+  if Session.get 'afterEmailVerified'
+    # delete Session.keys['afterEmailVerified']
+    apprise(Session.get('successMessage'))
+    $('#manual-login-dialog').modal('show')
 
 Template.home.events
   'click .add-google-oauth': (e) ->
@@ -130,10 +133,14 @@ Template.home.events
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log 'Calling callback function'
           console.log err if err
+# <<<<<<< HEAD
 
-          Session.set('GOOGLE_LOGIN', true)
+#           Session.set('GOOGLE_LOGIN', true)
           
-          Router.go("feature_select")
+#           Router.go("feature_select")
+# =======
+          Router.go "list_campaign"
+          #Session.set("STEP", "feature_select")
     )
 
   'click #nav_down': (e) ->
@@ -143,14 +150,14 @@ clearAllSelection = () ->
   SelectedEmailsHelper.unselectAllEmails()
   oTable = $('#matched-contacts').dataTable()
   list = oTable.fnGetNodes()
-  count = 
+  count =
   i = 0
   while i < list.length
     $(list[i++]).removeClass("info").find(".icon i").removeClass "glyphicon glyphicon-ok"
 
   oTable = $('#unmatched-contacts').dataTable()
   list = oTable.fnGetNodes()
-  count = 
+  count =
   i = 0
   while i < list.length
     $(list[i++]).removeClass("info").find(".icon i").removeClass "glyphicon glyphicon-ok"
@@ -193,7 +200,7 @@ Template.confirm.rendered = ->
   mixpanel.track("visits step 4 page", { });
 
 
-Template.confirm.helpers 
+Template.confirm.helpers
   subject: ->
     Session.get "MAIL_TITLE" || ""
 
@@ -207,26 +214,39 @@ Template.confirm.helpers
 
   emails: ->
     to = []
-    $(Session.get "CONF_DATA").each (index, value) -> 
+    $(Session.get "CONF_DATA").each (index, value) ->
       to.push value
     emails = '<span>' + to.join('</span>, <span>') + '</span>'
     emails
 
+  shareurl: ->
+    Meteor.call 'getCampaignSlug', Session.get('campaign_id'), (e, resp) ->
+      console.log e if e
+
+      slug = resp[0]
+      campaignId = resp[1]
+      Session.set('slug' + campaignId, slug)
+
+    slug = Session.get('slug' + Session.get('campaign_id'))
+
+    return Meteor.absoluteUrl "" + Meteor.user()._id + '/' + slug
 
 Template.confirm.events
   'click .confirm-to-contact-list': (e) ->
     mixpanel.track("click on cancel/back button", { })
     delete Session.keys['searchQ']
     delete Session.keys['prev_searchQ']
-    delete Session.keys['contact_list']    
+    delete Session.keys['contact_list']
     Router.go 'new_campaign'
 
   'click .draft-send': (e) ->
     e.preventDefault()
+    slug = $(e.currentTarget).data('shareurl')
 
     subject = Session.get "MAIL_TITLE"
     body = Session.get("OWN_MESS")
     body = body.replace(/style="color:rgb\(150, 150, 150\)"/g, '')
+    body = body + '<br><br>Support this idea by sending it to people who care by clicking on this link:<br>' + slug
     to = Session.get "CONF_DATA"
 
     $('.draft-send').prop('disabled', true)
@@ -234,7 +254,7 @@ Template.confirm.events
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
       campaign_id = Session.get("campaign_id")
       campaign = Campaigns.findOne({_id: campaign_id})
-      
+
       if err
         console.log err
       else
@@ -259,7 +279,7 @@ Template.confirm.events
 
         _.each(to,(email) ->
           # message = Messages.findOne({campaign_id: campaign_id, to: email})
-          
+
           # if message
           #   Messages.update message._id,
           #     $set:
@@ -289,8 +309,9 @@ Template.confirm.events
 
         console.log 'send mail success'
 
-        $('.draft-send').prop('disabled', false)
-        $('.draft-close').trigger('click')
+        Session.set("sent_campaign_id", Session.get("campaign_id"))
+
+        Router.go 'list_campaign'
 
 
 Template.share_via_email.rendered = ->
@@ -331,16 +352,7 @@ Template.share_via_email.helpers
     return recipients
 
   shareurl: ->
-    Meteor.call 'getCampaignSlug', Session.get('campaign_id'), (e, resp) ->
-      console.log e if e
-
-      slug = resp[0]
-      campaignId = resp[1]
-      Session.set('slug' + campaignId, slug)
-
-    slug = Session.get('slug' + Session.get('campaign_id'))
-
-    return Meteor.absoluteUrl "" + Meteor.user()._id + '/' + slug
+    return Session.get('shareThisUrl')
 
 
 Template.share_via_email.events
@@ -357,7 +369,7 @@ Template.share_via_email.events
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
       campaign_id = Session.get("campaign_id")
       campaign = Campaigns.findOne({_id: campaign_id})
-      
+
       if err
         console.log err
       else
@@ -400,7 +412,7 @@ Template.share_via_email.events
 @menuitemActive = (elcl) ->
   list = $('.left_nav ul')
   list.find('li').removeClass('active').find('a').removeClass('active').find('span:first-child').removeClass('active')
-  
+
   if elcl isnt undefined and elcl.length
     list.find('li.' + elcl).addClass('active').find('a').addClass('active').find('span:first-child').addClass('active')
 

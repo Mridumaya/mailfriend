@@ -3,7 +3,7 @@ Deps.autorun ->
   Meteor.subscribe 'messages', ->
     console.log 'Messages Subscribed :', new Date
 
-  
+
   if Meteor.userId()
     Session.set('SUBSCRIBED_CONTACTS', false)
     #Session.set("STEP", "feature_select")
@@ -27,6 +27,7 @@ Deps.autorun ->
     console.log 'SUBSCRIBED_SHARINGS: ', new Date
 
   Meteor.subscribe 'search_status'
+  Meteor.subscribe 'loggedInWithGoogle'
 
 Session.setDefault("GOOGLE_API", true)
 
