@@ -727,4 +727,7 @@ p.draft-body textarea {
     width: 37px;
     display: none;
 }
-
+#campaignSaved {
+  opacity: 0.0;
+  margin-left: 18px;
+}

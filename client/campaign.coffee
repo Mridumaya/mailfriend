@@ -760,16 +760,20 @@ getEnteredTags = () ->
     if Session.get("campaign_id")
       Meteor.call 'updateCampaign', Session.get("campaign_id"), user._id, $("#subject").val(), $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), recipients, (e, campaign_id) ->
         console.log e if e
-        $.gritter.add
-          title: "Notification"
-          text: "Campaign updated!"
+        # $.gritter.add
+        #   title: "Notification"
+        #   text: "Campaign updated!"
+        $('#campaignSaved').animate {opacity: 1.0}, 1000, () ->
+          $('#campaignSaved').animate {opacity: 0.0}, 1000
     else
       Meteor.call 'createCampaign', user._id, $("#subject").val(), $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), recipients, (e, campaign_id) ->
         console.log e if e
         Session.set("campaign_id", campaign_id)
-        $.gritter.add
-          title: "Notification"
-          text: "Campaign saved!"
+        # $.gritter.add
+        #   title: "Notification"
+        #   text: "Campaign saved!"
+        $('#campaignSaved').animate {opacity: 1.0}, 1000, () ->
+          $('#campaignSaved').animate {opacity: 0.0}, 1000
 
 
 @searchContacts = (searchQuery, session_id, cb) ->
