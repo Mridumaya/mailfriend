@@ -732,7 +732,7 @@ ie9 .scrollable tr {
 }
 
 .public #container1 {
-    margin-right: 250px;
+    margin: 0 12% !important;
 }
 
 #container-inner {
@@ -929,7 +929,8 @@ ie9 .scrollable tr {
     }
     .user_pic ul li:last-child a img {
         margin: -2px 0 0 3px;
-        width: 15px;
+        width: 16px;
+        height: 18px;
     }
     .user_pic ul li:last-child a:hover {
         opacity:0.5;
@@ -953,6 +954,9 @@ ie9 .scrollable tr {
         cursor: pointer;
     }
 
+    .public #container1 {
+        margin: 0 0 !important;
+    }
     /*.mobile-menu{left:-200px !important;}
         .wrapper header .menu-open{display:block !important;}*/
 }
@@ -976,7 +980,6 @@ ie9 .scrollable tr {
         margin-right: auto;
     }
     .logo img {
-
         width: 152px;
     }
     .menu-open img {
@@ -993,9 +996,23 @@ ie9 .scrollable tr {
     .left_nav ul li:hover {
         background: url("../images/li_arrow.png") no-repeat scroll right -1px center hsl(228, 20%, 15%);
     }
-    .user_pic ul li img {
+    .user_pic ul li img,
+    .inbox-profile-pic {
         width: 31px;
+        height: 31px;
     }
+    .image-mask {
+        background-size: 31px 31px;
+        height: 31px;
+        margin: -31px 0 0 3px;
+        width: 31px;
+    }    
+    .image-mask-color {
+        background-size: 100% 100%;
+        height: 32px;
+        margin: -32px 0 0;
+        width: 32px;
+    }    
     .user_pic ul li + li {
         font-size: 15px;
         margin-top: 13px;
@@ -1024,7 +1041,7 @@ ie9 .scrollable tr {
         float: right;
         margin-right: 17px;
         margin-top: 10px;
-        width: 200px;
+        /*width: 200px;*/
         margin-bottom: 0 !important;
     }
     .logo img {
@@ -1040,7 +1057,7 @@ ie9 .scrollable tr {
         width: auto;
     }
     .inbox_content {
-        width: 97.5%;
+        /*width: 97.5%;*/
         margin-left: 0px;
         margin-right:0px;
         margin-top: 24px;
@@ -1201,7 +1218,7 @@ table td, table th {
         width: auto;
     }
     .inbox_content {
-        width: 97.6%;
+        /*width: 97.6%;*/
         margin-left: 0px;
         margin-right:0px;
         padding:2% 1%;
@@ -1212,8 +1229,13 @@ table td, table th {
         background: url("../images/li_arrow.png") no-repeat scroll right -1px center hsl(228, 20%, 15%);
     }
 
+    #container-inner {
+        overflow: inherit;
+    }
 
-
+    .public #container1 {
+        margin: 0 0 !important;
+    }    
 }
 
 
@@ -1315,6 +1337,10 @@ table td, table th {
     .mobile-menu {
         top: 45px;
     }
+
+    #container-inner {
+        overflow: inherit;
+    }    
 }
 
 
@@ -1322,12 +1348,31 @@ table td, table th {
 
 
 @media(max-width: 600px) {
+    .show-mobile-menu {
+        display: block;        
+    }
+    .logo_2 a {
+        display: block;
+        float: left;
+        margin-top: -2px;
+    }
     .inbox_content {
-        margin: 24px 4% 0;
+        margin: 3%;
         padding: 4%;
         position: relative;
-        width: 84%;
+        width: 96%;
     }
+    .menu-opened {
+        left: 0 !important;
+        margin-top: -13px;
+        width: 82px;
+    }   
+    .menu-is-opened {
+        margin-left: 82px !important;
+    }         
+    section.left_nav {
+        width: 82px;
+    }    
     .mobile-header h1.logo {
         display: none;
     }
@@ -1874,8 +1919,26 @@ a.delete-message {
 
 }
 @media (min-width: 480px) and  ( max-width:639px)  {
-
-    .inbox_content { margin:2%; position:relative; width:92%; padding:2%; }
+    .show-mobile-menu {
+        display: block;        
+    }
+    .logo_2 a {
+        display: block;
+        float: left;
+        margin-top: -2px;
+    }
+    .menu-opened {
+        left: 0 !important;
+        margin-top: -13px;
+        width: 82px;
+    }    
+    section.left_nav {
+        width: 82px;
+    }
+    .menu-is-opened {
+        margin-left: 82px !important;
+    }
+    .inbox_content { margin:2%; position:relative; width:97%; padding:2%; }
     .block_head { width:100%;}
     .mailbox_left { width:94%; margin-left:0px;}
     .mail_content { width:100%;margin-top: 20px;}
@@ -1950,16 +2013,26 @@ a.delete-message {
 
 }
 @media (min-width: 640px) and  ( max-width:767px){
-
-
+    .show-mobile-menu {
+        display: block;        
+    }
     .mailbox_left input[type="text"] {
         padding: 14px 1%;
         width: 97.6%;
     }
-    .mailbox_left textarea {    padding: 14px 1%;
-        width: 97.6%;}
-
-    .inbox_content { margin:2%; position:relative; width:92%; padding:2%; }
+    .mailbox_left textarea {
+        padding: 14px 1%;
+        width: 97.6%;
+    }
+    .menu-opened {
+        left: 0 !important;
+        margin-top: -13px;
+        width: 189px;
+    }
+    .menu-is-opened {
+        margin-left: 189px !important;
+    }    
+    .inbox_content { margin:2%; position:relative; width:97%; padding:2%; }
     .block_head { width:100%;}
     .mailbox_left { width:100%; margin-left:0px;}
     .mail_content { width:100%;margin-top: 20px;}

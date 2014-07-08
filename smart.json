@@ -10,6 +10,7 @@
     "iron-router-progress": {},
     "jquery-datatables": {},
     "ms-seo": {},
-    "accounts-merge": {}
+    "accounts-merge": {},
+    "urlify2": {}
   }
 }

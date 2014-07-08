@@ -20,6 +20,9 @@ googleOauthOpen = (ev) ->
     unless err
       Meteor.call 'loadContacts', Meteor.userId(), (err) ->
         console.log err if err
+
+        Session.set 'loggedInWithGoogle', true
+
         $('#login-dialog').modal('hide')
         $('#register-dialog').modal('hide')
         if Session.get 'sent_campaign_id'
@@ -120,6 +123,9 @@ Template.manual_login_dialog.events
             mixpanel.track("logs in with password", { });
             Meteor.call 'loadContacts', Meteor.userId(), (err) ->
               console.log err if err
+
+              Session.set 'loggedInWithGoogle', false
+
               if Session.get 'afterEmailVerified'
                 $('#manual-login-dialog').modal('hide')
                 Router.go("inbox")
@@ -127,7 +133,7 @@ Template.manual_login_dialog.events
                 Router.go "feature_select"
         )
       else
-        apprise("Email not verified.")
+        apprise("Your email address was not yet verified!")
 
 
 Template.register_dialog.events

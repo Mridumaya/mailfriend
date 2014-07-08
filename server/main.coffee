@@ -31,7 +31,6 @@ Meteor.methods
         index = index + 1
         uniqueUsername = username + '_' + index
 
-
 # Meteor.headly.config({
 #   facebook: (data) ->
 #     tags = '<meta property="og:image" content="http://jacint.meteor.com/images/logo.png"/>'

@@ -7,7 +7,7 @@ introPagesDone = (page, pageObject) ->
         introJs().start()
 
 # new campaign stuff ----------------------------------------------------------------------------------------------------------------------
-googleOauthOpen = (ev) ->
+googleOauthOpen = (ev, search) ->
   ev.preventDefault()
   mixpanel.track("logs in", { });
   console.log Session.get 'loggedInWithGoogle'
@@ -41,7 +41,11 @@ googleOauthOpen = (ev) ->
           Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
             Session.set 'loggedInWithGoogle', res
 
-          Router.go 'new_campaign'
+          if search isnt undefined
+            setTimeout ->
+              Router.go 'new_campaign'
+              $('.search-tags').trigger('click')
+            , 1500
     )
   else
     true
@@ -182,7 +186,7 @@ Template.new_campaign.events
     refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
   'click .search-tags': (e) ->
-    success = googleOauthOpen(e)
+    success = googleOauthOpen(e, true)
     if success
       button = $(e.currentTarget)
       button.data('pressed', 1)
@@ -271,6 +275,7 @@ Template.new_campaign.events
               clearInterval contactInt
 
           , 750)
+# >>>>>>> 3c4baa6ab9115a84e54e4613d59cd689b965a9eb
 
   'click .tagit-close': (e) ->
     addedTags = $("#tags").tagit("assignedTags").join(" ")

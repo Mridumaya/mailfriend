@@ -14,7 +14,8 @@
       "iron-router-progress": {},
       "jquery-datatables": {},
       "ms-seo": {},
-      "accounts-merge": {}
+      "accounts-merge": {},
+      "urlify2": {}
     },
     "packages": {
       "google-contacts": {
@@ -71,6 +72,11 @@
         "git": "https://github.com/lirbank/meteor-accounts-merge.git",
         "tag": "v0.0.7",
         "commit": "ae5c08bb1574858257291fa11982733e6e1937f0"
+      },
+      "urlify2": {
+        "git": "https://github.com/peerlibrary/meteor-urlify2.git",
+        "tag": "v0.2.2",
+        "commit": "5d33ec1eaa1f815a56a0b70c0c9eddc4aed4c33e"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

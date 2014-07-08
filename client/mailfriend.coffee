@@ -26,15 +26,31 @@ Template.masterLayout.events
   'click .logout': (e) ->
     e.preventDefault
     Meteor.logout()
+
+    delete Session.keys['GOOGLE_LOGIN']
+
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened') 
+
     Router.go('home')
     return true
 
   'click .edit-user-info': (e) ->
     menuitemActive()
     e.preventDefault
+
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened') 
+
     Router.go "edit_user_info"
 
   'click .back-to-feature-select': (e) ->
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened') 
+
     Router.go 'feature_select'
 
   'click .btn-create-campaign': (e) ->
@@ -43,24 +59,49 @@ Template.masterLayout.events
     delete Session.keys['searchQ']
     delete Session.keys['prev_searchQ']
     delete Session.keys['contact_list']
+
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened') 
+
     Router.go "new_campaign"
 
   'click .btn-view-campaign': (e) ->
     mixpanel.track("visit campaign list", { });
+
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened') 
+
     Router.go "list_campaign"
 
   'click .btn-view-messages': (e) ->
     mixpanel.track("visit inbox", { });
+
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened')    
+    
     Router.go "inbox"
 
+  'click #show-mobile-menu': (e) ->
+    e.preventDefault()
+    $('div.mobile-menu').toggleClass('menu-opened')
+    $('#container1').toggleClass('menu-is-opened')
 
 Template.feature_select.rendered = ->
   menuitemActive()
   $('#manual-login-dialog').modal('hide')
   $('#login-dialog').modal('hide')
   $('#register-dialog').modal('hide')
+<<<<<<< HEAD
   # $('#help-dialog').modal('hide')
   introPagesDone 'feature_select', {'introPagesDone.feature_select':true}
+=======
+
+  console.log Meteor.user()
+
+>>>>>>> FETCH_HEAD
 
 Template.feature_select.helpers
   name: ->
@@ -121,10 +162,11 @@ Template.home.events
     button = $(e.currentTarget)
     $(button).prop('disabled', true)
     Meteor.loginWithGoogle({
-      requestPermissions: ["https://mail.google.com/", # imap
-                           "https://www.googleapis.com/auth/userinfo.profile", # profile
-                           "https://www.googleapis.com/auth/userinfo.email", # email
-                           "https://www.google.com/m8/feeds/" # contacts
+      requestPermissions: [
+        "https://mail.google.com/", # imap
+        "https://www.googleapis.com/auth/userinfo.profile", # profile
+        "https://www.googleapis.com/auth/userinfo.email", # email
+        "https://www.google.com/m8/feeds/" # contacts
       ]
       requestOfflineToken: true
       forceApprovalPrompt: true
@@ -135,8 +177,8 @@ Template.home.events
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log 'Calling callback function'
           console.log err if err
+          
           Router.go "list_campaign"
-          #Session.set("STEP", "feature_select")
     )
 
   'click #nav_down': (e) ->
