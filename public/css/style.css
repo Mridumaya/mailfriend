@@ -707,3 +707,24 @@ p.draft-body textarea {
     margin-bottom: 20px;
     white-space: normal;
 }
+
+#show-mobile-menu {
+    background-image: url("../images/mobile_menu.png");
+    background-repeat: no-repeat;
+    display: block;
+    height: 27px;
+}
+
+#show-mobile-menu:hover,
+#show-mobile-menu.active {
+    background-position: 0px -27px;
+}
+
+.show-mobile-menu {
+    background-color: #38a6a6;
+    float: left;
+    padding: 9px 2px 9px 9px;
+    width: 37px;
+    display: none;
+}
+

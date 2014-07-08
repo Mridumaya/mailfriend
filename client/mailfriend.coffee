@@ -23,15 +23,28 @@ Template.masterLayout.events
 
     delete Session.keys['GOOGLE_LOGIN']
 
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened') 
+
     Router.go('home')
     return true
 
   'click .edit-user-info': (e) ->
     menuitemActive()
     e.preventDefault
+
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened') 
+
     Router.go "edit_user_info"
 
   'click .back-to-feature-select': (e) ->
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened') 
+
     Router.go 'feature_select'
 
   'click .btn-create-campaign': (e) ->
@@ -40,16 +53,35 @@ Template.masterLayout.events
     delete Session.keys['searchQ']
     delete Session.keys['prev_searchQ']
     delete Session.keys['contact_list']
+
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened') 
+
     Router.go "new_campaign"
 
   'click .btn-view-campaign': (e) ->
     mixpanel.track("visit campaign list", { });
+
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened') 
+
     Router.go "list_campaign"
 
   'click .btn-view-messages': (e) ->
     mixpanel.track("visit inbox", { });
+
+    if $('div.mobile-menu').hasClass('menu-opened')
+      $('div.mobile-menu').removeClass('menu-opened')
+      $('#container1').removeClass('menu-is-opened')    
+    
     Router.go "inbox"
 
+  'click #show-mobile-menu': (e) ->
+    e.preventDefault()
+    $('div.mobile-menu').toggleClass('menu-opened')
+    $('#container1').toggleClass('menu-is-opened')
 
 Template.feature_select.rendered = ->
   menuitemActive()
