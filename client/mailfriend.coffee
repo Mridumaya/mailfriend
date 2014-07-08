@@ -31,7 +31,7 @@ Template.masterLayout.events
 
     if $('div.mobile-menu').hasClass('menu-opened')
       $('div.mobile-menu').removeClass('menu-opened')
-      $('#container1').removeClass('menu-is-opened') 
+      $('#container1').removeClass('menu-is-opened')
 
     Router.go('home')
     return true
@@ -42,14 +42,14 @@ Template.masterLayout.events
 
     if $('div.mobile-menu').hasClass('menu-opened')
       $('div.mobile-menu').removeClass('menu-opened')
-      $('#container1').removeClass('menu-is-opened') 
+      $('#container1').removeClass('menu-is-opened')
 
     Router.go "edit_user_info"
 
   'click .back-to-feature-select': (e) ->
     if $('div.mobile-menu').hasClass('menu-opened')
       $('div.mobile-menu').removeClass('menu-opened')
-      $('#container1').removeClass('menu-is-opened') 
+      $('#container1').removeClass('menu-is-opened')
 
     Router.go 'feature_select'
 
@@ -62,7 +62,7 @@ Template.masterLayout.events
 
     if $('div.mobile-menu').hasClass('menu-opened')
       $('div.mobile-menu').removeClass('menu-opened')
-      $('#container1').removeClass('menu-is-opened') 
+      $('#container1').removeClass('menu-is-opened')
 
     Router.go "new_campaign"
 
@@ -71,7 +71,7 @@ Template.masterLayout.events
 
     if $('div.mobile-menu').hasClass('menu-opened')
       $('div.mobile-menu').removeClass('menu-opened')
-      $('#container1').removeClass('menu-is-opened') 
+      $('#container1').removeClass('menu-is-opened')
 
     Router.go "list_campaign"
 
@@ -80,8 +80,8 @@ Template.masterLayout.events
 
     if $('div.mobile-menu').hasClass('menu-opened')
       $('div.mobile-menu').removeClass('menu-opened')
-      $('#container1').removeClass('menu-is-opened')    
-    
+      $('#container1').removeClass('menu-is-opened')
+
     Router.go "inbox"
 
   'click #show-mobile-menu': (e) ->
@@ -94,14 +94,10 @@ Template.feature_select.rendered = ->
   $('#manual-login-dialog').modal('hide')
   $('#login-dialog').modal('hide')
   $('#register-dialog').modal('hide')
-<<<<<<< HEAD
   # $('#help-dialog').modal('hide')
   introPagesDone 'feature_select', {'introPagesDone.feature_select':true}
-=======
 
   console.log Meteor.user()
-
->>>>>>> FETCH_HEAD
 
 Template.feature_select.helpers
   name: ->
@@ -177,7 +173,7 @@ Template.home.events
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log 'Calling callback function'
           console.log err if err
-          
+
           Router.go "list_campaign"
     )
 
