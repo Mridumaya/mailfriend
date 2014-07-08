@@ -55,3 +55,12 @@ Meteor.methods
 
   setUserToLoggedInWithGoogle: (userId) ->
     Meteor.users.update({'_id':Meteor.userId()}, {$set : {'loggedInWithGoogle' : true}})
+
+  introPagesDone: (page, pageObject) ->
+    user = Meteor.users.findOne({'_id':Meteor.userId()})
+
+    if user.introPagesDone[page]
+      false
+    else
+      Meteor.users.update({'_id':Meteor.userId()}, {$set : pageObject})
+      true

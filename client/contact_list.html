@@ -1,5 +1,5 @@
 <template name="contact_list">
-    <section class="inbox_content" id="contact-list-container">
+    <section class="inbox_content" id="contact-list-container" data-step="4" data-intro="These are your matched and unmatched contacts" data-position="left">
         <div class="text_box">
             These are your Friends Interested in: <span class="red">{{searchQ}}</span> &nbsp;<span class="green edit-search-term-open" data-toggle="modal" data-target="#searchTermModal">edit search term</span>
             <br>
@@ -71,7 +71,7 @@
                     </tr>
                     {{/each}}
                 </table>
-            </div>            
+            </div>
         </div>
 
         <section class="inbox_content">
@@ -86,7 +86,7 @@
                     <ul id="recipients"></ul>
                 </div>
             </div>
-        </section>        
+        </section>
 
         <div class="back_next">
             <span>Step 3 of 4</span>
@@ -101,7 +101,7 @@
                 <div class="modal-header pb70">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h1>Edit search term</h1>
-                    
+
                     <p>Please add or change search term</p>
                     <input type="text" id="s_term" value="{{searchQ}}" class="form-control">
                     <button type="button" class="btn btn-primary edit-search-term pull-right mt10">Change</button>

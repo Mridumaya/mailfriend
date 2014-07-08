@@ -1,3 +1,9 @@
+introPagesDone = (page, pageObject) ->
+  Meteor.call 'introPagesDone', page, pageObject, (err, res) ->
+    if res
+      introJs().start()
+
+
 Template.masterLayout.helpers
   picture: ->
     user = Meteor.user()
@@ -54,7 +60,7 @@ Template.feature_select.rendered = ->
   $('#login-dialog').modal('hide')
   $('#register-dialog').modal('hide')
   # $('#help-dialog').modal('hide')
-
+  introPagesDone 'feature_select', {'introPagesDone.feature_select':true}
 
 Template.feature_select.helpers
   name: ->
@@ -102,6 +108,7 @@ Template.feature_select.events
 
 Template.home.rendered = ->
   mixpanel.track("view front page", { });
+  # introJs().start()
   if Session.get 'afterEmailVerified'
     # delete Session.keys['afterEmailVerified']
     apprise(Session.get('successMessage'))

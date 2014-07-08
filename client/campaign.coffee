@@ -1,3 +1,11 @@
+introPagesDone = (page, pageObject) ->
+  Meteor.call 'introPagesDone', page, pageObject, (err, res) ->
+    if res
+      if page is 'new_campaign_second'
+        introJs().goToStep(4).start()
+      else
+        introJs().start()
+
 # new campaign stuff ----------------------------------------------------------------------------------------------------------------------
 googleOauthOpen = (ev) ->
   ev.preventDefault()
@@ -38,12 +46,13 @@ googleOauthOpen = (ev) ->
   else
     true
 
-
 initialize = true
 saveInt = ''
 triggerTimeout = 0
+
 Template.new_campaign.rendered = ->
   menuitemActive('new-campaign')
+  introPagesDone 'new_campaign_first', {'introPagesDone.new_campaign_first':true}
 
   $('#tags-popover').popover({
     trigger: 'hover'
@@ -202,7 +211,7 @@ Template.new_campaign.events
           Session.set("contact_list", "yes")
 
           button.data('destroyContactInt', 0)
-
+          introPagesDone 'new_campaign_second', {'introPagesDone.new_campaign_second':true}
           # check for results in every 0.75 seconds
           contactInt = setInterval(->
             # add tags to datatables header

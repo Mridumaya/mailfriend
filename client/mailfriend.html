@@ -34,6 +34,9 @@
 
     <!-- mixpanel -->
     <script type="text/javascript" charset="utf-8" src="/js/mixpanel.js"></script>
+    <!-- intro.js -->
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/intro.js/0.9.0/introjs.min.css">
+    <script type="text/javascript" charset="utf-8" src="http://cdn.jsdelivr.net/intro.js/0.9.0/intro.min.js"></script>
 </head>
 <body>
     {{#if isError}}
@@ -79,13 +82,13 @@
         <div class="mobile-menu mobile-menu1">
             <section class="left_nav">
                 <ul>
-                    <li class="new-campaign">
+                    <li class="new-campaign" data-step="1" data-intro="By clicking here you can start creating a new campaign" data-position="right">
                         <a href="#" class="btn-create-campaign"><span class="new_coamp"></span><span>new campaign</span></a>
                     </li>
-                    <li class="campaign-list">
+                    <li class="campaign-list" data-step="2" data-intro="By clicking here you can view your existing campaigns" data-position="right">
                         <a href="#" class="btn-view-campaign"><span class="exist_comp"></span><span>existing campaigns</span></a>
                     </li>
-                    <li class="my-inbox">
+                    <li class="my-inbox" data-step="3" data-intro="By clicking here you can view your inbox" data-position="right">
                         <a href="#" class="btn-view-messages"><span class="my_inbox">{{#if new_messages gt 0}}<span class="notification">{{new_messages}}</span>{{/if}}</span><span>My inbox</span></a>
                     </li>
                 </ul>
@@ -200,8 +203,8 @@
     <section id="content" class="header_part">
         <div class="home_wrapper">
             <div class="header_part_top">
-                <h1 class="home_logo"><a href="{{pathFor 'home'}}"><img src="/images/Home_logo.png" alt="MailFriend"></a></h1>
-                <div class="manubar">
+                <h1 class="home_logo" data-step="2" data-intro="Introduction message 2"><a href="{{pathFor 'home'}}"><img src="/images/Home_logo.png" alt="MailFriend"></a></h1>
+                <div class="manubar" data-step="1" data-intro="Introduction message">
                     <ul>
                         <li><a href="{{pathFor 'faq'}}" class="nav-faq">FAQ</a></li>
                         <li><a href="{{pathFor 'about'}}" class="nav-about">About</a></li>

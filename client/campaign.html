@@ -9,11 +9,13 @@
             </div>
             <div class="block_main_content">
                 <div class="mailbox_left">
-                    <input type="text" placeholder="Type the subject of this message..." id="subject" value="{{#if _id}}{{subject}}{{/if}}">
-                    <textarea id="own_message" name="own_message" autofocus>{{#if _id}}{{body}}{{/if}}</textarea>
+                    <input type="text" placeholder="Type the subject of this message..." id="subject" value="{{#if _id}}{{subject}}{{/if}}" data-step="1" data-intro="Input the camapign subject here">
+                    <div data-step="2" data-intro="Input the campaign text here" data-position="right">
+                      <textarea id="own_message" name="own_message" autofocus>{{#if _id}}{{body}}{{/if}}</textarea>
+                    </div>
                     <a href="#" class="button btn-save-campaign">Save</a>
                 </div>
-                <div class="mail_content">
+                <div class="mail_content" data-step="3" data-intro="Tag a word by using a <strong>#</strong> in the message and it will add the keyword to the campaign." data-position="left">
                     <div class="mailbox_right">
                         <div class="top_content">Keywords for this campaign<span id="tags-popover" data-container="body" data-toggle="popover" data-placement="top" data-html="true" data-content="Tag a word by using a <strong>#</strong> in the message and it will add the keyword to the campaign.">?</span></div>
                         <input type="hidden" value="{{#if _id}}{{search_tags}}{{/if}}" id="campaign-tags">
