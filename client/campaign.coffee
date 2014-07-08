@@ -482,7 +482,7 @@ Template.list_campaign.events
   'click #share-twitter': (e) ->
     e.preventDefault()
     shareURL = $('#share-url').val()
-    window.open("http://twitter.com/share?text=" + encodeURIComponent("Check out this cool application! " + shareURL), 'twitter', "width=575, height=400");
+    window.open("http://twitter.com/share?text=" + encodeURIComponent("Help support my idea by sharing this message with your network. " + shareURL), 'twitter', "width=575, height=400");
 
 
 # inbox stuff -----------------------------------------------------------------------------------------------------------------------------
