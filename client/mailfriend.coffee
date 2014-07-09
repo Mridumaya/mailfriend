@@ -232,6 +232,7 @@ clearAllSelection = () ->
 
 Template.confirm.rendered = ->
   mixpanel.track("visits step 4 page", { });
+  introPagesDone 'campaign_send', {'introPagesDone.campaign_send':true}
 
 
 Template.confirm.helpers
