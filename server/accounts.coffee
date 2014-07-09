@@ -24,13 +24,13 @@ Accounts.onCreateUser( (options,user)->
 
     user.profile = profile
     user.loggedInWithGoogle = true
-    user.introPagesDone = {'feature_select': false, 'new_campaign_first': false, 'new_campaign_second': false, 'campaign_send': false, 'list_campaign': false, 'inbox': false}
+    user.introPagesDone = {'feature_select': false, 'new_campaign_first': false, 'new_campaign_second': false, 'campaign_send': false, 'share_campaign': false, 'list_campaign': false, 'inbox': false}
     user
   else
     user.customVerified = false
     user.loggedInWithGoogle = false
     user.customVerificationCode = Random.hexString(20).toLowerCase()
-    user.introPagesDone = {'feature_select': false, 'new_campaign_first': false, 'new_campaign_second': false, 'campaign_send': false, 'list_campaign': false, 'inbox': false}
+    user.introPagesDone = {'feature_select': false, 'new_campaign_first': false, 'new_campaign_second': false, 'campaign_send': false, 'share_campaign': false, 'list_campaign': false, 'inbox': false}
     console.log "accounts.coffee: "
     #console.log user
     console.log options

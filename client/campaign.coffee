@@ -1,10 +1,10 @@
 introPagesDone = (page, pageObject) ->
   Meteor.call 'introPagesDone', page, pageObject, (err, res) ->
     if res
-      if page is 'new_campaign_second'
-        introJs().goToStep(4).start()
-      else
-        introJs().start()
+      switch page
+        when 'new_campaign_second' then introJs().goToStep(4).start()
+        when 'share_campaign' then introJs('#container1').start()
+        else introJs().start()
 
 # new campaign stuff ----------------------------------------------------------------------------------------------------------------------
 googleOauthOpen = (ev, search) ->
@@ -275,7 +275,6 @@ Template.new_campaign.events
               clearInterval contactInt
 
           , 750)
-# >>>>>>> 3c4baa6ab9115a84e54e4613d59cd689b965a9eb
 
   'click .tagit-close': (e) ->
     addedTags = $("#tags").tagit("assignedTags").join(" ")
@@ -305,13 +304,17 @@ Template.list_campaign.rendered = ->
   listInt = setInterval(->
     list = $('#list1 td.info_content span.created.raw')
 
+
     if list.length > 4
       initScrollbar('#content_1')
 
       clearInterval listInt
 
+
   , 750)
 
+  introPagesDone 'share_campaign', {'introPagesDone.share_campaign':true}
+  
   if Session.get 'sent_campaign_id'
     console.log Session.get 'sent_campaign_id'
     $("table#list1").find("[data-campaignid='" + Session.get('sent_campaign_id') + "']").click()
