@@ -25,10 +25,11 @@ googleOauthOpen = (ev) ->
 
         $('#login-dialog').modal('hide')
         $('#register-dialog').modal('hide')
-        if Session.get 'sent_campaign_id'
-          Router.go("inbox")
-        else
-          Router.go "feature_select"
+        # if Session.get 'sent_campaign_id'
+        #   Router.go("inbox")
+        # else
+        #   Router.go "feature_select"
+        Router.go "feature_select"
   )
 
 
