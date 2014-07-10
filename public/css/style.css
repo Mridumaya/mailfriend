@@ -396,7 +396,7 @@ table.contacts td{
 }
 
 #login-dialog .modal-dialog {
-    width: 800px;
+    /*width: 800px;*/
 }
 
 #login-dialog .modal-title {
@@ -422,7 +422,7 @@ table.contacts td{
 }
 
 #manual-login-dialog .modal-dialog {
-    width: 450px !important;
+    /*width: 450px !important;*/
 }
 
 #register-dialog .modal-body,
