@@ -10,7 +10,7 @@ Accounts.onCreateUser( (options,user)->
 
     result = Meteor.http.get('https://www.googleapis.com/oauth2/v3/userinfo',
       header:
-        'User-Agent': 'Meteor MailFriend/1.0'
+        'User-Agent': 'Meteor Pollen/1.0'
       params:
         access_token: accessToken
     )

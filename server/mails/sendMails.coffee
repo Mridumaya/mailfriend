@@ -82,14 +82,14 @@ Meteor.methods
             "html": body
             "text": body
             "subject": subject
-            "from_email": "no-reply@mailfriend.com"
-            "from_name": "Mailfriend Registration"
+            "from_email": "no-reply@pollenpost.com"
+            "from_name": "Pollen Registration"
             "to":[
                 "email": to
                 #"name": "Recipient Name"
             ]
             "headers":
-                "Reply-To": "no-reply@mailfriend.com"
+                "Reply-To": "no-reply@pollenpost.com"
             "important": false
             "track_opens": null
             "track_clicks": null

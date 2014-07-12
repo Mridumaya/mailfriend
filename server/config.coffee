@@ -14,6 +14,9 @@
         else if Meteor.absoluteUrl() == 'http://borkom.meteor.com/'
             Meteor.settings = JSON.parse(Assets.getText("settings_borkom.json"))
 
+        else if Meteor.absoluteUrl() == 'http://www.pollenpost.com/'
+            Meteor.settings = JSON.parse(Assets.getText("settings_pollen.json"))
+
         else
             Meteor.settings = JSON.parse(Assets.getText("settings_live.json"))
 

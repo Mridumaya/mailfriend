@@ -1,5 +1,5 @@
 
-#mailfriend
+#pollen
 
 lets you send mails that your friends can pass on
 

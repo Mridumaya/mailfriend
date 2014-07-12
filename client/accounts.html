@@ -4,8 +4,8 @@
             <div class="modal-content">
                 <div class="modal-header pb70">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h1 class="centertext">Mailfriend lets you pass the word to your friends<br>who might actually care</h1>
-                    
+                    <h1 class="centertext">Pollen lets you pass the word to your friends<br>who might actually care</h1>
+
                     {{#if isError}}
                     <div class="alert alert-danger">{{errorMessage}}</div>
                     {{/if}}
@@ -179,17 +179,17 @@
 <template name="welcome">
     <section class="welcome_container">
         <h2>Welcome friend of <span>{{sender}},</span></h2>
-        <h3>Welcome to Mail Friend!</h3>
+        <h3>Welcome to Pollen!</h3>
         <h4>You have a few options:</h4>
-   
+
         <div class="login_portion">
             <div class="login_part">
                 <a href="#" class="big-link" data-reveal-id="myModal" data-toggle="modal" data-target="#register-dialog">
                     <div class="demo">
                         <img src="/images/login_img.png" alt="login">
                     </div>
-                </a>    
-               <h2>Create an account on <br><span>Mail Friend</span></h2>
+                </a>
+               <h2>Create an account on <br><span>Pollen</span></h2>
                <p>By creating an account, you can save,<br>edit and come back to<br> you messages.</p>
             </div>
 
@@ -198,7 +198,7 @@
                     <div class="demo">
                         <img src="/images/help_img.png" alt="help" class="public-account">
                     </div>
-                </a>   
+                </a>
                 <h2>I just want to help <br><span>{{sender}}</span></h2>
                 <p>You are ready to go, don't need to save or edit this,<br>you just want to get the word out about<br><a href="#">{{sender}}'s</a> Project!<br>(you can always make an account later)</p>
             </div>

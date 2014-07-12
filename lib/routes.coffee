@@ -37,18 +37,18 @@ Router.map ->
     path: "/home"
     onAfterAction: ->
       baseurl = Meteor.absoluteUrl("")
-      
+
       SEO.set
-        title: 'Welcome to Mailfriend'
+        title: 'Welcome to Pollen'
         meta:
-          'title':       'Mailfriend'
-          'description': 'Mailfriend - send mail to people who care'
-          'keywords':    'mailfriend, email, friend'
+          'title':       'Pollen'
+          'description': 'Pollen - send mail to people who care'
+          'keywords':    'pollen, email, friend'
         og:
           'image':     baseurl + 'images/logo.png'
-          'title':     'Mailfriend'
+          'title':     'Pollen'
           'url':       baseurl + 'home/'
-          'site_name': 'Mailfriend'
+          'site_name': 'Pollen'
           'type':      'website'
 
 
@@ -60,16 +60,16 @@ Router.map ->
       baseurl = Meteor.absoluteUrl("")
 
       SEO.set
-        title: 'About Mailfriend'
+        title: 'About Pollen'
         meta:
-          'title':       'About Mailfriend'
-          'description': 'Mailfriend - send mail to people who care'
-          'keywords':    'mailfriend, email, friend'
+          'title':       'About Pollen'
+          'description': 'Pollen - send mail to people who care'
+          'keywords':    'pollen, email, friend'
         og:
           'image':     baseurl + 'images/logo.png'
-          'title':     'About Mailfriend'
+          'title':     'About Pollen'
           'url':       baseurl + 'about/'
-          'site_name': 'Mailfriend'
+          'site_name': 'Pollen'
           'type':      'website'
 
 
@@ -81,16 +81,16 @@ Router.map ->
       baseurl = Meteor.absoluteUrl("")
 
       SEO.set
-        title: 'Mailfriend FAQ'
+        title: 'Pollen FAQ'
         meta:
-          'title':       'Mailfriend FAQ'
-          'description': 'Mailfriend - send mail to people who care'
-          'keywords':    'mailfriend, email, friend'
+          'title':       'Pollen FAQ'
+          'description': 'Pollen - send mail to people who care'
+          'keywords':    'pollen, email, friend'
         og:
           'image':     baseurl + 'images/logo.png'
-          'title':     'Mailfriend FAQ'
+          'title':     'Pollen FAQ'
           'url':       baseurl + 'faq/'
-          'site_name': 'Mailfriend'
+          'site_name': 'Pollen'
           'type':      'website'
 
 
@@ -99,7 +99,7 @@ Router.map ->
     path: "/"
     onAfterAction: ->
       SEO.set
-        title: 'Welcome to Mailfriend'
+        title: 'Welcome to Pollen'
 
 
   @route "edit_user_info",
@@ -233,30 +233,30 @@ Router.map ->
       if campaign isnt undefined
         sender_name = sender.profile.name + "'s"
         SEO.set
-          title: 'Get the word out for ' + sender_name + ' mailfriend campaign'
+          title: 'Get the word out for ' + sender_name + ' pollen campaign'
           meta:
-            'title':       'Get the word out for ' + sender_name + ' mailfriend campaign'
-            'description': 'Get the word out for ' + sender_name + ' mailfriend campaign'
-            'keywords':    'mailfriend, email, friend'
+            'title':       'Get the word out for ' + sender_name + ' pollen campaign'
+            'description': 'Get the word out for ' + sender_name + ' pollen campaign'
+            'keywords':    'pollen, email, friend'
           og:
             'image':     baseurl + 'images/logo.png'
-            'title':     'Get the word out for ' + sender_name + ' mailfriend campaign'
+            'title':     'Get the word out for ' + sender_name + ' pollen campaign'
             'url':       baseurl + @params.user_id + '/' + @params.slug + '/'
-            'site_name': 'Mailfriend'
+            'site_name': 'Pollen'
             'type':      'website'
       else
         SEO.set
-          title: 'Get the word out for this mailfriend campaign'
+          title: 'Get the word out for this pollen campaign'
           meta:
-            'title':       'Get the word out for this mailfriend campaign'
-            'description': 'Get the word out for this mailfriend campaign'
-            'keywords':    'mailfriend, email, friend'
+            'title':       'Get the word out for this pollen campaign'
+            'description': 'Get the word out for this pollen campaign'
+            'keywords':    'pollen, email, friend'
           og:
             'image':     baseurl + 'images/logo.png'
-            'title':     'Get the word out for this mailfriend campaign'
+            'title':     'Get the word out for this pollen campaign'
             'url':       baseurl + @params.user_id + '/' + @params.slug + '/'
-            'site_name': 'Mailfriend'
-            'type':      'website'      
+            'site_name': 'Pollen'
+            'type':      'website'
 
   @route "publicedit",
     path: '/public-edit',
