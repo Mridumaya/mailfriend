@@ -276,7 +276,7 @@ Template.new_campaign.events
                   clearInterval contactInt
 
               , 750)
-          , 2000
+          , 2500
 
 
 
