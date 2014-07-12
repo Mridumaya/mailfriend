@@ -426,6 +426,9 @@ a span.my_inbox {
 --------------------------------------------------
 Reveal Modals
 -------------------------------------------------- */
+#share-dialog {
+  z-index: 9999;
+}
 .big-link { display:block; text-align: center;  color: #06f; }
 .reveal-modal-bg {
     position: fixed;
@@ -1366,6 +1369,17 @@ table td, table th {
 
 /* -- responsive-table end --*/
 
+@media(max-width: 321px) {
+    .send_button {
+        margin-top: 10px;
+    }
+}
+
+@media(max-width: 479px) {
+    .delete_button {
+        margin-top: 10px;
+    }
+}
 
 @media(max-width: 600px) {
     .show-mobile-menu {
@@ -1404,8 +1418,12 @@ table td, table th {
     }
     .info_content{ display:block; width:100% !important;}
     .send_button {
+        display: inline-table;
         width: 50%;
-        display: inline;
+    }
+    .delete_button {
+        display: inline-table;
+        width: 50%;
     }
 
     .logo_2 {
@@ -1414,7 +1432,7 @@ table td, table th {
         width: auto;
     }
     .logo_2 img {
-        height: 45px;
+        height: 46px;
         width: 45px;
     }
 
