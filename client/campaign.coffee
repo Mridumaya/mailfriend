@@ -2,7 +2,7 @@ introPagesDone = (page, pageObject) ->
   Meteor.call 'introPagesDone', page, pageObject, (err, res) ->
     if res
       switch page
-        when 'new_campaign_second' then introJs().goToStep(4).start()
+        when 'new_campaign_second' then introJs().refresh() introJs().goToStep(4).start()
         when 'share_campaign' then introJs('#container1').start()
         else introJs().start()
 
@@ -43,7 +43,7 @@ googleOauthOpen = (ev, search) ->
 
           if search isnt undefined
             setTimeout ->
-              Router.go 'new_campaign'
+              # Router.go 'new_campaign'
               $('.search-tags').trigger('click')
             , 1500
     )
@@ -207,74 +207,78 @@ Template.new_campaign.events
 
         # switch to matched contacts tab
         $('div.select-contact-group a:first-child').trigger('click')
-
         searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
-          console.log("show list")
-          Session.set("searchQ", searchQuery)
-          Session.set("prev_searchQ", searchQuery)
-          Session.set("contact_list", "yes")
+          setTimeout ->
+            searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
+              console.log("show list")
+              Session.set("searchQ", searchQuery)
+              Session.set("prev_searchQ", searchQuery)
+              Session.set("contact_list", "yes")
 
-          button.data('destroyContactInt', 0)
-          introPagesDone 'new_campaign_second', {'introPagesDone.new_campaign_second':true}
-          # check for results in every 0.75 seconds
-          contactInt = setInterval(->
-            # add tags to datatables header
-            $("span.relevantQ").text(searchQuery)
+              button.data('destroyContactInt', 0)
+              introPagesDone 'new_campaign_second', {'introPagesDone.new_campaign_second':true}
+              # check for results in every 0.75 seconds
+              contactInt = setInterval(->
+                # add tags to datatables header
+                $("span.relevantQ").text(searchQuery)
 
-            # if there are matches add them to datatables
-            matches = parseInt($('#tmp_matched_contacts tr').length)
-            if matches
-              # add existing recipients to recipienys list
-              recipients_str = $('#existing-recipients').text()
+                # if there are matches add them to datatables
+                matches = parseInt($('#tmp_matched_contacts tr').length)
+                if matches
+                  # add existing recipients to recipienys list
+                  recipients_str = $('#existing-recipients').text()
 
-              if recipients_str.length
-                recipients = recipients_str.split(',')
+                  if recipients_str.length
+                    recipients = recipients_str.split(',')
 
-                _.each(recipients, (email) ->
-                  $("#recipients").tagit("createTag", email)
+                    _.each(recipients, (email) ->
+                      $("#recipients").tagit("createTag", email)
 
-                  row = $('#tmp_matched_contacts tr td:contains(' + email + ')').parent()
-                  if row.length isnt 0
-                    row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+                      row = $('#tmp_matched_contacts tr td:contains(' + email + ')').parent()
+                      if row.length isnt 0
+                        row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
 
-                  else
-                    row = $('#tmp_unmatched_contacts tr td:contains(' + email + ')').parent()
-                    if row.length isnt 0
-                      row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
-                )
+                      else
+                        row = $('#tmp_unmatched_contacts tr td:contains(' + email + ')').parent()
+                        if row.length isnt 0
+                          row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+                    )
 
-              setTimeout ->
-                # populate datatables
-                refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
-                refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+                  setTimeout ->
+                    # populate datatables
+                    refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+                    refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
-                button.data('pressed', 0)
-              , 2000
+                    button.data('pressed', 0)
+                  , 100
 
-              button.data('destroyContactInt', 1)
+                  button.data('destroyContactInt', 1)
 
-            # check for results, if there's none, display notification
-            results = button.data('results')
-            if results is 0
-              button.data('destroyContactInt', 1)
+                # check for results, if there's none, display notification
+                results = button.data('results')
+                if results is 0
+                  button.data('destroyContactInt', 1)
 
-              # clear datatables
-              @refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
-              @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+                  # clear datatables
+                  @refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+                  @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
-              # hide loaders
-              searchLoader('hide');
-              $('div.loading-contacts').addClass('hidden')
+                  # hide loaders
+                  searchLoader('hide');
+                  $('div.loading-contacts').addClass('hidden')
 
-              # show the no results warning
-              $('div.no-results').removeClass('hidden')
+                  # show the no results warning
+                  $('div.no-results').removeClass('hidden')
 
-            # clear interval
-            destroyContactInt = button.data('destroyContactInt')
-            if destroyContactInt is 1
-              clearInterval contactInt
+                # clear interval
+                destroyContactInt = button.data('destroyContactInt')
+                if destroyContactInt is 1
+                  clearInterval contactInt
 
-          , 750)
+              , 750)
+          , 2000
+
+
 
   'click .tagit-close': (e) ->
     addedTags = $("#tags").tagit("assignedTags").join(" ")
@@ -314,7 +318,7 @@ Template.list_campaign.rendered = ->
   , 750)
 
   introPagesDone 'share_campaign', {'introPagesDone.share_campaign':true}
-  
+
   if Session.get 'sent_campaign_id'
     console.log Session.get 'sent_campaign_id'
     $("table#list1").find("[data-campaignid='" + Session.get('sent_campaign_id') + "']").click()
