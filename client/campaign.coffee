@@ -451,6 +451,9 @@ Template.list_campaign.events
         Session.set 'loggedInWithGoogle', res
       Router.go 'new_campaign'
 
+  'click .btn-create-campaign-green': (e) ->
+    mixpanel.track("clicked on create new campaign green button", { });
+
   'click .back-to-feature-select': (e) ->
     Router.go 'feature_select'
 

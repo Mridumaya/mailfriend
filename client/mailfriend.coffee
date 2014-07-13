@@ -143,7 +143,7 @@ Template.feature_select.events
 
 
 Template.home.rendered = ->
-  mixpanel.track("view front page", { });
+  mixpanel.track("view home page", { });
   # introJs().start()
   if Session.get 'afterEmailVerified'
     # delete Session.keys['afterEmailVerified']
@@ -157,7 +157,7 @@ Template.home.rendered = ->
 
 Template.home.events
   'click .add-google-oauth': (e) ->
-    mixpanel.track("logs in", { });
+    mixpanel.track("logs in with google", { });
     console.log new Date()
     button = $(e.currentTarget)
     $(button).prop('disabled', true)

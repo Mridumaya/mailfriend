@@ -2045,7 +2045,7 @@ a.delete-message {
     .home_mail_content .button { margin-left:0; margin-bottom:20px; margin-top:10px; }
     footer .logo { display:block !important; margin:10px auto; width:144px; float:none !important;}
     footer .logo img { width:auto !important;}
-    footer h2 { margin: 10px;text-align: center;width: 100%;}
+    footer h2 { margin: 0px;text-align: center;width: 100%;}
     .nav_down { width:24px !important; height:24px !important; background-size:100% !important; left:42% !important;}
 
     /*--home page responsive css end--*/
@@ -2288,6 +2288,13 @@ a.delete-message {
         width: 100%;
     }
 
+}
+
+@media ( max-width: 1326px) {
+    #DataTables_Table_0_length {
+        float: left;
+        margin: 10px 0;
+    }
 }
 
 

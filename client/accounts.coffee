@@ -87,11 +87,17 @@ Template.home.events
   'click .add-google-oauth': (e) ->
     googleOauthOpen(e)
 
+  'click .add-google-oauth-bottom': (e) ->
+    mixpanel.track("clicked on login with gmail button on the bottom", { });
+
   'click .register': (e) ->
     registerOpen(e)
 
   'click .btn-standard-login': (e) ->
     manualLoginOpen(e)
+
+  'click #nav_down': (e) ->
+    mixpanel.track("clicked on explore more on home page", { });
 
 
 Template.login_dialog.rendered = ->
@@ -101,6 +107,11 @@ Template.login_dialog.rendered = ->
 Template.login_dialog.events
   'click .add-google-oauth': (e) ->
     googleOauthOpen(e)
+  'click .add-google-oauth-green': (e) ->
+    mixpanel.track("clicked on login with gmail big green button", { });
+
+  'click .add-google-oauth-small': (e) ->
+    mixpanel.track("clicked on login with gmail small button", { });
 
   'click .register': (e) ->
     registerOpen(e)
@@ -140,6 +151,12 @@ Template.manual_login_dialog.events
 Template.register_dialog.events
   'click .add-google-oauth': (e) ->
     googleOauthOpen(e)
+
+  'click .add-google-oauth-green': (e) ->
+    mixpanel.track("clicked on login with gmail big green button", { });
+
+  'click .add-google-oauth-small': (e) ->
+    mixpanel.track("clicked on login with gmail small button", { });
 
 
 Template.register_dialog.rendered = ->
@@ -182,7 +199,7 @@ Template.register_dialog.rendered = ->
 
         apprise("You have been succefully registered, please check your email for confirmation code.")
         $(".close").click()
-        mixpanel.track("new user", { });
+        mixpanel.track("new user without gmail", { });
         return
 
         # Meteor.loginWithPassword($(form).find("#email").val(), $(form).find("#password").val(), (err) ->
