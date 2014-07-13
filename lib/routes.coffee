@@ -37,7 +37,6 @@ Router.map ->
     path: "/home"
     onAfterAction: ->
       baseurl = Meteor.absoluteUrl("")
-
       SEO.set
         title: 'Welcome to Pollen'
         meta:

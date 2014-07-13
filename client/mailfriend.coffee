@@ -3,7 +3,6 @@ introPagesDone = (page, pageObject) ->
     if res
       introJs().start()
 
-
 Template.masterLayout.helpers
   picture: ->
     user = Meteor.user()
@@ -150,6 +149,11 @@ Template.home.rendered = ->
     # delete Session.keys['afterEmailVerified']
     apprise(Session.get('successMessage'))
     $('#manual-login-dialog').modal('show')
+
+  setTimeout ->
+    if Meteor.user()
+      Router.go "feature_select"
+  , 500
 
 Template.home.events
   'click .add-google-oauth': (e) ->
