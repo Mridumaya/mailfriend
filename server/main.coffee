@@ -33,7 +33,7 @@ Meteor.methods
 
 # Meteor.headly.config({
 #   facebook: (data) ->
-#     tags = '<meta property="og:image" content="http://jacint.meteor.com/images/logo.png"/>'
+#     tags = '<meta property="og:image" content="http://jacint.meteor.com/images/pollen_logo.png"/>'
 #     tags += '<meta property="og:title" content="Pollen"/>'
 #     tags += '<meta property="og:url" content="http://jacint.meteor.com"/>'
 #     tags += '<meta property="og:site_name" content="Pollen"/>'

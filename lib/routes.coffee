@@ -44,7 +44,7 @@ Router.map ->
           'description': 'Pollen - send mail to people who care'
           'keywords':    'pollen, email, friend'
         og:
-          'image':     baseurl + 'images/logo.png'
+          'image':     baseurl + 'images/pollen_logo.png'
           'title':     'Pollen'
           'url':       baseurl + 'home/'
           'site_name': 'Pollen'
@@ -65,7 +65,7 @@ Router.map ->
           'description': 'Pollen - send mail to people who care'
           'keywords':    'pollen, email, friend'
         og:
-          'image':     baseurl + 'images/logo.png'
+          'image':     baseurl + 'images/pollen_logo.png'
           'title':     'About Pollen'
           'url':       baseurl + 'about/'
           'site_name': 'Pollen'
@@ -86,7 +86,7 @@ Router.map ->
           'description': 'Pollen - send mail to people who care'
           'keywords':    'pollen, email, friend'
         og:
-          'image':     baseurl + 'images/logo.png'
+          'image':     baseurl + 'images/pollen_logo.png'
           'title':     'Pollen FAQ'
           'url':       baseurl + 'faq/'
           'site_name': 'Pollen'
@@ -238,7 +238,7 @@ Router.map ->
             'description': 'Get the word out for ' + sender_name + ' pollen campaign'
             'keywords':    'pollen, email, friend'
           og:
-            'image':     baseurl + 'images/logo.png'
+            'image':     baseurl + 'images/pollen_logo.png'
             'title':     'Get the word out for ' + sender_name + ' pollen campaign'
             'url':       baseurl + @params.user_id + '/' + @params.slug + '/'
             'site_name': 'Pollen'
@@ -251,7 +251,7 @@ Router.map ->
             'description': 'Get the word out for this pollen campaign'
             'keywords':    'pollen, email, friend'
           og:
-            'image':     baseurl + 'images/logo.png'
+            'image':     baseurl + 'images/pollen_logo.png'
             'title':     'Get the word out for this pollen campaign'
             'url':       baseurl + @params.user_id + '/' + @params.slug + '/'
             'site_name': 'Pollen'
