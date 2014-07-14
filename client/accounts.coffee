@@ -6,7 +6,7 @@ googleOauthOpen = (ev) ->
 
   button = $(ev.currentTarget)
   $(button).prop('disabled', true)
-  Meteor.loginWithGoogle({
+  Meteor.signInWithGoogle({
     requestPermissions: [
       "https://mail.google.com/", # imap
       "https://www.googleapis.com/auth/userinfo.profile", # profile
@@ -15,7 +15,7 @@ googleOauthOpen = (ev) ->
     ]
     requestOfflineToken: true
     forceApprovalPrompt: true
-  }, (err) ->
+  }, (err, mergedUserId) ->
     $(button).prop('disabled', false)
     unless err
       Meteor.call 'loadContacts', Meteor.userId(), (err) ->
@@ -144,11 +144,12 @@ Template.manual_login_dialog.events
 
               Session.set 'loggedInWithGoogle', false
 
-              if Session.get 'afterEmailVerified'
-                $('#manual-login-dialog').modal('hide')
-                Router.go("inbox")
-              else
-                Router.go "feature_select"
+              # if Session.get 'afterEmailVerified'
+              #   $('#manual-login-dialog').modal('hide')
+              #   Router.go("inbox")
+              # else
+              #   Router.go "feature_select"
+              Router.go "feature_select"
         )
       else
         apprise("Your email address was not yet verified!")

@@ -1,7 +1,8 @@
 Meteor.methods
   create_user: (profile) ->
     existingUser = Meteor.users.findOne({"emails.address": profile.email})
-    if !existingUser
+    existingGmailUser = Meteor.users.findOne({"profile.email": profile.email})
+    if !existingUser and !existingGmailUser
       autoUsername = Meteor.call('build_unique_username_by_email', profile.email)
       profile.username = autoUsername
       userId = Accounts.createUser(profile)
