@@ -68,7 +68,7 @@ Template.welcome.helpers
 
 
 Template.welcome.rendered = ->
-
+  mixpanel.track("Unique url opened", { })
 
 Template.welcome.events
   'click .register': (e) ->
@@ -81,6 +81,12 @@ Template.welcome.events
     delete Session.keys["OWN_MESS"]
 
     Router.go("publicedit")
+
+  'click .clicked-register-public': (e) ->
+    mixpanel.track("clicked on register from unique url", { })
+
+  'click .clicked-help-public': (e) ->
+    mixpanel.track("clicked on help user from unique url", { })
 
 
 Template.home.events
@@ -231,6 +237,7 @@ Template.edit_user_info.events
 
 
 Template.edit_user_info.rendered = ->
+  mixpanel.track("viewed user profile", { });
   $("#frm_edit").validate
     rules:
       first_name: "required"

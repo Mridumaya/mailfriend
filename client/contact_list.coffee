@@ -8,7 +8,7 @@ Template.contact_list.helpers
       _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
       _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
       _.extend(selector, {searchQ: Session.get('searchQ')})
-      
+
       contacts = Contacts.find(selector).fetch()
 
       button = $('a.search-tags')
@@ -49,7 +49,7 @@ Template.contact_list.helpers
       title: ""
       data: "checked"
       mRender:  ( data, type, row ) ->
-        row.checked ?= ""      
+        row.checked ?= ""
     },{
       title: "Name"
       data: "name"
@@ -59,7 +59,7 @@ Template.contact_list.helpers
       title: "Email"
       data: "email"
       mRender:  ( data, type, row ) ->
-        row.email ?= ""    
+        row.email ?= ""
     },{
       title: "Sent in last<br>90 Days"
       data: "sentMessages"
@@ -69,17 +69,17 @@ Template.contact_list.helpers
       title: "Recevied in last<br>90 Days"
       data: "receivedMessages"
       mRender:  ( data, type, row ) ->
-        row.receivedMessages ?= ""    
+        row.receivedMessages ?= ""
     },{
       title: "On contact<br>List"
       data: "isGContact"
       mRender:  ( data, type, row ) ->
-        row.isGContact ?= "" 
+        row.isGContact ?= ""
     },{
       title: 'Relevant<br>(<span class="relevantQ"></span>)'
       data: "isRelevant"
       mRender:  ( data, type, row ) ->
-        row.isRelevant ?= "" 
+        row.isRelevant ?= ""
     }]
 
   matched_selector: ->
@@ -111,7 +111,7 @@ Template.contact_list.helpers
         return priorDate < uidDate
       .length
     else
-      0    
+      0
 
   isGContact: ->
     @source is 'gcontact'
@@ -148,7 +148,7 @@ Template.contact_list.events
   'click button.selectAll': (e) ->
     selectAll = $(e.currentTarget)
     rows = $('table.dataTable:visible tbody tr')
-    
+
     $('.alert-contact').hide()
 
     if selectAll.hasClass('selected')
@@ -194,14 +194,15 @@ Template.contact_list.events
 
     if row.hasClass('info')
       row.find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
-      addRecipient(row)      
+      addRecipient(row)
     else
       row.find('td:nth-child(1)').html('')
-      removeRecipient(row)      
+      removeRecipient(row)
 
     $('.alert-contact').hide()
 
   'click .sendToTop15': (e) ->
+    mixpanel.track("clicked on select top 15", { })
     console.log 'sendToTop15'
     rows = $('table.dataTable:visible tbody tr')
     rows15 = $('table.dataTable:visible tbody tr').slice(0,15)
@@ -213,9 +214,10 @@ Template.contact_list.events
     rows15.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
     # add recipients
     rows15.each ->
-      addRecipient($(this))      
+      addRecipient($(this))
 
   'click .sendToTop30': (e) ->
+    mixpanel.track("clicked on select top 30", { })
     console.log 'sendToTop30'
     rows = $('table.dataTable:visible tbody tr')
     rows30 = $('table.dataTable:visible tbody tr').slice(0,30)
@@ -227,9 +229,10 @@ Template.contact_list.events
     rows30.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
     # add recipients
     rows30.each ->
-      addRecipient($(this))      
+      addRecipient($(this))
 
   'click .sendToAll': (e) ->
+    mixpanel.track("clicked on select all", { })
     console.log 'sendToAll'
     rows = $('table.dataTable:visible tbody tr')
 
@@ -240,9 +243,10 @@ Template.contact_list.events
     rows.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
     # add recipients
     rows.each ->
-      addRecipient($(this))      
+      addRecipient($(this))
 
   'click .add-all-relevant': (e) ->
+    mixpanel.track("clicked on select all relevant", { })
     console.log 'sendToAllRelevant'
     rows = $('table.dataTable:visible tbody tr')
     relevant = $('table.dataTable:visible tbody').find('i.relevant-contact').closest('tr')
@@ -257,6 +261,7 @@ Template.contact_list.events
       addRecipient($(this))
 
   'click .selectNone': (e) ->
+    mixpanel.track("clicked on select none", { });
     console.log 'selectNone'
     rows = $('table.dataTable tbody tr')
     # rows = $('table.dataTable:visible tbody tr')
@@ -275,9 +280,10 @@ Template.contact_list.events
       $("#searchTermModal").modal("hide")
 
       $('.search-tags').trigger('click')
-      
+
 
   'click .contact-list-to-confirm': (e) ->
+    mixpanel.track("searched, choose contacts and hit next", { })
     menuitemActive()
 
     subject = $("#subject").val()
@@ -305,6 +311,7 @@ Template.contact_list.events
     Router.go("confirm")
 
   'click .back-to-editing': (e) ->
+    mixpanel.track("clicked on back to editing campaign(scroll page up)", { })
     editor = $('#campaign-editor-section')
     if editor.length
       scroll = editor.offset().top
@@ -323,6 +330,12 @@ Template.contact_list.events
   'click .contact-tab': (e) ->
     $('.contact-tab').removeClass('tab-active')
     $(e.target).addClass('tab-active')
+
+  'click .contact-tab-matched': (e) ->
+    mixpanel.track("clicked on matched contacts tab", { })
+
+  'click .contact-tab-unmatched': (e) ->
+    mixpanel.track("clicked on unmatched contacts tab", { })
 
 
 @addRecipient = (row) ->

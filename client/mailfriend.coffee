@@ -272,7 +272,7 @@ Template.confirm.helpers
 
 Template.confirm.events
   'click .confirm-to-contact-list': (e) ->
-    mixpanel.track("click on cancel/back button", { })
+    mixpanel.track("clicked on back to editing campaign on final step", { })
     delete Session.keys['searchQ']
     delete Session.keys['prev_searchQ']
     delete Session.keys['contact_list']

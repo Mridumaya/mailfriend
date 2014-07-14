@@ -174,6 +174,7 @@ Template.new_campaign.helpers
 
 Template.new_campaign.events
   'click .reset-tags': (e) ->
+    mixpanel.track("clicked on reset in a campaign", { });
     $('#recipients').tagit('removeAll')
     $('#existing-recipients').text('')
 
@@ -186,6 +187,7 @@ Template.new_campaign.events
     refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
   'click .search-tags': (e) ->
+    mixpanel.track("clicked on search in a campaign", { });
     success = googleOauthOpen(e, true)
     if success
       button = $(e.currentTarget)
@@ -210,6 +212,7 @@ Template.new_campaign.events
         searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
           setTimeout ->
             searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
+              mixpanel.track("used search", { });
               console.log("show list")
               Session.set("searchQ", searchQuery)
               Session.set("prev_searchQ", searchQuery)
@@ -257,6 +260,7 @@ Template.new_campaign.events
                 # check for results, if there's none, display notification
                 results = button.data('results')
                 if results is 0
+                  mixpanel.track("no matched contacts after search", { })
                   button.data('destroyContactInt', 1)
 
                   # clear datatables
@@ -285,6 +289,7 @@ Template.new_campaign.events
     $('#campaign-tags').val(addedTags)
 
   'click .btn-save-campaign': (e) ->
+    mixpanel.track("clicked on save in a campaign", { });
     Session.set("OWN_MESS", $("#own_message").val())
     Session.set("MAIL_TITLE", $("#subject").val())
     SaveCampaign()
@@ -452,7 +457,7 @@ Template.list_campaign.events
       Router.go 'new_campaign'
 
   'click .btn-create-campaign-green': (e) ->
-    mixpanel.track("clicked on create new campaign green button", { });
+    mixpanel.track("clicked on create new campaign green button", { })
 
   'click .back-to-feature-select': (e) ->
     Router.go 'feature_select'
@@ -472,6 +477,7 @@ Template.list_campaign.events
     # $('.fb-share-button').attr('data-href', shareURL)
 
   'click #share-email': (e) ->
+    mixpanel.track("clicked on share campaign with email", { })
     e.preventDefault()
 
     $('#share-dialog button.close').trigger('click')
@@ -485,11 +491,13 @@ Template.list_campaign.events
 
 
   'click #share-facebook': (e) ->
+    mixpanel.track("clicked on share campaign with facebook", { })
     e.preventDefault()
     shareURL = $('#share-url').val()
     window.open('https://www.facebook.com/sharer/sharer.php?u=' + shareURL, 'facebook-share-dialog', 'width=626,height=436');
 
   'click #share-twitter': (e) ->
+    mixpanel.track("clicked on share campaign with twitter", { })
     e.preventDefault()
     shareURL = $('#share-url').val()
     window.open("http://twitter.com/share?text=" + encodeURIComponent("Help support my idea by sharing this message with your network. " + shareURL), 'twitter', "width=575, height=400");
