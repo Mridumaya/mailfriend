@@ -1179,6 +1179,11 @@ table td, table th {
         visibility: none;
     }
 }
+@media (max-width: 825px) {
+    .dataTables_paginate .paginate_button {
+      padding: 6px 10px;
+    }
+}
 @media (max-width: 820px) {
     .table_2 table th:nth-child(6) {
         display: none;
@@ -1205,6 +1210,18 @@ table td, table th {
         visibility: none;
     }
     .table_2 table td:nth-child(4) {
+        display: none;
+        visibility: none;
+    }
+    .dataTables_paginate .paginate_button {
+        padding: 6px 8px;
+    }
+}
+@media (max-width: 431px) {
+    .dataTables_paginate .paginate_button {
+        padding: 6px 6px;
+    }
+    .dataTables_paginate .first, .last, .previous, .next {
         display: none;
         visibility: none;
     }
