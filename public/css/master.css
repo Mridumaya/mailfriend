@@ -1821,6 +1821,10 @@ p.draft-to,
     padding: 10px;
 }
 
+p.draft-subject input#share-subject {
+    width: 100%;
+}
+
 .original-message {
     min-height: 200px;
     background-color: #DDDDDD;
