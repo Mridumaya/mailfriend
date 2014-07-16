@@ -65,3 +65,17 @@ Meteor.methods
     else
       Meteor.users.update({'_id':Meteor.userId()}, {$set : pageObject})
       true
+
+  setRedirectToShareCampaign: (email, campaign_id) ->
+    Meteor.users.update({ emails: { $elemMatch: { address: email } } }, {$set:{'redirectToShareCampaign':{'campaign_id':campaign_id, 'done':false}}})
+
+  redirectToShareCampaign: (userId) ->
+    user = Meteor.users.findOne({'_id':userId})
+    if user.redirectToShareCampaign isnt undefined
+      campaign = Campaigns.findOne({'_id': user.redirectToShareCampaign.campaign_id})
+      unless user.redirectToShareCampaign.done
+        Meteor.users.update({'_id':userId}, {$set:{'redirectToShareCampaign.done':true}})
+
+      return {'redirect':user.redirectToShareCampaign, 'campaign':campaign}        
+    else
+      return false

@@ -150,6 +150,9 @@ Template.home.rendered = ->
     apprise(Session.get('successMessage'))
     $('#manual-login-dialog').modal('show')
 
+  if Session.get 'sent_campaign_id'
+    Session.set 'sent_campaign_id', Session.get 'sent_campaign_id' 
+
   setTimeout ->
     if Meteor.user()
       Router.go "feature_select"

@@ -25,11 +25,11 @@ googleOauthOpen = (ev) ->
 
         $('#login-dialog').modal('hide')
         $('#register-dialog').modal('hide')
-        # if Session.get 'sent_campaign_id'
-        #   Router.go("inbox")
-        # else
-        #   Router.go "feature_select"
-        Router.go "feature_select"
+        if Session.get 'sent_campaign_id'
+          Session.set 'public', 'no'
+          Router.go "edit"
+        else
+          Router.go "feature_select"
   )
 
 
@@ -144,12 +144,23 @@ Template.manual_login_dialog.events
 
               Session.set 'loggedInWithGoogle', false
 
-              # if Session.get 'afterEmailVerified'
-              #   $('#manual-login-dialog').modal('hide')
-              #   Router.go("inbox")
-              # else
-              #   Router.go "feature_select"
-              Router.go "feature_select"
+              Meteor.call 'redirectToShareCampaign', Meteor.userId(), (err, res) ->
+                if res isnt false and res.redirect.done isnt true
+                  $('#manual-login-dialog').modal('hide')
+                  if res.campaign isnt undefined
+                    Session.set "MAIL_TITLE", res.campaign.subject
+                    Session.set "ORIG_MESS", res.campaign.body
+                    Session.set "slug", res.campaign.slug
+                    Session.set "senderId", res.campaign.user_id
+                    Session.set "searchQ", res.campaign.search_tags
+                    Session.set "campaign_id", res.redirect.campaign_id
+                    Session.set 'sent_campaign_id', res.redirect.campaign_id
+                    Session.set 'public', 'no'
+                    Router.go "edit"
+                  else
+                    Router.go "feature_select"
+                else
+                  Router.go "feature_select"
         )
       else
         apprise("Your email address was not yet verified!")
@@ -203,6 +214,11 @@ Template.register_dialog.rendered = ->
         if err?.reason == "Email already exist."
           apprise("Email already exists, try again.")
           return
+        if Session.get 'sent_campaign_id'
+          # console.log Session.get 'sent_campaign_id'
+          # console.log user
+          Meteor.call "setRedirectToShareCampaign", user.email, Session.get 'sent_campaign_id', (err, res) ->
+            return
 
         apprise("You have been succefully registered, please check your email for confirmation code.")
         $(".close").click()
