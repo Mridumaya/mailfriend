@@ -12,7 +12,7 @@ Template.public_contact_list.helpers
       _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
       _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
       _.extend(selector, {searchQ: Session.get('searchQ')})
-      
+
       contacts = Contacts.find(selector).fetch()
 
       button = $('a.search-tags')
@@ -53,7 +53,7 @@ Template.public_contact_list.helpers
       title: ""
       data: "checked"
       mRender:  ( data, type, row ) ->
-        row.checked ?= ""      
+        row.checked ?= ""
     },{
       title: "Name"
       data: "name"
@@ -63,7 +63,7 @@ Template.public_contact_list.helpers
       title: "Email"
       data: "email"
       mRender:  ( data, type, row ) ->
-        row.email ?= ""    
+        row.email ?= ""
     },{
       title: "Sent in last<br>90 Days"
       data: "sentMessages"
@@ -73,17 +73,17 @@ Template.public_contact_list.helpers
       title: "Recevied in last<br>90 Days"
       data: "receivedMessages"
       mRender:  ( data, type, row ) ->
-        row.receivedMessages ?= ""    
+        row.receivedMessages ?= ""
     },{
       title: "On contact<br>List"
       data: "isGContact"
       mRender:  ( data, type, row ) ->
-        row.isGContact ?= "" 
+        row.isGContact ?= ""
     },{
       title: 'Relevant<br>(<span class="relevantQ"></span>)'
       data: "isRelevant"
       mRender:  ( data, type, row ) ->
-        row.isRelevant ?= "" 
+        row.isRelevant ?= ""
     }]
 
   matched_selector: ->
@@ -115,7 +115,7 @@ Template.public_contact_list.helpers
         return priorDate < uidDate
       .length
     else
-      0    
+      0
 
   isGContact: ->
     @source is 'gcontact'
@@ -152,7 +152,7 @@ Template.public_contact_list.events
   'click button.selectAll': (e) ->
     selectAll = $(e.currentTarget)
     rows = $('table.dataTable:visible tbody tr')
-    
+
     $('.alert-contact').hide()
 
     if selectAll.hasClass('selected')
@@ -198,10 +198,10 @@ Template.public_contact_list.events
 
     if row.hasClass('info')
       row.find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
-      addRecipient(row)      
+      addRecipient(row)
     else
       row.find('td:nth-child(1)').html('')
-      removeRecipient(row)      
+      removeRecipient(row)
 
     $('.alert-contact').hide()
 
@@ -217,7 +217,7 @@ Template.public_contact_list.events
     rows15.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
     # add recipients
     rows15.each ->
-      addRecipient($(this))      
+      addRecipient($(this))
 
   'click .sendToTop30': (e) ->
     console.log 'sendToTop30'
@@ -231,7 +231,7 @@ Template.public_contact_list.events
     rows30.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
     # add recipients
     rows30.each ->
-      addRecipient($(this))      
+      addRecipient($(this))
 
   'click .sendToAll': (e) ->
     console.log 'sendToAll'
@@ -244,7 +244,7 @@ Template.public_contact_list.events
     rows.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
     # add recipients
     rows.each ->
-      addRecipient($(this))      
+      addRecipient($(this))
 
   'click .add-all-relevant': (e) ->
     console.log 'sendToAllRelevant'
@@ -356,7 +356,7 @@ Template.public_contact_list.events
   'click .search-tags': (e) ->
     button = $(e.currentTarget)
     button.data('pressed', 1)
-    
+
     searchQuery = Session.get('searchQ')
 
     # console.log searchQuery
@@ -366,7 +366,7 @@ Template.public_contact_list.events
     # do the search if there's a search term and if the current search term is not equal to the previous one
     if searchQuery.length
       mixpanel.track("search tag", { });
-      
+
       # show the loaders
       searchLoader('show');
       $('div.loading-contacts').removeClass('hidden')
@@ -381,72 +381,75 @@ Template.public_contact_list.events
 
       # SearchStatus.insert {session_id: Meteor.default_connection._lastSessionId}
       searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
-        console.log("show list")
-        Session.set("searchQ", searchQuery)
-        Session.set("prev_searchQ", searchQuery)
-        Session.set("contact_list", "yes")
+        setTimeout ->
+          searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
+            console.log("show list")
+            Session.set("searchQ", searchQuery)
+            Session.set("prev_searchQ", searchQuery)
+            Session.set("contact_list", "yes")
 
-        button.data('destroyContactInt', 0)
+            button.data('destroyContactInt', 0)
 
-        # check for results in every 0.75 seconds
-        contactInt = setInterval(->
-          # add tags to datatables header
-          $("span.relevantQ").text(searchQuery)
+            # check for results in every 0.75 seconds
+            contactInt = setInterval(->
+              # add tags to datatables header
+              $("span.relevantQ").text(searchQuery)
 
-          # if there are matches add them to datatables
-          matches = parseInt($('#tmp_matched_contacts tr').length)
-          if matches
-            # add existing recipients to recipienys list
-            recipients_str = $('#existing-recipients').text()
+              # if there are matches add them to datatables
+              matches = parseInt($('#tmp_matched_contacts tr').length)
+              if matches
+                # add existing recipients to recipienys list
+                recipients_str = $('#existing-recipients').text()
 
-            if recipients_str.length
-              recipients = recipients_str.split(',')
+                if recipients_str.length
+                  recipients = recipients_str.split(',')
 
-              _.each(recipients, (email) ->
-                $("#recipients").tagit("createTag", email)
+                  _.each(recipients, (email) ->
+                    $("#recipients").tagit("createTag", email)
 
-                row = $('#tmp_matched_contacts tr td:contains(' + email + ')').parent()
-                if row.length isnt 0
-                  row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
-                
-                else
-                  row = $('#tmp_unmatched_contacts tr td:contains(' + email + ')').parent()
-                  if row.length isnt 0
-                    row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
-              )
+                    row = $('#tmp_matched_contacts tr td:contains(' + email + ')').parent()
+                    if row.length isnt 0
+                      row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
 
-            setTimeout ->
-              # populate datatables
-              refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
-              refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+                    else
+                      row = $('#tmp_unmatched_contacts tr td:contains(' + email + ')').parent()
+                      if row.length isnt 0
+                        row.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+                  )
 
-              button.data('pressed', 0)
-            , 2000
+                setTimeout ->
+                  # populate datatables
+                  refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+                  refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
-            button.data('destroyContactInt', 1)
+                  button.data('pressed', 0)
+                , 100
 
-          # check for results, if there's none, display notification
-          results = button.data('results')
-          if results is 0
-            button.data('destroyContactInt', 1)
+                button.data('destroyContactInt', 1)
 
-            # clear datatables
-            @refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
-            @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+              # check for results, if there's none, display notification
+              results = button.data('results')
+              if results is 0
+                button.data('destroyContactInt', 1)
 
-            # hide loaders
-            searchLoader('hide');
-            $('div.loading-contacts').addClass('hidden')
+                # clear datatables
+                @refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+                @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
-            # show the no results warning
-            $('div.no-results').removeClass('hidden')
+                # hide loaders
+                searchLoader('hide');
+                $('div.loading-contacts').addClass('hidden')
 
-          # clear interval
-          destroyContactInt = button.data('destroyContactInt')
-          if destroyContactInt is 1
-            clearInterval contactInt
-        
-        , 750)
+                # show the no results warning
+                $('div.no-results').removeClass('hidden')
+
+              # clear interval
+              destroyContactInt = button.data('destroyContactInt')
+              if destroyContactInt is 1
+                clearInterval contactInt
+
+            , 750)
+        , 2500
 
 @addRecipient = (row) ->
   name = row.find('td:nth-child(2)').text()
@@ -485,9 +488,10 @@ Template.public_contact_list.rendered = ->
   delete Session.keys['contact_list']
 
   setTimeout ->
-    $('.edit-search-term').trigger('click')
+    # $('.edit-search-term').trigger('click')
+    $('.search-tags').trigger 'click'
     console.log 'click'
-  , 500
+  , 2000
 
   # set some custom stuff in the datatables layout
   $('div.dataTables_filter input').attr('placeholder', "Sort By Pople l've:").after('<button type="submit"><img src="/images/search_button.png" alt="Search"></button>')
@@ -629,7 +633,7 @@ clickSendMessages = (toEmails=[]) ->
 #     clearAllSelection()
 #     oTable = $('#matched-contacts').dataTable()
 #     list = oTable.fnGetNodes()
-#     count = 
+#     count =
 #     i = 0
 #     while i < list.length
 #       $(list[i]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
@@ -694,7 +698,7 @@ clickSendMessages = (toEmails=[]) ->
 #     clearAllSelection()
 #     oTable = $('#matched-contacts').dataTable()
 #     list = oTable.fnGetNodes()
-#     count = 
+#     count =
 #     i = 0
 #     while i < 15
 #       $(list[i]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
@@ -707,7 +711,7 @@ clickSendMessages = (toEmails=[]) ->
 #     clearAllSelection()
 #     oTable = $('#matched-contacts').dataTable()
 #     list = oTable.fnGetNodes()
-#     count = 
+#     count =
 #     i = 0
 #     while i < 30
 #       $(list[i]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
@@ -718,7 +722,7 @@ clickSendMessages = (toEmails=[]) ->
 #     console.log 'sendToAll'
 #     oTable = $('#unmatched-contacts').dataTable()
 #     list = oTable.fnGetNodes()
-#     count = 
+#     count =
 #     i = 0
 #     while i < list.length
 #       $(list[i]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"
@@ -727,7 +731,7 @@ clickSendMessages = (toEmails=[]) ->
 
 #     oTable = $('#matched-contacts').dataTable()
 #     list = oTable.fnGetNodes()
-#     count = 
+#     count =
 #     i = 0
 #     while i < list.length
 #       $(list[i]).addClass("info").find(".icon i").addClass "glyphicon glyphicon-ok"

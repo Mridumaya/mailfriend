@@ -9,6 +9,13 @@ Template.public_search_contacts.rendered = ->
   _.each(publicTags || [],(item) ->
     $("#public-tags").tagit("createTag", item)
   )
+  setTimeout ->
+    searchQuery = $("#public-tags").tagit("assignedTags").join(' ')
+
+    if searchQuery
+      searchContacts searchQuery, Meteor.default_connection._lastSessionId, ->
+        console.log 'search initiated'
+  , 1000
 
 Template.public_search_contacts.helpers
   searchQ: ->
@@ -20,7 +27,7 @@ Template.public_search_contacts.events
     e.preventDefault()
 
     searchQuery = $("#public-tags").tagit("assignedTags").join(' ')
-    
+
     if searchQuery
       $(e.target).prop('disabled', true)
 
@@ -30,7 +37,10 @@ Template.public_search_contacts.events
       if is_public is 'yes'
         Router.go('publiccontactlist')
       else
-        Router.go('contactlist')
+        Meteor.call 'searchContacts', searchQuery, Meteor.default_connection._lastSessionId, (err) ->
+          setTimeout ->
+            Router.go('contactlist')
+          , 2000
     else
       apprise('Please add at least one search term!')
 
@@ -48,14 +58,14 @@ clearAllSelection = () ->
   SelectedEmailsHelper.unselectAllEmails()
   oTable = $('#matched-contacts').dataTable()
   list = oTable.fnGetNodes()
-  count = 
+  count =
   i = 0
   while i < list.length
     $(list[i++]).removeClass("info").find(".icon i").removeClass "glyphicon glyphicon-ok"
 
   oTable = $('#unmatched-contacts').dataTable()
   list = oTable.fnGetNodes()
-  count = 
+  count =
   i = 0
   while i < list.length
     $(list[i++]).removeClass("info").find(".icon i").removeClass "glyphicon glyphicon-ok"
