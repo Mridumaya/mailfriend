@@ -185,6 +185,14 @@ Template.contact_list.events
     loadAllGmails(isLoadAll)
 
 
+  'click #manualAddContact': (e) ->
+    e.preventDefault()
+    apprise 'Enter an email address', {'input':true}, (email) ->
+      regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      if email.match regex
+        $("#recipients").tagit "createTag", email
+      else
+        apprise 'Email address not valid'
 
   'click table.dataTable tbody tr': (e) ->
     row = $(e.currentTarget)
@@ -289,6 +297,7 @@ Template.contact_list.events
     subject = $("#subject").val()
     message = $("#own_message").val()
     recipients = $('table.dataTable tbody tr.info')
+    recipientsTagit = $("#recipients")
 
     if subject.length is 0
       apprise('Please enter the subject for your campaign email!')
@@ -298,7 +307,7 @@ Template.contact_list.events
       apprise('Please enter your message!')
       return false
 
-    if recipients.length is 0
+    if recipients.length is 0 and recipientsTagit.length is 0
       apprise('Please select recipients for your campaign email!')
       return false
 
@@ -420,6 +429,9 @@ clickSendMessages = (toEmails=[]) ->
   if toEmails.length
     emails = toEmails
   else
-    $('table.dataTable tbody tr.info').each -> emails.push $(this).find('td:nth-child(3)').text()
+    # $('table.dataTable tbody tr.info').each -> emails.push $(this).find('td:nth-child(3)').text()
+    recipientsTagit = $("#recipients")
+    if recipientsTagit.length
+      emails = recipientsTagit.tagit("assignedTags")
 
   Session.set("CONF_DATA", emails)
