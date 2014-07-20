@@ -15,7 +15,8 @@
       "jquery-datatables": {},
       "ms-seo": {},
       "accounts-merge": {},
-      "urlify2": {}
+      "urlify2": {},
+      "houston": {}
     },
     "packages": {
       "google-contacts": {
@@ -78,6 +79,11 @@
         "tag": "v0.2.2",
         "commit": "5d33ec1eaa1f815a56a0b70c0c9eddc4aed4c33e"
       },
+      "houston": {
+        "git": "https://github.com/gterrono/houston.git",
+        "tag": "v1.0.6",
+        "commit": "49765acf835385de6de6160b0c86514d5af09395"
+      },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
         "tag": "v0.2.2",
@@ -87,6 +93,16 @@
         "git": "https://github.com/LumaPictures/meteor-luma-component",
         "tag": "v1.0.5",
         "commit": "9d567068048e9ca82699b096e78c3f7ec76c0fa4"
+      },
+      "paginated-subscription": {
+        "git": "https://github.com/tmeasday/meteor-paginated-subscription.git",
+        "tag": "v0.2.2",
+        "commit": "2133a2163575f569f90253f81314f21b2bf08d20"
+      },
+      "spin": {
+        "git": "https://github.com/SachaG/meteor-spin.git",
+        "tag": "v0.2.2",
+        "commit": "3f655f0016228e4195acc784c45d3e3a247dc39f"
       }
     }
   }
