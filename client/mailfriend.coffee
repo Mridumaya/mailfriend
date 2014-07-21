@@ -151,7 +151,7 @@ Template.home.rendered = ->
     $('#manual-login-dialog').modal('show')
 
   if Session.get 'sent_campaign_id'
-    Session.set 'sent_campaign_id', Session.get 'sent_campaign_id' 
+    Session.set 'sent_campaign_id', Session.get 'sent_campaign_id'
 
   setTimeout ->
     if Meteor.user()
@@ -177,6 +177,8 @@ Template.home.events
       console.log err
       $(button).prop('disabled', false)
       unless err
+        Meteor.call 'updateLastLogin', (err) ->
+          false
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log 'Calling callback function'
           console.log err if err

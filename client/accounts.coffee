@@ -18,6 +18,8 @@ googleOauthOpen = (ev) ->
   }, (err, mergedUserId) ->
     $(button).prop('disabled', false)
     unless err
+      Meteor.call 'updateLastLogin', (err) ->
+        false
       Meteor.call 'loadContacts', Meteor.userId(), (err) ->
         console.log err if err
 
@@ -139,6 +141,8 @@ Template.manual_login_dialog.events
             return
           unless err
             mixpanel.track("logs in with password", { });
+            Meteor.call 'updateLastLogin', (err) ->
+              false
             Meteor.call 'loadContacts', Meteor.userId(), (err) ->
               console.log err if err
 

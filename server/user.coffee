@@ -57,6 +57,9 @@ Meteor.methods
   setUserToLoggedInWithGoogle: (userId) ->
     Meteor.users.update({'_id':Meteor.userId()}, {$set : {'loggedInWithGoogle' : true}})
 
+  updateLastLogin: () ->
+    Meteor.users.update({'_id':Meteor.userId()}, {$set : {'lastLogin' : new Date()}})
+
   introPagesDone: (page, pageObject) ->
     user = Meteor.users.findOne({'_id':Meteor.userId()})
 
@@ -76,6 +79,6 @@ Meteor.methods
       unless user.redirectToShareCampaign.done
         Meteor.users.update({'_id':userId}, {$set:{'redirectToShareCampaign.done':true}})
 
-      return {'redirect':user.redirectToShareCampaign, 'campaign':campaign}        
+      return {'redirect':user.redirectToShareCampaign, 'campaign':campaign}
     else
       return false

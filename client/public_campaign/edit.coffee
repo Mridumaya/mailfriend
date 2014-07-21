@@ -77,20 +77,20 @@ Template.public_edit.events
     mixpanel.track("logs in", { });
 
     console.log new Date()
-    
+
     button = $(e.currentTarget)
     $(button).prop('disabled', true)
-    
+
     # if user is already logged in
     if !!Meteor.user()
         Meteor.subscribe 'contacts', Meteor.userId(), ->
           console.log 'SUBSCRIBED_CONTACTS: ', Contacts.find({}).count(), new Date()
-          
+
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log err if err
           #Session.set "ORIG_MESS", $("#original_message").val() || $("#original_message").html()
-          Session.set "OWN_MESS", $("#own_message").val() 
-          Session.set "MAIL_TITLE", $("#subject").val() 
+          Session.set "OWN_MESS", $("#own_message").val()
+          Session.set "MAIL_TITLE", $("#subject").val()
           # Session.set "STEP", "public_searchq"
 
           is_public = Session.get('public')
@@ -115,7 +115,8 @@ Template.public_edit.events
         unless err
           Meteor.subscribe 'contacts', Meteor.userId(), ->
             console.log 'SUBSCRIBED_CONTACTS: ', Contacts.find({}).count(), new Date()
-            
+          Meteor.call 'updateLastLogin', (err) ->
+            false  
           Meteor.call 'loadContacts', Meteor.userId(), (err) ->
             console.log err if err
             #Session.set "ORIG_MESS", $("#original_message").val() || $("#original_message").html()

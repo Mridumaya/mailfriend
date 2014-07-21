@@ -31,7 +31,8 @@ googleOauthOpen = (ev, search) ->
       unless err
         Meteor.call 'setUserToLoggedInWithGoogle', Meteor.userId(), (err) ->
           false
-
+        Meteor.call 'updateLastLogin', (err) ->
+          false
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log err if err
           delete Session.keys['searchQ']
