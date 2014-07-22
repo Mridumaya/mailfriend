@@ -35,3 +35,5 @@ Meteor.startup ->
   Session.set "OWN_MESS", ""
   GoogleAccountChecker.checkGoogleApi()
   SelectedEmails.remove()
+
+  Houston.menu {'type':'template', 'use':'_houston_user_view', 'title':'User view'}
