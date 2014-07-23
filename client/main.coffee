@@ -36,4 +36,4 @@ Meteor.startup ->
   GoogleAccountChecker.checkGoogleApi()
   SelectedEmails.remove()
 
-  Houston.menu {'type':'template', 'use':'_houston_user_view', 'title':'User view'}
+  Houston.menu {'type':'template', 'use':'user_view', 'title':'User view'}

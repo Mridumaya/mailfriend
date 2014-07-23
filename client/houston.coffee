@@ -1,3 +1,26 @@
+Houston._subscribe 'collections'
+
+setup_collection = (collection_name, document_id) ->
+  Houston._page_length = 20
+  subscription_name = Houston._houstonize collection_name
+  collection = Houston._get_collection(collection_name)
+  filter = if document_id
+    # Sometimes you can lookup with _id being a string, sometimes not
+    # When id can be wrapped in an ObjectID, it should
+    # It can't if it isn't 12 bytes (24 characters)
+    if typeof(document_id) == 'string' and document_id.length == 24
+      document_id = new Meteor.Collection.ObjectID(document_id)
+    {_id: document_id}
+  else
+    {}
+  Houston._paginated_subscription =
+    Meteor.subscribeWithPagination subscription_name, {}, filter,
+      Houston._page_length
+  Houston._session('collection_name', collection_name)
+  return [collection, Houston._paginated_subscription]
+
+setup_collection 'users'
+
 get_sort_by = ->
   sort_by = {}
   sort_by[Houston._session('sort_key')] = Houston._session('sort_order')
@@ -22,33 +45,31 @@ get_filter_query = ->
 
 resubscribe = ->
   # Stop the old subscription and resubscribe with the new filter/sort
-  # subscription_name = "_houston_#{Houston._session('collection_name')}"
-  subscription_name = "_houston_users"
+  subscription_name = "_houston_#{Houston._session('collection_name')}"
   Houston._paginated_subscription.stop()
   Houston._paginated_subscription =
     Meteor.subscribeWithPagination subscription_name,
       get_sort_by(), get_filter_query(),
       Houston._page_length
 
-collection_info = -> Houston._collections.collections.findOne(name: 'users')
+collection_info = -> Houston._collections.collections.findOne(name: Houston._session('collection_name'))
 
 collection_count = -> collection_info()?.count
 
-Template._houston_user_view.helpers
+Template.user_view.helpers
   custom_selector_error_class: -> if Houston._session("custom_selector_error") then "error" else ""
   custom_selector_error: -> Houston._session("custom_selector_error")
   field_filter_disabled: -> if Houston._session("custom_selector") then "disabled" else ""
   headers: -> [{'name':'_id'}, {'name':'profile.name'}, {'name':'profile.email'}]
   nonid_headers: -> get_collection_view_fields()[1..]
-  col_name: -> 'users'
+  col_name: -> Houston._session('collection_name')
   document_id: -> @_id + ""
   num_of_records: ->
     collection_count() or "no"
   pluralize: -> 's' unless collection_count() == 1
   rows: ->
-    collection = 'users'
+    collection = Houston._session('collection_name')
     documents = get_current_collection()?.find(get_filter_query(), {sort: get_sort_by()}).fetch()
-    console.log documents
     _.map documents, (d) ->
       d.collection = collection
       d._id = d._id._str or d._id
@@ -67,17 +88,17 @@ Template._houston_user_view.helpers
     else
       ''
 
-Template._houston_user_view.rendered = ->
+Template.user_view.rendered = ->
   $win = $(window)
   $win.scroll ->
     if $win.scrollTop() + 300 > $(document).height() - $win.height() and
       Houston._paginated_subscription.limit() < collection_count()
         Houston._paginated_subscription.loadNextPage()
 
-get_current_collection = -> Houston._get_collection('users')
+get_current_collection = -> Houston._get_collection(Houston._session('collection_name'))
 get_collection_view_fields = -> collection_info()?.fields or []
 
-Template._houston_user_view.events
+Template.user_view.events
   "click a.houston-sort": (e) ->
       e.preventDefault()
       sort_key = this.name
@@ -103,7 +124,7 @@ Template._houston_user_view.events
         get_current_collection())
       update_dict = {}
       update_dict[field_name] = updated_val
-      Houston._call("users_update",
+      Houston._call("#{Houston._session('collection_name')}_update",
         id, $set: update_dict)
 
   'keyup .houston-column-filter': (e) ->
@@ -146,7 +167,7 @@ Template._houston_user_view.events
     e.preventDefault()
     id = $(e.currentTarget).data('id')
     if confirm("Are you sure you want to delete the document with _id #{id}?")
-      Houston._call("users_delete", id)
+      Houston._call("#{Houston._session('collection_name')}_delete", id)
 
   'submit form.houston-filter-form': (e) ->
     e.preventDefault()
