@@ -81,8 +81,8 @@
       },
       "houston": {
         "git": "https://github.com/gterrono/houston.git",
-        "tag": "v1.0.6",
-        "commit": "49765acf835385de6de6160b0c86514d5af09395"
+        "tag": "v1.0.7",
+        "commit": "a27e9e42d03764f09a6681a98945787fe1f6303d"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
@@ -101,8 +101,8 @@
       },
       "spin": {
         "git": "https://github.com/SachaG/meteor-spin.git",
-        "tag": "v0.2.2",
-        "commit": "3f655f0016228e4195acc784c45d3e3a247dc39f"
+        "tag": "v2.0.3",
+        "commit": "23c1145472a710d5c93fa4beaca4e576caeb2f24"
       }
     }
   }

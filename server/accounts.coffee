@@ -32,8 +32,10 @@ Accounts.onCreateUser( (options,user)->
     user.customVerificationCode = Random.hexString(20).toLowerCase()
     user.introPagesDone = {'feature_select': false, 'new_campaign_first': false, 'new_campaign_second': false, 'campaign_send': false, 'share_campaign': false, 'list_campaign': false, 'inbox': false}
     console.log "accounts.coffee: "
-    #console.log user
-    console.log options
+    # console.log user
+    # console.log options
     user.profile = options.profile
+    user.profile.email = user.emails[0].address
+    # console.log user
     user
 )

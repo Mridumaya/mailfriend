@@ -1,7 +1,13 @@
 Meteor.startup ->
   GlobalConfiguration.init()
   Houston.add_collection Meteor.users
-  Houston.add_collection Houston._admins
+  # Houston.add_collection Campaigns
+  Houston.hide_collection Houston._admins
+  Houston.hide_collection Contacts
+  Houston.hide_collection Sharings
+  Houston.hide_collection Messages
+  # Houston.hide_collection Campaigns
+  Houston.hide_collection SearchStatus
 
 
 Meteor.methods

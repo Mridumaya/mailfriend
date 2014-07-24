@@ -1,3 +1,5 @@
+Houston._subscribe = (name) -> Meteor.subscribe Houston._houstonize name
+
 Houston._subscribe 'collections'
 
 setup_collection = (collection_name, document_id) ->
@@ -19,6 +21,7 @@ setup_collection = (collection_name, document_id) ->
   Houston._session('collection_name', collection_name)
   return [collection, Houston._paginated_subscription]
 
+setup_collection 'campaigns'
 setup_collection 'users'
 
 get_sort_by = ->
@@ -60,7 +63,7 @@ Template.user_view.helpers
   custom_selector_error_class: -> if Houston._session("custom_selector_error") then "error" else ""
   custom_selector_error: -> Houston._session("custom_selector_error")
   field_filter_disabled: -> if Houston._session("custom_selector") then "disabled" else ""
-  headers: -> [{'name':'_id'}, {'name':'profile.name'}, {'name':'profile.email'}]
+  headers: -> [{'name':'_id'}, {'name':'profile.name'}, {'name':'profile.email'}, {'name':'lastLogin'}]
   nonid_headers: -> get_collection_view_fields()[1..]
   col_name: -> Houston._session('collection_name')
   document_id: -> @_id + ""
@@ -73,12 +76,12 @@ Template.user_view.helpers
     _.map documents, (d) ->
       d.collection = collection
       d._id = d._id._str or d._id
-      d.campaignsCount = Campaigns.find({'user_id':d._id}).count()
-      d.campaignsSent = Campaigns.find({'user_id':d._id,'sent':'yes'}).count()
+      d.campaignsCount = get_campaigns_collection()?.find({'user_id':d._id}).count()
+      d.campaignsSent = get_campaigns_collection()?.find({'user_id':d._id,'sent':'yes'}).count()
       return d
   values_in_order: ->
     # fields_in_order = get_collection_view_fields()
-    fields_in_order = [{'name':'_id'}, {'name':'profile.name'}, {'name':'profile.email'}]
+    fields_in_order = [{'name':'_id'}, {'name':'profile.name'}, {'name':'profile.email'}, {'name':'lastLogin'}]
     names_in_order = _.clone fields_in_order
     values = (Houston._nested_field_lookup(@, field.name) for field in fields_in_order[1..]) # skip _id
     ({field_value, field_name} for [field_value, {name:field_name}] in _.zip values, names_in_order[1..])
@@ -97,6 +100,7 @@ Template.user_view.rendered = ->
 
 get_current_collection = -> Houston._get_collection(Houston._session('collection_name'))
 get_collection_view_fields = -> collection_info()?.fields or []
+get_campaigns_collection = -> Houston._get_collection('campaigns')
 
 Template.user_view.events
   "click a.houston-sort": (e) ->
