@@ -1,5 +1,6 @@
 <template name="user_view">
     <div class="houston">
+        {{#if admin_user_exists}}
         {{#if loggingIn}}
         {{> spinner}}
         {{else}}
@@ -35,6 +36,7 @@
                 </div>
           </div>
         </div>
+        {{/if}}
         {{/if}}
     </div>
 </template>

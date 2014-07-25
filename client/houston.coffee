@@ -1,3 +1,4 @@
+admin_user_exists = () -> Houston._admins.find().count() > 0
 Houston._subscribe = (name) -> Meteor.subscribe Houston._houstonize name
 
 Houston._subscribe 'collections'
@@ -21,7 +22,7 @@ setup_collection = (collection_name, document_id) ->
   Houston._session('collection_name', collection_name)
   return [collection, Houston._paginated_subscription]
 
-setup_collection 'campaigns'
+# setup_collection 'admincampaigns'
 setup_collection 'users'
 
 get_sort_by = ->
@@ -60,6 +61,7 @@ collection_info = -> Houston._collections.collections.findOne(name: Houston._ses
 collection_count = -> collection_info()?.count
 
 Template.user_view.helpers
+  admin_user_exists: -> admin_user_exists()
   custom_selector_error_class: -> if Houston._session("custom_selector_error") then "error" else ""
   custom_selector_error: -> Houston._session("custom_selector_error")
   field_filter_disabled: -> if Houston._session("custom_selector") then "disabled" else ""
@@ -100,7 +102,9 @@ Template.user_view.rendered = ->
 
 get_current_collection = -> Houston._get_collection(Houston._session('collection_name'))
 get_collection_view_fields = -> collection_info()?.fields or []
-get_campaigns_collection = -> Houston._get_collection('campaigns')
+get_campaigns_collection = ->
+  Meteor.subscribe 'allcampaigns'
+  Houston._get_collection('campaigns')
 
 Template.user_view.events
   "click a.houston-sort": (e) ->
