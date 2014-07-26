@@ -22,7 +22,6 @@ setup_collection = (collection_name, document_id) ->
   Houston._session('collection_name', collection_name)
   return [collection, Houston._paginated_subscription]
 
-# setup_collection 'admincampaigns'
 setup_collection 'users'
 
 get_sort_by = ->

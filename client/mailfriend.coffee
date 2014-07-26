@@ -290,6 +290,7 @@ Template.confirm.events
     subject = Session.get "MAIL_TITLE"
     body = Session.get("OWN_MESS")
     body = body.replace(/style="color:rgb\(150, 150, 150\)"/g, '')
+    body = body.replace(/#/g, '');
     body = body + '<br><br>Support this idea by sending it to people who care by clicking on this link:<br>' + slug
     to = Session.get "CONF_DATA"
 
@@ -405,6 +406,7 @@ Template.share_via_email.events
 
     subject = $('#share-subject').val()
     body = $('#share-message').val()
+    body = body.replace(/#/g, '');
     to = $('#recipients-tagit').tagit("assignedTags")
 
     # console.log subject, body, to
