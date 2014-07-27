@@ -346,9 +346,10 @@ Template.confirm.events
 
         Meteor.call 'markCampaignSent', Session.get("campaign_id"), (e, campaign_id) ->
           console.log e if e
-          $.gritter.add
-            title: "Email sent"
-            text: "Your campaign email was successfully sent!"
+          # $.gritter.add
+          #   title: "Email sent"
+          #   text: "Your campaign email was successfully sent!"
+          apprise "Your campaign email was successfully sent!"
 
         mixpanel.track("send email", { });
 
