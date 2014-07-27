@@ -1,7 +1,7 @@
 splitNameAndEmail = (nameAndEmail) ->
   matchResult = nameAndEmail.match(/<(.+)>/)
   email = if matchResult
-     matchResult[1] 
+     matchResult[1]
   else
     nameAndEmail
   name = nameAndEmail.match(/(.+)</)?[1].trim() if matchResult
@@ -116,7 +116,8 @@ fetchMails = (imapServer, user, session_id, box, isSentBox, searchQ = '') ->
 
   if searchQ
     console.log "[SyncMail] 3. search Q: ", searchQ
-    imapServer.search [['!DRAFT'],['BODY', searchQ]], (err, results) ->
+    orSearchQ = searchQ.replace /\ /g, ' OR '
+    imapServer.search [['X-GM-RAW', "-in:draft (#{orSearchQ})"]], (err, results) ->
       if err
         console.log('[LoadGmail]: Open InBox error', err)
         closeServer imapServer, session_id
@@ -147,7 +148,7 @@ fetchAllMails = (imapServer, user, session_id, box, range, isSentBox, searchQ) -
       stream.once 'end', ->
         contact = Imap.parseHeader(buffer)
 
-    msg.once 'attributes', (attrs) -> 
+    msg.once 'attributes', (attrs) ->
       contact.uid = attrs.uid
       contact.date = attrs.date
     msg.once 'end', ->
@@ -172,7 +173,7 @@ fetchAllMails = (imapServer, user, session_id, box, range, isSentBox, searchQ) -
       if searchQ
         closeServer imapServer, session_id
       else
-        syncSentBox(imapServer, user, session_id) 
+        syncSentBox(imapServer, user, session_id)
 
 
 
@@ -187,9 +188,9 @@ syncInbox = (imapServer, user, session_id, searchQ = '') ->
     fetchMails(imapServer, user, session_id, box, false, searchQ)
 
 syncSentBox = (imapServer, user, session_id) ->
-  imapServer.getBoxes (err, boxes) -> 
+  imapServer.getBoxes (err, boxes) ->
     boxname = ''
-    _.each boxes['[Gmail]']?.children, (v, k) -> 
+    _.each boxes['[Gmail]']?.children, (v, k) ->
       if _.contains v?.attribs, '\\Sent'
         boxname = '[Gmail]' +  v.delimiter + k
     if boxname
@@ -239,14 +240,14 @@ syncSentBox = (imapServer, user, session_id) ->
       imapServer.once 'ready', ->
         console.log "[SyncMail-(#{user.services.google.email})] 2. connected imap ", searchQ
         syncInbox(imapServer, user, session_id, searchQ)
-      imapServer.once 'end', -> 
+      imapServer.once 'end', ->
         console.log "[SyncMail-(#{user.services.google.email})] imapServer end!!\n\n"
         Fiber = Npm.require("fibers")
         Fiber ->
           console.log 'Removing Session id from search status'
           SearchStatus.remove {session_id: session_id}
         .run()
-      imapServer.once 'error', (err) -> 
+      imapServer.once 'error', (err) ->
         console.log "[SyncMail-(#{user.services.google.email})] imapServer error: ", err
         Fiber = Npm.require("fibers")
         Fiber ->
