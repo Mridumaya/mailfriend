@@ -295,7 +295,7 @@ Template.confirm.events
     to = Session.get "CONF_DATA"
 
     $('.draft-send').prop('disabled', true)
-
+    sendingSpinner 'show'
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
       campaign_id = Session.get("campaign_id")
       campaign = Campaigns.findOne({_id: campaign_id})
@@ -411,7 +411,7 @@ Template.share_via_email.events
 
     # console.log subject, body, to
     $('.draft-send').prop('disabled', true)
-
+    sendingSpinner 'show'
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
       campaign_id = Session.get("campaign_id")
       campaign = Campaigns.findOne({_id: campaign_id})
@@ -442,11 +442,11 @@ Template.share_via_email.events
               new_message: 'yes'
               created_at: new Date()
         )
-
-        $.gritter.add
-          title: "Email sent"
-          text: "Your email was successfully sent!"
-
+        sendingSpinner 'hide'
+        # $.gritter.add
+        #   title: "Email sent"
+        #   text: "Your email was successfully sent!"
+        apprise "Your email was successfully sent!"
         mixpanel.track("send email", { });
 
         console.log 'send mail success'
@@ -598,3 +598,11 @@ Template.google_api_dialog.events
         console.log err if err
         GoogleAccountChecker.checkGoogleApi()
         # $('#google-api-modal').modal('hide');
+
+# functions
+@sendingSpinner = (action) ->
+  spinner = $('#sending-spinner')
+  if action is 'show'
+    spinner.removeClass('hidden')
+  else if action is 'hide'
+    spinner.addClass('hidden')

@@ -54,7 +54,7 @@ Template.public_confirm.events
 
     # console.log subject, body, to
     $('.draft-send').prop('disabled', true)
-
+    sendingSpinner 'show'
     Meteor.call 'sendMail', subject, body, to, (err, result) ->
       campaign_id = Session.get("campaign_id")
       campaign = Campaigns.findOne({_id: campaign_id})
@@ -126,6 +126,7 @@ Template.public_confirm.events
         # $.gritter.add
         #   title: "Email sent"
         #   text: "You have successfully forwarded this campaign email!"
+        sendingSpinner 'hide'
         apprise "You have successfully forwarded this campaign email!"
 
 
@@ -135,3 +136,11 @@ Template.public_confirm.events
 
         $('.draft-send').prop('disabled', false)
         $('.draft-close').trigger('click')
+
+# functions
+@sendingSpinner = (action) ->
+  spinner = $('#sending-spinner')
+  if action is 'show'
+    spinner.removeClass('hidden')
+  else if action is 'hide'
+    spinner.addClass('hidden')
