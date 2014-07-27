@@ -123,9 +123,11 @@ Template.public_confirm.events
         #     password: 'queens'
         #     created_at: new Date()
 
-        $.gritter.add
-          title: "Email sent"
-          text: "You have successfully forwarded this campaign email!"
+        # $.gritter.add
+        #   title: "Email sent"
+        #   text: "You have successfully forwarded this campaign email!"
+        apprise "You have successfully forwarded this campaign email!"
+
 
         mixpanel.track("send email", { });
 
