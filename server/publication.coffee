@@ -16,6 +16,7 @@ Meteor.publish 'messages', ->
   Messages.find()
 
 Meteor.publish 'search_status', ->
+  Houston.hide_collection SearchStatus
   SearchStatus.find()
 
 Meteor.publish 'publicCampaigns', (user_id, slug) ->
