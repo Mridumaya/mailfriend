@@ -429,6 +429,9 @@ Reveal Modals
 #share-dialog {
   z-index: 9999;
 }
+#show-shares-dialog {
+  z-index: 9999;
+}
 .big-link { display:block; text-align: center;  color: #06f; }
 .reveal-modal-bg {
     position: fixed;

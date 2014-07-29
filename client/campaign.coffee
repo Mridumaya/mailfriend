@@ -477,6 +477,11 @@ Template.list_campaign.events
     Session.set('shareThisUrl', el.data('shareurl'))
     # $('.fb-share-button').attr('data-href', shareURL)
 
+  'click a.show-shares-link': (e) ->
+    el = $(e.currentTarget)
+    campaignId = el.data('campaignid')
+    Session.set 'show_shares_campaign_id', campaignId
+
   'click #share-email': (e) ->
     mixpanel.track("clicked on share campaign with email", { })
     e.preventDefault()
@@ -645,6 +650,11 @@ Template.inbox.events
     delete Session.keys["OWN_MESS"]
 
     Router.go('edit')
+
+Template.show_shares_modal.helpers
+  shares: ->
+    campaignId = Session.get 'show_shares_campaign_id'
+    shares = Sharings.find({owner_id:Meteor.userId(), campaign_id:campaignId}).fetch()
 
 # functions -------------------------------------------------------------------------------------------------------------------------------
 

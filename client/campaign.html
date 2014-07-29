@@ -76,6 +76,7 @@
                                 <!-- <a class="campaign-share-link" href="{{rooturl}}{{user_id}}/{{slug}}">Share Campaign</a> -->
                                 <br>
                                 <a class="campaign-share-link" href="#" data-toggle="modal" data-target="#share-dialog" data-shareurl="{{rooturl}}{{user_id}}/{{slug}}" data-sharesubject="{{subject}}" data-campaignid="{{_id}}" data-intro="Click here to share your campaign via email, twitter or facebook" data-position="left">Share Campaign</a>
+                                &nbsp;|&nbsp;<a class="show-shares-link" href="#" data-toggle="modal" data-target="#show-shares-dialog" data-campaignid="{{_id}}">Show Shares</a>
                                 {{/if}}
                             </td>
                             <td class="edit_button">
@@ -101,6 +102,7 @@
     </div>
 
     {{> share_modal}}
+    {{> show_shares_modal}}
 </template>
 
 <template name="share_modal">
@@ -130,6 +132,30 @@
                                 <img src="/images/twitter_icon.png">
                             </a>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="show_shares_modal">
+    <div id="show-shares-dialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="show-shares-dialog-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header pb70">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1>List of people who shared your campaign</h1>
+                    <div class="row text-center success">
+                        <ul>
+                          {{#if shares}}
+                          {{#each shares}}
+                          <li>{{senderName}}</li>
+                          {{/each}}
+                          {{else}}
+                          <li>No shares yet.</li>
+                          {{/if}}
+                        </ul>
                     </div>
                 </div>
             </div>
