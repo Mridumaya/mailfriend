@@ -655,6 +655,13 @@ Template.show_shares_modal.helpers
   shares: ->
     campaignId = Session.get 'show_shares_campaign_id'
     shares = Sharings.find({owner_id:Meteor.userId(), campaign_id:campaignId}).fetch()
+    senderIds = _.pluck shares, 'sender_id'
+    senderIds = _.uniq senderIds
+    sortedShares = _.map senderIds, (value) ->
+      found = _.where shares, {sender_id: value}
+      {sender_id: value, senderName:found[0].senderName, count: found.length}
+
+    sortedShares
 
 # functions -------------------------------------------------------------------------------------------------------------------------------
 
