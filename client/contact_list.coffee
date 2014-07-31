@@ -297,7 +297,7 @@ Template.contact_list.events
     subject = $("#subject").val()
     message = $("#own_message").val()
     recipients = $('table.dataTable tbody tr.info')
-    recipientsTagit = $("#recipients")
+    recipientsTagit = $("#recipients li")
 
     if subject.length is 0
       apprise('Please enter the subject for your campaign email!')
@@ -307,7 +307,7 @@ Template.contact_list.events
       apprise('Please enter your message!')
       return false
 
-    if recipients.length is 0 and recipientsTagit.length is 0
+    if recipients.length is 0 and recipientsTagit.length < 2
       apprise('Please select recipients for your campaign email!')
       return false
 

@@ -78,7 +78,7 @@
                     {{/each}}
                     {{/if}}
                 </table>
-            </div>            
+            </div>
         </div>
 
         <section class="inbox_content" id="public-recipients-list">
@@ -86,6 +86,7 @@
                 <div class="box_left">
                     <h2>Recipients list</h2>
                     <img src="/images/arreow_block.png" alt="arreow_box">
+                    <a href="#" id="manualAddContact">Manually add an email address</a>
                 </div>
             </div>
             <div class="block_main_content">
@@ -93,7 +94,7 @@
                     <ul id="recipients"></ul>
                 </div>
             </div>
-        </section>        
+        </section>
 
         <div class="row">
             <label class="pull-right">Step 3 of 4</label>
@@ -111,7 +112,7 @@
                 <div class="modal-header pb70">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h1>Edit search term</h1>
-                    
+
                     <p>Please add or change search term</p>
                     <input type="text" id="s_term" value="{{searchQ}}" class="form-control">
                     <button type="button" class="btn btn-primary edit-search-term pull-right mt10">Change</button>
