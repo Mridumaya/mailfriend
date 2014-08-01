@@ -429,7 +429,7 @@ Template.public_contact_list.events
                   # populate datatables
                   refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
                   refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
-
+                  sendToTop10()
                   button.data('pressed', 0)
                 , 100
 

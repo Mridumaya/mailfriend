@@ -367,6 +367,19 @@ Template.contact_list.events
 
   $("#recipients").tagit("removeTagByLabel", recipient)
 
+@sendToTop10 = () ->
+  console.log 'sendToTop10'
+  rows = $('table.dataTable:visible tbody tr')
+  rows10 = $('table.dataTable:visible tbody tr').slice(0,10)
+
+  rows.removeClass('info').find('td:nth-child(1)').html('')
+  # clear recipients list
+  $("#recipients").tagit("removeAll")
+
+  rows10.addClass('info').find('td:nth-child(1)').html('<i class="glyphicon glyphicon-ok"></i>')
+  # add recipients
+  rows10.each ->
+    addRecipient($(this))
 
 loadAllGmails = (isLoadAll) ->
   Meteor.setTimeout ->
