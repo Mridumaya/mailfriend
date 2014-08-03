@@ -654,7 +654,7 @@ Template.inbox.events
 Template.show_shares_modal.helpers
   shares: ->
     campaignId = Session.get 'show_shares_campaign_id'
-    shares = Sharings.find({owner_id:Meteor.userId(), campaign_id:campaignId}).fetch()
+    shares = Sharings.find({owner_id:Meteor.userId(), sender_id:{$ne:Meteor.userId()}, campaign_id:campaignId}).fetch()
     senderIds = _.pluck shares, 'sender_id'
     senderIds = _.uniq senderIds
     sortedShares = _.map senderIds, (value) ->
