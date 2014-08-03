@@ -28,6 +28,10 @@ Template.public_search_contacts.events
 
     searchQuery = $("#public-tags").tagit("assignedTags").join(' ')
 
+    sameSearchQuery = false
+    if Session.get('searchQ') is searchQuery
+      sameSearchQuery = true
+
     if searchQuery
       $(e.target).prop('disabled', true)
 
@@ -35,11 +39,17 @@ Template.public_search_contacts.events
 
       is_public = Session.get('public')
       if is_public is 'yes'
-        Router.go('publiccontactlist')
+        if sameSearchQuery
+          Router.go 'publiccontactlist'
+        else
+          Meteor.call 'searchContacts', searchQuery, Meteor.default_connection._lastSessionId, (err) ->
+            setTimeout ->
+              Router.go 'publiccontactlist'
+            , 2000
       else
         Meteor.call 'searchContacts', searchQuery, Meteor.default_connection._lastSessionId, (err) ->
           setTimeout ->
-            Router.go('contactlist')
+            Router.go 'contactlist'
           , 2000
     else
       apprise('Please add at least one search term!')
