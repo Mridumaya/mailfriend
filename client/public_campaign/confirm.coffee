@@ -37,7 +37,7 @@ Template.public_confirm.events
 
     is_public = Session.get('public')
     if is_public is 'yes'
-      Router.go('publiccontactlist')
+      Router.go('publicsearchcontacts')
     else
       Router.go('contactlist')
 

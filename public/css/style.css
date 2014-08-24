@@ -67,6 +67,10 @@ input[type=text],input[type=search],input[type=password], textarea {
     margin-right: 10px;
 }
 
+.mb10 {
+    margin-bottom: 10px !important;
+}
+
 .mb20 {
     margin-bottom: 20px;
 }

@@ -1,6 +1,6 @@
 <template name="public_search_contacts">
     <div id="container-inner">
-        <section class="inbox_content">
+        <section class="inbox_content mb10">
             <div class="block_head">
                 <div class="box_left">
                     <h2>Search for contacts</h2>
@@ -15,15 +15,132 @@
 
                     <ul id="public-tags"></ul>
 
-                    <div class="row mt20">
-                        <label class="pull-right">Step 2 of 4</label>
-                    </div>
-                    <div class="row">
+                    <div class="row mt30">
                         <a href="#" class="button next_button search-button pull-right">Search for contacts</a>
-                        <a href="#" class="button back_button pull-right searchq-to-welcome mr10">Back</a>
                     </div>
                 </div>
             </div>
         </section>
+    </div>
+    <div id="container-inner">
+    <section class="inbox_content" id="contact-list-container">
+        <a class="search-tags hidden">Search</a>
+
+        <div class="text_box">
+            These are your Friends Interested in: <span class="red">{{searchQ}}</span> &nbsp;<span class="green edit-search-term-open" data-toggle="modal" data-target="#searchTermModal">edit search term</span>
+            <br>
+            The people at the top are the most relevant. Select people using these handy buttons.
+        </div>
+        <div class="info_button_box">
+            <a href="#" class="info_button sendToTop15">select top 15</a>
+            <a href="#" class="info_button sendToTop30">Select the top 30 relevant</a>
+            <a href="#" class="info_button sendToAll">Select all</a>
+            <a href="#" class="info_button add-all-relevant">Select all relevant</a>
+            <a href="#" class="info_button selectNone">Select none</a>
+        </div>
+
+        <div class="btn-group select-contact-group">
+            <a href="#matched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab tab-active">Matched Contacts</a>
+            <a href="#unmatched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab">Unmatched Contacts</a>
+        </div>
+
+        <div class="alert alert-warning alert-dismissable no-results hidden mt20">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Your search had no results!</strong> Please try again with other keywords or select recipients from the "Unmatched Contacts" list.
+        </div>
+
+        <div class="tab-content table_2">
+            <div class="tab-pane active" id="matched-contacts-tab">
+                <div class="loading-contacts hidden">
+                    <img src="/images/ajax-loader.gif" alt=""><span> Loading search results...</span>
+                </div>
+
+                {{> DataTable
+                    selector=matched_selector
+                    columns=columns
+                }}
+
+                <table id="tmp_matched_contacts" class="hidden">
+                    {{#if showContactList}}
+                    {{#each matchedContacts}}
+                    <tr class="contact" data-email="{{email}}">
+                        <td class="icon"><i></i></td>
+                        <td>{{name}}</td>
+                        <td>{{email}}</td>
+                        <td>{{sentMessages}}</td>
+                        <td>{{receivedMessages}}</td>
+                        <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                        <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                    </tr>
+                    {{/each}}
+                    {{/if}}
+                </table>
+            </div>
+            <div class="tab-pane" id="unmatched-contacts-tab">
+                <div class="loading-contacts">
+                    <img src="/images/ajax-loader.gif" alt=""><span> Loading search results...</span>
+                </div>
+
+                {{> DataTable
+                    selector=unmatched_selector
+                    columns=columns
+                }}
+
+                <table id="tmp_unmatched_contacts" class="hidden">
+                    {{#if showContactList}}
+                    {{#each unmatchedContacts}}
+                    <tr class="contact" data-email="{{email}}">
+                        <td class="icon"><i></i></td>
+                        <td>{{name}}</td>
+                        <td>{{email}}</td>
+                        <td>{{sentMessages}}</td>
+                        <td>{{receivedMessages}}</td>
+                        <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                        <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                    </tr>
+                    {{/each}}
+                    {{/if}}
+                </table>
+            </div>
+        </div>
+
+        <section class="inbox_content" id="public-recipients-list">
+            <div class="block_head">
+                <div class="box_left">
+                    <h2>Recipients list</h2>
+                    <img src="/images/arreow_block.png" alt="arreow_box">
+                    <a href="#" id="manualAddContact">Manually add an email address</a>
+                </div>
+            </div>
+            <div class="block_main_content">
+                <div class="box">
+                    <ul id="recipients"></ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="row">
+            <label class="pull-right">Step 2 of 3</label>
+        </div>
+        <div class="row">
+            <a href="#" class="button contact-list-to-confirm pull-right">Preview email</a>
+            <a href="#" class="button back_button pull-right contact-list-to-searchq mr10">Back</a>
+        </div>
+    </section>
+    </div>
+
+    <div class="modal fade" id="searchTermModal" tabindex="-1" role="dialog" aria-labelledby="mySearchTermLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header pb70">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1>Edit search term</h1>
+
+                    <p>Please add or change search term</p>
+                    <input type="text" id="s_term" value="{{searchQ}}" class="form-control">
+                    <button type="button" class="btn btn-primary edit-search-term pull-right mt10">Change</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
