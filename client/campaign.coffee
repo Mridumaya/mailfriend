@@ -96,7 +96,7 @@ Template.new_campaign.rendered = ->
             if (tmpLength isnt messageLength)
               messageLength = tmpLength
 
-              getEnteredTags()
+              getEnteredTagsInit()
               return
           , 100)
 
@@ -141,10 +141,10 @@ Template.new_campaign.rendered = ->
   })
 
   if Session.get 'campaign_id'
-    getEnteredTags()
+    getEnteredTagsInit()
 
     Meteor.defer ->
-      getEnteredTags()
+      getEnteredTagsInit()
 
 
 Template.new_campaign.helpers
@@ -708,7 +708,7 @@ getEnteredTags = () ->
       )
 
       if w5ref
-        # w5ref.editor.setValue('')
+        w5ref.editor.setValue('')
       else
         ta.val('')
 
@@ -719,6 +719,18 @@ getEnteredTags = () ->
     Session.set("search_tags", tags)
   , 1000)
 
+getEnteredTagsInit = () ->
+  if (@key_up_delay)
+    clearTimeout @key_up_delay
+
+  @key_up_delay = setTimeout(->
+    searchTags = $('#campaign-tags').val().split(' ')
+    $("#tags").tagit("removeAll")
+    _.each(searchTags || [],(item) ->
+      $("#tags").tagit("createTag", item)
+    )
+    getEnteredTags()
+  , 1000)
 
 @refreshDataTable = (table, source) ->
   table = table.DataTable()
