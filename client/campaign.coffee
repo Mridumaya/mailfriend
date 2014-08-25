@@ -708,7 +708,7 @@ getEnteredTags = () ->
       )
 
       if w5ref
-        w5ref.editor.setValue('')
+        # w5ref.editor.setValue('')
       else
         ta.val('')
 
