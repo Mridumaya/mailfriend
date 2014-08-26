@@ -349,7 +349,7 @@ Template.confirm.events
           # $.gritter.add
           #   title: "Email sent"
           #   text: "Your campaign email was successfully sent!"
-          apprise "Your campaign email was successfully sent!"
+          # apprise "Your campaign email was successfully sent!"
 
         mixpanel.track("send email", { });
 

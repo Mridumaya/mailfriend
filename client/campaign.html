@@ -102,6 +102,7 @@
     </div>
 
     {{> share_modal}}
+    {{> after_send_share_modal}}
     {{> show_shares_modal}}
 </template>
 
@@ -120,9 +121,43 @@
                             <input type="hidden" id="share-subject">
                             <input type="hidden" id="share-id">
 
-                            <a id="share-email" href="#" class="active">
+                            <!-- <a id="share-email" href="#" class="active">
                                 <img src="/images/gmail_icon.png">
+                            </a> -->
+
+                            <a id="share-facebook" href="#" target="_blank" class="active">
+                                <img src="/images/facebook_icon.png">
                             </a>
+
+                            <a id="share-twitter" href="#" class="active">
+                                <img src="/images/twitter_icon.png">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="after_send_share_modal">
+    <div id="after-send-share-dialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="after-send-share-dialog-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header pb70">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1>Campaign email sent! Share your campaign</h1>
+
+                    <p>Please choose a method to share your campaign:</p>
+                    <div class="row text-center success">
+                        <div class="mt20">
+                            <input type="hidden" id="share-url">
+                            <input type="hidden" id="share-subject">
+                            <input type="hidden" id="share-id">
+
+                            <!-- <a id="share-email" href="#" class="active">
+                                <img src="/images/gmail_icon.png">
+                            </a> -->
 
                             <a id="share-facebook" href="#" target="_blank" class="active">
                                 <img src="/images/facebook_icon.png">
