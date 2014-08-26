@@ -664,6 +664,24 @@ Template.show_shares_modal.helpers
 
     sortedShares
 
+Template.share_modal.rendered = ->
+  client = new ZeroClipboard($('#copyToClipboard'))
+  client.on 'copy', (e) ->
+    e.clipboardData.setData 'text/plain', $('#shareUrlToCopy').val()
+
+Template.share_modal.helpers
+  shareUrl: ->
+    Session.get 'shareThisUrl'
+
+Template.after_send_share_modal.rendered = ->
+  client = new ZeroClipboard($('#copyToClipboard'))
+  client.on 'copy', (e) ->
+    e.clipboardData.setData 'text/plain', $('#shareUrlToCopy').val()
+
+Template.after_send_share_modal.helpers
+  shareUrl: ->
+    Session.get 'shareThisUrl'
+
 # functions -------------------------------------------------------------------------------------------------------------------------------
 
 @key_up_delay = 0;
