@@ -67,8 +67,13 @@
                                 {{/if}}
                                 </div>
 
-                                <div class="recipients-count" title="{{recipients_count}} recipient(s)">{{recipients_count}}</div>
+                                <!-- <div class="recipients-count" title="{{recipients_count}} recipient(s)">{{recipients_count}}</div> -->
+                                {{#if is_message_sent}}
                                 <br>
+                                <div>Sent to {{recipients_count}} recipient(s)</div>
+                                {{else}}
+                                <br>
+                                {{/if}}
                                 <img src="/images/time_img.png" alt="time">
                                 <span class="created" data-created="{{created_at}}">{{create_date}}</span>
 
