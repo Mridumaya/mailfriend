@@ -83,6 +83,7 @@ Meteor.methods
 # common functions ------------------------------------------------------------------------------------------------------------------------
 
   formatDate: (created, id) ->
+    created.setTime(created.getTime() + 36000 * parseInt(Meteor.user().profile.timezone))
     weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
