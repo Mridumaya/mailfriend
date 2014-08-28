@@ -293,6 +293,7 @@ Template.contact_list.events
   'click .contact-list-to-confirm': (e) ->
     mixpanel.track("searched, choose contacts and hit next", { })
     menuitemActive()
+    Session.set 'campaign_step', 3
 
     subject = $("#subject").val()
     message = $("#own_message").val()
@@ -435,6 +436,8 @@ Template.contact_list.rendered = ->
 
       row.removeClass('info').find('td:nth-child(1)').html('')
   )
+  $('#campaign_progress_bar #campaign_step_one').addClass('done')
+  $('#campaign_progress_bar #campaign_step_two').addClass('current')
 
 
 clickSendMessages = (toEmails=[]) ->

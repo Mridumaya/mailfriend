@@ -310,6 +310,7 @@ Template.new_campaign.events
 
 Template.list_campaign.rendered = ->
   menuitemActive('campaign-list')
+  delete Session.keys['campaign_step']
 
   listInt = setInterval(->
     list = $('#list1 td.info_content span.created.raw')
@@ -389,6 +390,7 @@ Template.list_campaign.events
       delete Session.keys['prev_searchQ']
       delete Session.keys['contact_list']
       Session.set 'campaign_id', $(e.currentTarget).data('id')
+      Session.set 'campaign_step', 1
 
       Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
         Session.set 'loggedInWithGoogle', res
@@ -400,6 +402,7 @@ Template.list_campaign.events
       menuitemActive()
       el = $(e.currentTarget)
       Session.set('shareThisUrl', el.data('shareurl'))
+      Session.set 'campaign_step', 3
       Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
         Session.set 'loggedInWithGoogle', res
 
@@ -674,13 +677,30 @@ Template.share_modal.helpers
     Session.get 'shareThisUrl'
 
 Template.after_send_share_modal.rendered = ->
-  client = new ZeroClipboard($('#copyToClipboard'))
+  client = new ZeroClipboard($('#copyToClipboardAfter'))
   client.on 'copy', (e) ->
-    e.clipboardData.setData 'text/plain', $('#shareUrlToCopy').val()
+    e.clipboardData.setData 'text/plain', $('#shareUrlToCopyAfter').val()
 
 Template.after_send_share_modal.helpers
   shareUrl: ->
     Session.get 'shareThisUrl'
+
+Template.campaign_progress.rendered = ->
+  switch Session.get 'campaign_step'
+    when 1
+      $('#campaign_progress_bar #campaign_step_one').addClass('current')
+    when 2
+      $('#campaign_progress_bar #campaign_step_one').addClass('done')
+      $('#campaign_progress_bar #campaign_step_two').addClass('current')
+    when 3
+      $('#campaign_progress_bar #campaign_step_one').addClass('done')
+      $('#campaign_progress_bar #campaign_step_two').addClass('done')
+      $('#campaign_progress_bar #campaign_step_three').addClass('current')
+    else
+      $('#campaign_progress_bar #campaign_step_one').addClass('done')
+      $('#campaign_progress_bar #campaign_step_two').addClass('done')
+      $('#campaign_progress_bar #campaign_step_three').addClass('done')
+      $('#campaign_progress_bar #campaign_step_four').addClass('current')
 
 # functions -------------------------------------------------------------------------------------------------------------------------------
 

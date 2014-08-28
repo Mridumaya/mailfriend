@@ -3,7 +3,6 @@
     "google-contacts": {},
     "font-awesome": {},
     "bootstrap-3": {},
-    "bootstrap3-wysihtml5": {},
     "iron-router": "0.7.0",
     "npm": {},
     "trail": {},
@@ -13,6 +12,7 @@
     "accounts-merge": {},
     "urlify2": {},
     "houston": {},
-    "timezone": {}
+    "timezone": {},
+    "bootstrap3-wysihtml5": {}
   }
 }

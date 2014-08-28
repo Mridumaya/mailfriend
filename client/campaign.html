@@ -1,5 +1,6 @@
 <template name="new_campaign">
     <div id="container-inner">
+        {{> campaign_progress}}
         <section class="inbox_content" id="campaign-editor-section">
             <div class="block_head">
                 <div class="box_left">
@@ -177,8 +178,8 @@
                             </a>
                         </div>
                         <div class="mt20">
-                          <input type="text" id="shareUrlToCopy" size="30" value="{{shareUrl}}">
-                          <input type="button" id="copyToClipboard" value="copy">
+                          <input type="text" id="shareUrlToCopyAfter" size="30" value="{{shareUrl}}">
+                          <input type="button" id="copyToClipboardAfter" value="copy">
                         </div>
                     </div>
                 </div>
@@ -256,4 +257,14 @@
             </div>
         </section>
     </div>
+</template>
+
+<template name="campaign_progress">
+  <section class="inbox_content">
+    <ul id="campaign_progress_bar">
+      <li id="campaign_step_one">1. Compose</li>
+      <li id="campaign_step_two">2. Choose contacts</li>
+      <li id="campaign_step_three">3. Confirm and send</li>
+    </ul>
+  </section>
 </template>

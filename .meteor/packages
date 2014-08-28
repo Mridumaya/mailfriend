@@ -19,7 +19,6 @@ google-contacts
 font-awesome
 amplify
 bootstrap-3
-bootstrap3-wysihtml5
 accounts-password
 iron-router
 npm
@@ -33,3 +32,4 @@ random
 accounts-merge
 houston
 timezone
+bootstrap3-wysihtml5

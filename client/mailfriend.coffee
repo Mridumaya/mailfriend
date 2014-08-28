@@ -54,6 +54,7 @@ Template.masterLayout.events
 
   'click .btn-create-campaign': (e) ->
     mixpanel.track("visit new campaign", { });
+    Session.set 'campaign_step', 1
     delete Session.keys['campaign_id']
     delete Session.keys['searchQ']
     delete Session.keys['prev_searchQ']
@@ -278,6 +279,7 @@ Template.confirm.helpers
 Template.confirm.events
   'click .confirm-to-contact-list': (e) ->
     mixpanel.track("clicked on back to editing campaign on final step", { })
+    Session.set 'campaign_step', 1
     delete Session.keys['searchQ']
     delete Session.keys['prev_searchQ']
     delete Session.keys['contact_list']
@@ -356,6 +358,7 @@ Template.confirm.events
         console.log 'send mail success'
 
         Session.set("sent_campaign_id", Session.get("campaign_id"))
+        Session.set('shareThisUrl', $(e.currentTarget).data('shareurl'))
 
         Router.go 'list_campaign'
 
