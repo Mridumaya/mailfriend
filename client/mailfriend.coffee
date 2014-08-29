@@ -68,6 +68,7 @@ Template.masterLayout.events
 
   'click .btn-view-campaign': (e) ->
     mixpanel.track("visit campaign list", { });
+    @autoSelect = 0
 
     if $('div.mobile-menu').hasClass('menu-opened')
       $('div.mobile-menu').removeClass('menu-opened')
@@ -136,6 +137,7 @@ Template.feature_select.events
   'click .btn-view-campaign': (e) ->
     mixpanel.track("visit campaign list", { });
     menuitemActive($(this).parent())
+    @autoSelect = 0
     Router.go "list_campaign"
 
   'click .btn-view-messages': (e) ->

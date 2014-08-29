@@ -252,7 +252,9 @@ Template.new_campaign.events
                     # populate datatables
                     refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
                     refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
-                    sendToTop10()
+                    if @autoSelect isnt 2
+                      sendToTop10()
+                      @autoSelect++
                     button.data('pressed', 0)
                   , 100
 
@@ -294,6 +296,7 @@ Template.new_campaign.events
     Session.set("OWN_MESS", $("#own_message").val())
     Session.set("MAIL_TITLE", $("#subject").val())
     SaveCampaign()
+    @autoSelect = 0
     Router.go 'list_campaign'
 
   'click .back-to-campaign-list': (e) ->
@@ -307,10 +310,11 @@ Template.new_campaign.events
 
 
 # campaign list stuff ---------------------------------------------------------------------------------------------------------------------
-
+@autoSelect = 0
 Template.list_campaign.rendered = ->
   menuitemActive('campaign-list')
   delete Session.keys['campaign_step']
+  @autoSelect = 0
 
   listInt = setInterval(->
     list = $('#list1 td.info_content span.created.raw')
@@ -391,6 +395,7 @@ Template.list_campaign.events
       delete Session.keys['contact_list']
       Session.set 'campaign_id', $(e.currentTarget).data('id')
       Session.set 'campaign_step', 1
+      @autoSelect = 0
 
       Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
         Session.set 'loggedInWithGoogle', res
@@ -457,6 +462,7 @@ Template.list_campaign.events
       delete Session.keys['searchQ']
       delete Session.keys['prev_searchQ']
       delete Session.keys['contact_list']
+      @autoSelect = 0
       Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
         Session.set 'loggedInWithGoogle', res
       Router.go 'new_campaign'
