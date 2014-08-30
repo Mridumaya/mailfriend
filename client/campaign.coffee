@@ -86,23 +86,42 @@ Template.new_campaign.rendered = ->
     messageLength = 0
     interval = 0
 
-    $("#own_message").wysihtml5
-      image: false
-      "font-styles": false
-      events:
-        focus: () ->
+    # $("#own_message").wysihtml5
+    #   image: false
+    #   "font-styles": false
+    #   events:
+    #     focus: () ->
+    #       interval = setInterval(->
+    #         tmpLength = $('#own_message').val().length
+    #         if (tmpLength isnt messageLength)
+    #           messageLength = tmpLength
+    #
+    #           getEnteredTagsInit()
+    #           return
+    #       , 100)
+    #
+    #     blur: () ->
+    #       clearInterval interval
+    # tinymce.execCommand 'mceRemoveControl', true, '#own_message'
+    tinymce.remove("#own_message")
+    tinymce.init
+      selector: "#own_message"
+      plugins: ["link"]
+      toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+      menubar: false
+      setup : (ed) ->
+        ed.on 'focus', (e) ->
           interval = setInterval(->
-            tmpLength = $('#own_message').val().length
+            # tmpLength = $('#own_message').val().length
+            tmpLength = tinymce.get('own_message').getContent().length
             if (tmpLength isnt messageLength)
               messageLength = tmpLength
 
-              getEnteredTagsInit()
-              return
+              getEnteredTags()
+              return true
           , 100)
-
-        blur: () ->
+        ed.on 'blur', (e) ->
           clearInterval interval
-
     # initialize = false;
 
   # init tagit
@@ -141,10 +160,10 @@ Template.new_campaign.rendered = ->
   })
 
   if Session.get 'campaign_id'
-    getEnteredTagsInit()
+    getEnteredTags()
 
     Meteor.defer ->
-      getEnteredTagsInit()
+      getEnteredTags()
 
 
 Template.new_campaign.helpers
@@ -293,7 +312,8 @@ Template.new_campaign.events
 
   'click .btn-save-campaign': (e) ->
     mixpanel.track("clicked on save in a campaign", { });
-    Session.set("OWN_MESS", $("#own_message").val())
+    # Session.set("OWN_MESS", $("#own_message").val())
+    Session.set("OWN_MESS", tinymce.get('own_message').getContent())
     Session.set("MAIL_TITLE", $("#subject").val())
     SaveCampaign()
     @autoSelect = 0
@@ -715,7 +735,8 @@ getEnteredTags = () ->
   if (@key_up_delay)
     clearTimeout @key_up_delay
 
-  message = $('#own_message').val()
+  # message = $('#own_message').val()
+  message = tinymce.get('own_message').getContent()
 
   @tag_replaced = ''
   @key_up_delay = setTimeout(->
@@ -743,23 +764,27 @@ getEnteredTags = () ->
 
       w5ref = textarea.data('wysihtml5');
 
-      @tag_replaced = textarea.val()
+      # @tag_replaced = textarea.val()
+      @tag_replaced = tinymce.get('own_message').getContent()
 
       # add predefined tags
       _.each(searchTags || [],(item) ->
         $("#tags").tagit("createTag", item)
 
-        @tag_replaced = @tag_replaced.replace('#' + item + ' ', '<span style="color:rgb(150, 150, 150)">'+item+'</span> ')
+        # @tag_replaced = @tag_replaced.replace('#' + item + ' ', '<span style="color:rgb(150, 150, 150)">'+item+'</span> ')
+        @tag_replaced = @tag_replaced.replace('#' + item, item + ' ')
       )
 
-      if w5ref
-        w5ref.editor.setValue('')
-      else
-        ta.val('')
+      # if w5ref
+      #   w5ref.editor.setValue('')
+      # else
+      #   ta.val('')
+      tinymce.get('own_message').setContent('')
 
       # trick to update the content of the editor
-      w5ref.editor.composer.element.focus()
-      window.frames[0].document.execCommand("InsertHTML", false, @tag_replaced)
+      # w5ref.editor.composer.element.focus()
+      # window.frames[0].document.execCommand("InsertHTML", false, @tag_replaced)
+      tinymce.get('own_message').setContent(@tag_replaced)
 
     Session.set("search_tags", tags)
   , 1000)
@@ -851,7 +876,7 @@ getEnteredTagsInit = () ->
       recipients = ''
 
     if Session.get("campaign_id")
-      Meteor.call 'updateCampaign', Session.get("campaign_id"), user._id, $("#subject").val(), $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), recipients, (e, campaign_id) ->
+      Meteor.call 'updateCampaign', Session.get("campaign_id"), user._id, $("#subject").val(), tinymce.get('own_message').getContent(), $("#tags").tagit("assignedTags").join(" "), recipients, (e, campaign_id) ->
         console.log e if e
         # $.gritter.add
         #   title: "Notification"
@@ -859,7 +884,7 @@ getEnteredTagsInit = () ->
         $('#campaignSaved').animate {opacity: 1.0}, 1000, () ->
           $('#campaignSaved').animate {opacity: 0.0}, 1000
     else
-      Meteor.call 'createCampaign', user._id, $("#subject").val(), $("#own_message").val(), $("#tags").tagit("assignedTags").join(" "), recipients, (e, campaign_id) ->
+      Meteor.call 'createCampaign', user._id, $("#subject").val(), tinymce.get('own_message').getContent(), $("#tags").tagit("assignedTags").join(" "), recipients, (e, campaign_id) ->
         console.log e if e
         Session.set("campaign_id", campaign_id)
         # $.gritter.add
