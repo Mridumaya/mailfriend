@@ -1,0 +1,15 @@
+{
+  "strings": {
+    "title": "Pollen",
+    "welcomeMessage": "send mail to people who care",
+    "copyright": "Reviver",
+    "search": "Search",
+    "searchUnder": "For relevant friends",
+    "send": "Send it",
+    "sendUnder": "Off people who care"
+
+  },
+  "logos": {
+    "main": ""
+  }
+}

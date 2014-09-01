@@ -6,16 +6,23 @@
         #     Meteor.settings = JSON.parse(Assets.getText("settings.json"));
 
         if Meteor.absoluteUrl() == 'http://localhost:3000/'
-            Meteor.settings = JSON.parse(Assets.getText("settings_local.json"))
+            # Meteor.settings = JSON.parse(Assets.getText("settings_local.json"))
+            Meteor.settings.public.custom = JSON.parse(Assets.getText("pollenpost.json"))
 
         else if Meteor.absoluteUrl() == 'http://jacint.meteor.com/'
             Meteor.settings = JSON.parse(Assets.getText("settings_live.json"))
 
         else if Meteor.absoluteUrl() == 'http://borkom.meteor.com/'
             Meteor.settings = JSON.parse(Assets.getText("settings_borkom.json"))
+            Meteor.settings.public.custom = JSON.parse(Assets.getText("pollenpost.json"))
 
         else if Meteor.absoluteUrl() == 'http://www.pollenpost.com/'
             Meteor.settings = JSON.parse(Assets.getText("settings_pollen.json"))
+            Meteor.settings.public.custom = JSON.parse(Assets.getText("pollenpost.json"))
+
+        else if Meteor.absoluteUrl() == 'http://www.hirenurture.com/'
+            Meteor.settings = JSON.parse(Assets.getText("settings_hirenurture.json"))
+            Meteor.settings.public.custom = JSON.parse(Assets.getText("hirenurture.json"))
 
         else
             Meteor.settings = JSON.parse(Assets.getText("settings_live.json"))

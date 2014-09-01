@@ -1,0 +1,15 @@
+{
+  "strings": {
+    "title": "TalentBlast",
+    "welcomeMessage": "send job opportunities to people who care",
+    "copyright": "HireNurture",
+    "search": "Automatically build a list",
+    "searchUnder": "Of relevant candidates and contacts",
+    "send": "Email",
+    "sendUnder": "The whole list with just a few clicks"
+
+  },
+  "logos": {
+    "main": ""
+  }
+}
