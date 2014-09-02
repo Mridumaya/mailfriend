@@ -1,21 +1,21 @@
 <template name="public_signup">
 	<article class="signup text-center">
 		<h1>Welcome {{name}}</h1>
-		<h2 class="gray-190">Welcome to Pollen!</h2>
+		<h2 class="gray-190">Welcome to {{customText 'title'}}!</h2>
 		<!-- <h3 class="custom-red">You have a few options:</h3> -->
 		<div class="row"><br><br><br></div>
         <div class="row">
         	<div class="span2 text-center pull-left">
         		<a href="#" id="signup-account"><img src="/images/signup.png" alternate="Signup"></a>
         		<h3>Create an account on</h3>
-        		<h2 class="custom-red">Pollen</h2>
+        		<h2 class="custom-red">{{customText 'title'}}</h2>
         		<span class="gray-190">By creating an account, you can save,<br> edit and come back to<br> you messages</span>
         	</div>
         	<div class="span2 text-center pull-right">
         		<a href="#" id="guest-account"><img src="/images/guest.png" alternate="Guest"></a>
         		<h3>I want to help</h3>
-        		<h2 class="cyan">Pollen</h2>
-        		<!-- <span class="gray-190">You are ready to go, don't need to save or edit this,<br> you just want to get the word out about<br> your friends Pollen Project!<br> (you can always make an account later)</span> -->
+        		<h2 class="cyan">{{customText 'title'}}</h2>
+        		<!-- <span class="gray-190">You are ready to go, don't need to save or edit this,<br> you just want to get the word out about<br> your friends {{customText 'title'}} Project!<br> (you can always make an account later)</span> -->
         	</div>
         </div>
 	</article>

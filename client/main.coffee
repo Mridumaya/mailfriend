@@ -28,6 +28,10 @@ Deps.autorun ->
 
   Meteor.subscribe 'search_status'
   Meteor.subscribe 'loggedInWithGoogle'
+  UI.registerHelper 'customText', (arg) ->
+    Meteor.settings.public.custom.texts[arg]
+  UI.registerHelper 'customLogo', (arg) ->
+    Meteor.settings.public.custom.logos[arg]
 
 Session.setDefault("GOOGLE_API", true)
 

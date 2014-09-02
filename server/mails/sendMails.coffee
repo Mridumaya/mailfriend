@@ -82,14 +82,14 @@ Meteor.methods
             "html": body
             "text": body
             "subject": subject
-            "from_email": "no-reply@pollenpost.com"
-            "from_name": "Pollen Registration"
+            "from_email": "no-reply@" + Meteor.settings.public.custom.texts.domain
+            "from_name": Meteor.settings.public.custom.texts.title + " Registration"
             "to":[
                 "email": to
                 #"name": "Recipient Name"
             ]
             "headers":
-                "Reply-To": "no-reply@pollenpost.com"
+                "Reply-To": "no-reply@" + Meteor.settings.public.custom.texts.domain
             "important": false
             "track_opens": null
             "track_clicks": null

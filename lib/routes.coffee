@@ -38,16 +38,16 @@ Router.map ->
     onAfterAction: ->
       baseurl = Meteor.absoluteUrl("")
       SEO.set
-        title: 'Welcome to Pollen'
+        title: 'Welcome to ' + Meteor.settings.public.custom.texts.title
         meta:
-          'title':       'Pollen'
-          'description': 'Pollen - send mail to people who care'
-          'keywords':    'pollen, email, friend'
+          'title':       Meteor.settings.public.custom.texts.title
+          'description': Meteor.settings.public.custom.texts.title + ' - ' + Meteor.settings.public.custom.texts.welcomeMessage
+          'keywords':    Meteor.settings.public.custom.texts.keywords
         og:
-          'image':     baseurl + 'images/pollen_logo.png'
-          'title':     'Pollen'
+          'image':     baseurl + Meteor.settings.public.custom.logos.logoShare
+          'title':     Meteor.settings.public.custom.texts.title
           'url':       baseurl + 'home/'
-          'site_name': 'Pollen'
+          'site_name': Meteor.settings.public.custom.texts.title
           'type':      'website'
 
 
@@ -59,16 +59,16 @@ Router.map ->
       baseurl = Meteor.absoluteUrl("")
 
       SEO.set
-        title: 'About Pollen'
+        title: 'About ' + Meteor.settings.public.custom.texts.title
         meta:
-          'title':       'About Pollen'
-          'description': 'Pollen - send mail to people who care'
-          'keywords':    'pollen, email, friend'
+          'title':       'About ' + Meteor.settings.public.custom.texts.title
+          'description': Meteor.settings.public.custom.texts.title + ' - ' + Meteor.settings.public.custom.texts.welcomeMessage
+          'keywords':    Meteor.settings.public.custom.texts.keywords
         og:
-          'image':     baseurl + 'images/pollen_logo.png'
-          'title':     'About Pollen'
+          'image':     baseurl + Meteor.settings.public.custom.logos.logoShare
+          'title':     'About ' + Meteor.settings.public.custom.texts.title
           'url':       baseurl + 'about/'
-          'site_name': 'Pollen'
+          'site_name': Meteor.settings.public.custom.texts.title
           'type':      'website'
 
 
@@ -80,16 +80,16 @@ Router.map ->
       baseurl = Meteor.absoluteUrl("")
 
       SEO.set
-        title: 'Pollen FAQ'
+        title: Meteor.settings.public.custom.texts.title + ' FAQ'
         meta:
-          'title':       'Pollen FAQ'
-          'description': 'Pollen - send mail to people who care'
-          'keywords':    'pollen, email, friend'
+          'title':       Meteor.settings.public.custom.texts.title + ' FAQ'
+          'description': Meteor.settings.public.custom.texts.title + ' - ' + Meteor.settings.public.custom.texts.welcomeMessage
+          'keywords':    Meteor.settings.public.custom.texts.keywords
         og:
-          'image':     baseurl + 'images/pollen_logo.png'
-          'title':     'Pollen FAQ'
+          'image':     baseurl + Meteor.settings.public.custom.logos.logoShare
+          'title':     Meteor.settings.public.custom.texts.title + ' FAQ'
           'url':       baseurl + 'faq/'
-          'site_name': 'Pollen'
+          'site_name': Meteor.settings.public.custom.texts.title
           'type':      'website'
 
 
@@ -98,7 +98,7 @@ Router.map ->
     path: "/"
     onAfterAction: ->
       SEO.set
-        title: 'Welcome to Pollen'
+        title: 'Welcome to ' + Meteor.settings.public.custom.texts.title
 
 
   @route "edit_user_info",
@@ -232,29 +232,29 @@ Router.map ->
       if campaign isnt undefined
         sender_name = sender.profile.name + "'s"
         SEO.set
-          title: 'Get the word out for ' + sender_name + ' pollen campaign'
+          title: 'Get the word out for ' + sender_name + ' ' + Meteor.settings.public.custom.texts.title + ' campaign'
           meta:
-            'title':       'Get the word out for ' + sender_name + ' pollen campaign'
-            'description': 'Get the word out for ' + sender_name + ' pollen campaign'
-            'keywords':    'pollen, email, friend'
+            'title':       'Get the word out for ' + sender_name + ' ' + Meteor.settings.public.custom.texts.title + ' campaign'
+            'description': 'Get the word out for ' + sender_name + ' ' + Meteor.settings.public.custom.texts.title + ' campaign'
+            'keywords':    Meteor.settings.public.custom.texts.keywords
           og:
-            'image':     baseurl + 'images/pollen_logo.png'
-            'title':     'Get the word out for ' + sender_name + ' pollen campaign'
+            'image':     baseurl + Meteor.settings.public.custom.logos.logoShare
+            'title':     'Get the word out for ' + sender_name + ' ' + Meteor.settings.public.custom.texts.title + ' campaign'
             'url':       baseurl + @params.user_id + '/' + @params.slug + '/'
-            'site_name': 'Pollen'
+            'site_name': Meteor.settings.public.custom.texts.title
             'type':      'website'
       else
         SEO.set
-          title: 'Get the word out for this pollen campaign'
+          title: 'Get the word out for this ' + Meteor.settings.public.custom.texts.title + ' campaign'
           meta:
-            'title':       'Get the word out for this pollen campaign'
-            'description': 'Get the word out for this pollen campaign'
-            'keywords':    'pollen, email, friend'
+            'title':       'Get the word out for this ' + Meteor.settings.public.custom.texts.title + ' campaign'
+            'description': 'Get the word out for this ' + Meteor.settings.public.custom.texts.title + ' campaign'
+            'keywords':    Meteor.settings.public.custom.texts.keywords
           og:
-            'image':     baseurl + 'images/pollen_logo.png'
-            'title':     'Get the word out for this pollen campaign'
+            'image':     baseurl + Meteor.settings.public.custom.logos.logoShare
+            'title':     'Get the word out for this ' + Meteor.settings.public.custom.texts.title + ' campaign'
             'url':       baseurl + @params.user_id + '/' + @params.slug + '/'
-            'site_name': 'Pollen'
+            'site_name': Meteor.settings.public.custom.texts.title
             'type':      'website'
 
   @route "publicedit",

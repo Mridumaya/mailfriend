@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header pb70">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h1 class="centertext">Pollen lets you pass the word to your friends<br>who might actually care</h1>
+                    <h1 class="centertext">{{customText 'title'}} lets you pass the word to your friends<br>who might actually care</h1>
 
                     {{#if isError}}
                     <div class="alert alert-danger">{{errorMessage}}</div>
@@ -179,7 +179,7 @@
 <template name="welcome">
     <section class="welcome_container">
         <h2>Welcome friend of <span>{{sender}},</span></h2>
-        <h3>Welcome to Pollen!</h3>
+        <h3>Welcome to {{customText 'title'}}!</h3>
         <!-- <h4>You have a few options:</h4> -->
 
         <div class="login_portion">
@@ -189,7 +189,7 @@
                         <img src="/images/login_img.png" alt="login">
                     </div>
                 </a>
-               <h2>Create an account on <br><span>Pollen</span></h2>
+               <h2>Create an account on <br><span>{{customText 'title'}}</span></h2>
                <p>By creating an account, you can save,<br>edit and come back to<br> you messages.</p>
             </div> -->
 

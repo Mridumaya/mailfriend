@@ -560,7 +560,7 @@ a.popup_signup:hover { background:#026060; }
 .write { width:139px; height:134px; background-position:0 -2px; margin:120px auto 45px auto; display:block;  }
 .search {width:153px; height:134px; background-position:-142px -5px; margin:120px auto 45px auto; display:block;  }
 .send_it { width:132px; height:134px; background-position:-295px 2px;margin:120px auto 45px auto; display:block;  }
-.more_info_part ul li a h1 {font-family: 'Lato', sans-serif;color:#38a6a6; font-size:40px; font-weight:bold; text-transform:uppercase;  line-height:28px; transition:all 0.3s;}
+.more_info_part ul li a h1 {font-family: 'Lato', sans-serif;color:#38a6a6; font-size:40px; font-weight:bold; text-transform:uppercase;  line-height:32px; transition:all 0.3s;}
 .more_info_part ul li a h1 span {font-family: 'Lato', sans-serif;color:#333645; font-size:20px; font-weight:normal; text-transform:uppercase; transition:all 0.3s;}
 /*.more_info_part ul li a:hover >  h1 { color:#38a6a6;}
 .more_info_part ul li a:hover >  h1 span { color:#333645;}*/

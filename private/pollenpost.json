@@ -1,15 +1,19 @@
 {
-  "strings": {
+  "texts": {
     "title": "Pollen",
     "welcomeMessage": "send mail to people who care",
     "copyright": "Reviver",
-    "search": "Search",
-    "searchUnder": "For relevant friends",
-    "send": "Send it",
-    "sendUnder": "Off people who care"
-
+    "search": "search",
+    "searchUnder": "for relevant friends",
+    "send": "send it",
+    "sendUnder": "off to people who care",
+    "keywords": "pollen, email, friend",
+    "domain": "pollenpost.com"
   },
   "logos": {
-    "main": ""
+    "homeLogo": "/images/Home_pollen_logo.png",
+    "footerLogo": "/images/footer_pollen_logo.png",
+    "logo": "/images/pollen_logo.png",
+    "logoShare": "images/pollen_logo.png"
   }
 }

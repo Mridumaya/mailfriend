@@ -1,15 +1,19 @@
 {
-  "strings": {
+  "texts": {
     "title": "TalentBlast",
     "welcomeMessage": "send job opportunities to people who care",
     "copyright": "HireNurture",
-    "search": "Automatically build a list",
-    "searchUnder": "Of relevant candidates and contacts",
-    "send": "Email",
-    "sendUnder": "The whole list with just a few clicks"
-
+    "search": "automatically build a list",
+    "searchUnder": "of relevant candidates and contacts",
+    "send": "email",
+    "sendUnder": "the whole list with just a few clicks",
+    "keywords": "hirenurture, talentblast, email, friend",
+    "domain": "hirenurture.com"
   },
   "logos": {
-    "main": ""
+    "homeLogo": "/images/Home_hirenurture_logo.png",
+    "footerLogo": "/images/footer_hirenurture_logo.png",
+    "logo": "/images/hirenurture_logo.png",
+    "logoShare": "images/hirenurture_logo.png"
   }
 }
