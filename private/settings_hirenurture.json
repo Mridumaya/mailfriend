@@ -1,7 +1,7 @@
 {
     "google": {
-        "api" : "224157919603-c2cjqhgce7oo1hfog1a15enagcqag6e2.apps.googleusercontent.com",
-        "secret" : "jDhzFirYsCu73em8bArXhMz-"
+        "api" : "224157919603-330g0enjqhgsmicelr9716ef76n40msm.apps.googleusercontent.com",
+        "secret" : "g0cWC6xu9QCIEXrt-DA8wpKc"
     },
     "trail": {
         "transports": [
@@ -49,6 +49,26 @@
                     "options": {"level": "DEBUG"}
                 }
             ]
+        },
+        "custom": {
+          "texts": {
+            "title": "TalentBlast",
+            "welcomeMessage": "send job opportunities to people who care",
+            "copyright": "HireNurture",
+            "search": "automatically build a list",
+            "searchUnder": "of relevant candidates and contacts",
+            "send": "email",
+            "sendUnder": "the whole list with just a few clicks",
+            "keywords": "hirenurture, talentblast, email, friend",
+            "domain": "hirenurture.com"
+          },
+          "logos": {
+            "homeLogo": "/images/Home_hirenurture_logo.png",
+            "footerLogo": "/images/footer_hirenurture_logo.png",
+            "logo": "/images/hirenurture_logo.png",
+            "logoShare": "images/hirenurture_logo.png"
+          }
         }
+
     }
 }

@@ -4,25 +4,19 @@
         #     Meteor.log.info 'Starting server with following settings'
         # else
         #     Meteor.settings = JSON.parse(Assets.getText("settings.json"));
-
         if Meteor.absoluteUrl() == 'http://localhost:3000/'
-            Meteor.settings.public.custom = JSON.parse(Assets.getText("pollenpost.json"))
             Meteor.settings = JSON.parse(Assets.getText("settings_local.json"))
 
         else if Meteor.absoluteUrl() == 'http://borkom.meteor.com/'
-            Meteor.settings.public.custom = JSON.parse(Assets.getText("pollenpost.json"))
             Meteor.settings = JSON.parse(Assets.getText("settings_borkom.json"))
 
         else if Meteor.absoluteUrl() == 'http://www.pollenpost.com/'
-            Meteor.settings.public.custom = JSON.parse(Assets.getText("pollenpost.json"))
             Meteor.settings = JSON.parse(Assets.getText("settings_pollen.json"))
 
-        else if Meteor.absoluteUrl() == 'http://www.hirenurture.com/'
-            Meteor.settings.public.custom = JSON.parse(Assets.getText("hirenurture.json"))
+        else if Meteor.absoluteUrl() == 'http://talentblast.hirenurture.com/'
             Meteor.settings = JSON.parse(Assets.getText("settings_hirenurture.json"))
 
         else
-            Meteor.settings.public.custom = JSON.parse(Assets.getText("pollenpost.json"))
             Meteor.settings = JSON.parse(Assets.getText("settings_live.json"))
 
         console.log Meteor.settings
