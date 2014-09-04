@@ -71,15 +71,15 @@ Template.new_campaign.rendered = ->
   , 17000)
 
   # do search when a campaign is opened and there are search tags
-  if $('#campaign-tags').val().length
-    button = $('a.search-tags')
-    pressed = button.data('pressed')
-
-    if pressed is 0
-      setTimeout ->
-        # console.log 'search-tags click triggered'
-        button.trigger('click')
-      , 2000
+  # if $('#campaign-tags').val().length
+  #   button = $('a.search-tags')
+  #   pressed = button.data('pressed')
+  #
+  #   if pressed is 0
+  #     setTimeout ->
+  #       # console.log 'search-tags click triggered'
+  #       # button.trigger('click')
+  #     , 2000
 
   # init wisyhtml5 editor
   if (initialize)
@@ -102,27 +102,26 @@ Template.new_campaign.rendered = ->
     #
     #     blur: () ->
     #       clearInterval interval
-    # tinymce.execCommand 'mceRemoveControl', true, '#own_message'
     tinymce.remove("#own_message")
     tinymce.init
       selector: "#own_message"
       plugins: ["link"]
       toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
       menubar: false
-      setup : (ed) ->
-        ed.on 'focus', (e) ->
-          interval = setInterval(->
-            # tmpLength = $('#own_message').val().length
-            tmpLength = tinymce.get('own_message').getContent().length
-            if (tmpLength isnt messageLength)
-              messageLength = tmpLength
-
-              getEnteredTags()
-              return true
-          , 100)
-        ed.on 'blur', (e) ->
-          clearInterval interval
-    # initialize = false;
+    #   setup : (ed) ->
+    #     ed.on 'focus', (e) ->
+    #       interval = setInterval(->
+    #         # tmpLength = $('#own_message').val().length
+    #         tmpLength = tinymce.get('own_message').getContent().length
+    #         if (tmpLength isnt messageLength)
+    #           messageLength = tmpLength
+    #
+    #           # getEnteredTags()
+    #           return true
+    #       , 100)
+    #     ed.on 'blur', (e) ->
+    #       clearInterval interval
+    # # initialize = false;
 
   # init tagit
   $("#tags").tagit({
@@ -139,7 +138,7 @@ Template.new_campaign.rendered = ->
 
       triggerTimeout = setTimeout ->
         console.log 'trigger the search'
-        $('a.search-tags').trigger('click');
+        # $('a.search-tags').trigger('click');
       , 1000
 
     afterTagRemoved: (event,ui) ->
@@ -155,7 +154,7 @@ Template.new_campaign.rendered = ->
 
       triggerTimeout = setTimeout ->
         console.log 'trigger the search'
-        $('a.search-tags').trigger('click');
+        # $('a.search-tags').trigger('click');
       , 1000
   })
 
@@ -760,9 +759,9 @@ getEnteredTags = () ->
       # clear tags
       $("#tags").tagit("removeAll")
 
-      textarea = $('#own_message')
+      # textarea = $('#own_message')
 
-      w5ref = textarea.data('wysihtml5');
+      # w5ref = textarea.data('wysihtml5');
 
       # @tag_replaced = textarea.val()
       @tag_replaced = tinymce.get('own_message').getContent()
@@ -779,12 +778,12 @@ getEnteredTags = () ->
       #   w5ref.editor.setValue('')
       # else
       #   ta.val('')
-      tinymce.get('own_message').setContent('')
+      # tinymce.get('own_message').setContent('')
 
       # trick to update the content of the editor
       # w5ref.editor.composer.element.focus()
       # window.frames[0].document.execCommand("InsertHTML", false, @tag_replaced)
-      tinymce.get('own_message').setContent(@tag_replaced)
+      # tinymce.get('own_message').setContent(@tag_replaced)
 
     Session.set("search_tags", tags)
   , 1000)
