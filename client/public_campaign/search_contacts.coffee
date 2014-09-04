@@ -472,6 +472,7 @@ Template.public_search_contacts.events
       return false
 
     clickSendMessages()
+    Session.set("OWN_MESS", Session.get("OWN_MESS"))
 
     is_public = Session.get('public')
     if is_public is 'yes'

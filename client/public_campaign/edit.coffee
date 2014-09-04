@@ -5,7 +5,13 @@ Template.public_edit.rendered = ->
   menuitemActive()
 
   if (initialize)
-    $('#own_message').wysihtml5({"image":false, "font-styles": false});
+    # $('#own_message').wysihtml5({"image":false, "font-styles": false});
+    tinymce.remove("#own_message")
+    tinymce.init
+      selector: "#own_message"
+      plugins: ["link"]
+      toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+      menubar: false
     # initialize = false;
 
 
@@ -29,7 +35,7 @@ Template.public_edit.helpers
 
   orig_message: ->
     message = Session.get "ORIG_MESS"
-    message = message.replace(/style="color:rgb\(150, 150, 150\)"/g, '')
+    # message = message.replace(/style="color:rgb\(150, 150, 150\)"/g, '')
 
   sender_public: ->
     sender = Session.get("senderId")
@@ -89,7 +95,8 @@ Template.public_edit.events
         Meteor.call 'loadContacts', Meteor.userId(), (err) ->
           console.log err if err
           #Session.set "ORIG_MESS", $("#original_message").val() || $("#original_message").html()
-          Session.set "OWN_MESS", $("#own_message").val()
+          # Session.set "OWN_MESS", $("#own_message").val()
+          Session.set "OWN_MESS", tinymce.get('own_message').getContent()
           Session.set "MAIL_TITLE", $("#subject").val()
           # Session.set "STEP", "public_searchq"
 
@@ -116,7 +123,7 @@ Template.public_edit.events
           Meteor.subscribe 'contacts', Meteor.userId(), ->
             console.log 'SUBSCRIBED_CONTACTS: ', Contacts.find({}).count(), new Date()
           Meteor.call 'updateLastLogin', (err) ->
-            false  
+            false
           Meteor.call 'loadContacts', Meteor.userId(), (err) ->
             console.log err if err
             #Session.set "ORIG_MESS", $("#original_message").val() || $("#original_message").html()

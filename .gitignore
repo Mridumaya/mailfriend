@@ -1,3 +1,4 @@
 .idea
 
 packages/urlify2
+deploy.sh
