@@ -108,6 +108,8 @@ Template.new_campaign.rendered = ->
       plugins: ["link"]
       toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
       menubar: false
+      content_css: "/css/tinymce.css"
+      statusbar: false
     #   setup : (ed) ->
     #     ed.on 'focus', (e) ->
     #       interval = setInterval(->

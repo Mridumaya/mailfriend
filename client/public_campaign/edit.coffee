@@ -12,6 +12,8 @@ Template.public_edit.rendered = ->
       plugins: ["link"]
       toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
       menubar: false
+      content_css: "/css/tinymce.css"
+      statusbar: false
     # initialize = false;
 
 
