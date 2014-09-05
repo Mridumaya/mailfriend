@@ -14,13 +14,13 @@
         </div>
 
         <div class="btn-group select-contact-group" data-step="5" data-intro="Matched contacts are interested in the particular keyword(s) you typed based on search of received and sent emails." data-position="right">
-            <a href="#matched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab contact-tab-matched tab-active">Matched Contacts</a>
-            <a href="#unmatched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab contact-tab-unmatched">Unmatched Contacts</a>
+            <a href="#matched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab contact-tab-matched tab-active hidden">Matched Contacts</a>
+            <a href="#unmatched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab contact-tab-unmatched">Show all contacts, not just matches</a>
         </div>
 
         <div class="alert alert-warning alert-dismissable no-results hidden mt20">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <strong>Your search had no results!</strong> Please try again with other keywords or select recipients from the "Unmatched Contacts" list.
+            <strong>Your search had no results!</strong> Please try again with other keywords or select recipients from the "All Contacts" list.
         </div>
 
         <div class="tab-content table_2">
@@ -72,6 +72,11 @@
                     {{/each}}
                 </table>
             </div>
+            <!-- <br><br>
+            <div class="btn-group select-contact-group" data-step="5" data-intro="Matched contacts are interested in the particular keyword(s) you typed based on search of received and sent emails." data-position="right">
+                <a href="#matched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab contact-tab-matched tab-active hidden">Matched Contacts</a>
+                <a href="#unmatched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab contact-tab-unmatched">Show All Contacts</a>
+            </div> -->
         </div>
 
         <section class="inbox_content">

@@ -272,6 +272,7 @@ Template.new_campaign.events
                     # populate datatables
                     refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
                     refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+                    $('a.contact-tab-matched').removeClass('hidden')
                     if @autoSelect isnt 2
                       sendToTop10()
                       @autoSelect++
@@ -296,6 +297,10 @@ Template.new_campaign.events
 
                   # show the no results warning
                   $('div.no-results').removeClass('hidden')
+
+                  # show all contacts
+                  $('a.contact-tab-unmatched').trigger('click')
+                  $('a.contact-tab-matched').addClass('hidden')
 
                 # clear interval
                 destroyContactInt = button.data('destroyContactInt')
