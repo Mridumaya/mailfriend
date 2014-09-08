@@ -9,7 +9,7 @@ Template.public_search_contacts.rendered = ->
 
       triggerTimeout = setTimeout ->
         console.log 'trigger the search'
-        $('.search-tags').trigger 'click'
+        # $('.search-tags').trigger 'click'
       , 1000
 
     afterTagRemoved: (event,ui) ->
@@ -18,7 +18,7 @@ Template.public_search_contacts.rendered = ->
 
       triggerTimeout = setTimeout ->
         console.log 'trigger the search'
-        $('.search-tags').trigger 'click'
+        # $('.search-tags').trigger 'click'
       , 1000
   })
 
@@ -578,6 +578,7 @@ Template.public_search_contacts.events
                   # populate datatables
                   refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
                   refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+                  $('a.contact-tab-matched').removeClass('hidden')
                   sendToTop10()
                   button.data('pressed', 0)
                 , 100
@@ -599,6 +600,10 @@ Template.public_search_contacts.events
 
                 # show the no results warning
                 $('div.no-results').removeClass('hidden')
+
+                # show all contacts
+                $('a.contact-tab-unmatched').trigger('click')
+                $('a.contact-tab-matched').addClass('hidden')
 
               # clear interval
               destroyContactInt = button.data('destroyContactInt')
