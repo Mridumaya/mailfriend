@@ -44,7 +44,7 @@
           }
         },
         "simplesmtp": {
-          "version": "http://registry.npmjs.org/simplesmtp/-/simplesmtp-0.3.32.tgz",
+          "version": "http://registry.npmjs.org/simplesmtp/-/simplesmtp-0.3.33.tgz",
           "dependencies": {
             "rai": {
               "version": "http://registry.npmjs.org/rai/-/rai-0.1.11.tgz"
