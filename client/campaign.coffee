@@ -222,7 +222,7 @@ Template.new_campaign.events
         mixpanel.track("search tag", { });
 
         # show the loaders
-        searchLoader('show');
+        #searchLoader('show');
         $('div.loading-contacts').removeClass('hidden')
 
         # Show Progress Bar
@@ -296,7 +296,7 @@ Template.new_campaign.events
                   @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
                   # hide loaders
-                  searchLoader('hide');
+                  #searchLoader('hide');
                   $('div.loading-contacts').addClass('hidden')
 
                   # Hide Progress Bar
@@ -859,7 +859,7 @@ getEnteredTagsInit = () ->
       )
 
     # hide loaders
-    searchLoader('hide');
+    #searchLoader('hide');
     $('div.loading-contacts').addClass('hidden')
 
     # Hide Progress Bar
