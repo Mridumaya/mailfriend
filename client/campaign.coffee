@@ -225,6 +225,10 @@ Template.new_campaign.events
         searchLoader('show');
         $('div.loading-contacts').removeClass('hidden')
 
+        # Show Progress Bar
+        progressBarloader('show')
+        $('.mailProgressbar').animate({ width: "100%" },1000);
+
         # remove the no results warning
         $('div.no-results').addClass('hidden')
 
@@ -294,6 +298,10 @@ Template.new_campaign.events
                   # hide loaders
                   searchLoader('hide');
                   $('div.loading-contacts').addClass('hidden')
+
+                  # Hide Progress Bar
+                  progressBarloader('hide')
+                  $('.mailProgressbar').animate({ width: "0%" });
 
                   # show the no results warning
                   $('div.no-results').removeClass('hidden')
@@ -854,6 +862,10 @@ getEnteredTagsInit = () ->
     searchLoader('hide');
     $('div.loading-contacts').addClass('hidden')
 
+    # Hide Progress Bar
+    progressBarloader('hide')
+    $('.mailProgressbar').animate({ width: "0%" });
+
 
 @initScrollbar = (scrollcontent) ->
   $(scrollcontent).mCustomScrollbar
@@ -861,6 +873,15 @@ getEnteredTagsInit = () ->
       enable: true,
       scrollType: "pixels",
       horizontalScroll: true
+
+
+@progressBarloader = (action) ->
+  progressBar = $('#searchMailProgressbar')
+  if action is 'show'
+    progressBar.removeClass('hidden')
+  else if action is 'hide'
+    progressBar.addClass('hidden')
+    location.replace('#contact-list-container')
 
 
 @searchLoader = (action) ->

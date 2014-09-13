@@ -1,7 +1,7 @@
 <template name="new_campaign">
     <div id="container-inner">
         {{> campaign_progress}}
-        <section class="inbox_content" id="campaign-editor-section">
+        <section class="inbox_content pb70" id="campaign-editor-section">
             <div class="block_head">
                 <div class="box_left">
                     <h2>Create a new campaign</h2>
@@ -15,6 +15,15 @@
                       <textarea id="own_message" name="own_message" autofocus>{{#if _id}}{{body}}{{/if}}</textarea>
                     </div>
                     <a href="#" class="button btn-save-campaign">Save</a><span id="campaignSaved">Campaign saved...</span>
+
+                    <div id="searchMailProgressbar" class="hidden">
+                        <div class="progress mt20">
+                            <div class="mailProgressbar progress-bar six-sec-ease-in-out" role="progressbar" data-transitiongoal="100"></div>
+                        </div>
+                        <h3 class="text-center">Getting your contact list (Searching for relevant contacts)</h3>
+                    </div>
+
+                    
                 </div>
                 <div class="mail_content" data-step="3" data-intro="Tag a word by using a <strong>#</strong> in the message and it will add the keyword to the campaign." data-position="left">
                     <div class="mailbox_right">
@@ -24,6 +33,7 @@
                     </div>
 
                     <div id="existing-recipients" class="hidden">{{recipients}}</div>
+
 
                     <a href="#" class="button search-tags" data-pressed="0" data-destroyContactInt="0" data-results="0" data-autoselect="1">Search</a>
                     <a href="#" class="button reset-tags pull-right">Reset</a>
