@@ -7,9 +7,11 @@ Template.contact_list.helpers
       _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
       _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
       _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
-      _.extend(selector, {searchQ: Session.get('searchQ')})
+      _.extend(selector, {user_id: Meteor.userId()})
+      _.extend(selector, {email: { $regex: Session.get('searchQ'), $options: 'i' }})
 
       contacts = Contacts.find(selector).fetch()
+      
 
       button = $('a.search-tags')
       button.data('results', contacts.length)
@@ -28,11 +30,13 @@ Template.contact_list.helpers
     console.log 'Unmatched Contacts'
     if Session.get('searchQ')
       selector = {}
+      q= Session.get('searchQ')
 
       _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
       _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
       _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
-      _.extend(selector, {searchQ: {$ne: Session.get('searchQ')}}) if Session.get('searchQ')
+      _.extend(selector, {user_id: Meteor.userId()})
+      _.extend(selector, {email: { $not: /q/}}) if Session.get('searchQ')
 
       contacts = Contacts.find(selector).fetch()
 
