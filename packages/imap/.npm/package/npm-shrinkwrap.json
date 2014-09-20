@@ -1,25 +1,25 @@
 {
   "dependencies": {
     "imap": {
-      "version": "http://registry.npmjs.org/imap/-/imap-0.8.7.tgz",
+      "version": "0.8.7",
       "dependencies": {
         "utf7": {
-          "version": "http://registry.npmjs.org/utf7/-/utf7-1.0.0.tgz"
+          "version": "1.0.0"
         },
         "readable-stream": {
-          "version": "http://registry.npmjs.org/readable-stream/-/readable-stream-1.1.13.tgz",
+          "version": "1.1.13",
           "dependencies": {
             "core-util-is": {
-              "version": "http://registry.npmjs.org/core-util-is/-/core-util-is-1.0.1.tgz"
+              "version": "1.0.1"
             },
             "isarray": {
-              "version": "http://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
+              "version": "0.0.1"
             },
             "string_decoder": {
-              "version": "http://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz"
+              "version": "0.10.31"
             },
             "inherits": {
-              "version": "http://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
+              "version": "2.0.1"
             }
           }
         }

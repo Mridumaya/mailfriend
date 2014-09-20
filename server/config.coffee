@@ -16,8 +16,13 @@
         else if Meteor.absoluteUrl() == 'http://talentblast.hirenurture.com/'
             Meteor.settings = JSON.parse(Assets.getText("settings_hirenurture.json"))
 
+        else if Meteor.absoluteUrl() == 'http://pollen.meteor.com/'
+            Meteor.settings = JSON.parse(Assets.getText("settings_pollen_meteor.json"))
+            
         else
             Meteor.settings = JSON.parse(Assets.getText("settings_live.json"))
+
+
 
         console.log Meteor.settings
 

@@ -30,13 +30,18 @@ Template.contact_list.helpers
     console.log 'Unmatched Contacts'
     if Session.get('searchQ')
       selector = {}
-      q= Session.get('searchQ')
-
+      getResult = Session.get('searchQ')
+      q = '/' + getResult + '/'
+      
       _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
       _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
       _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
       _.extend(selector, {user_id: Meteor.userId()})
-      _.extend(selector, {email: { $not: /q/}}) if Session.get('searchQ')
+      _.extend(selector, {email: { $not: q}}) if Session.get('searchQ')
+
+
+      console.log selector
+      console.log '---------'
 
       contacts = Contacts.find(selector).fetch()
 
