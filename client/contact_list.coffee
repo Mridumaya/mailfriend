@@ -1,3 +1,7 @@
+Template.contact_list.showUnmatchedContacts = ->
+  return Session.get('showUnmatchedContacts')
+
+
 Template.contact_list.helpers
   matchedContacts: ->
     console.log 'Matched Contacts'
@@ -10,9 +14,11 @@ Template.contact_list.helpers
       _.extend(selector, {user_id: Meteor.userId()})
       _.extend(selector, {email: { $regex: Session.get('searchQ'), $options: 'i' }})
 
+      console.log Contacts.find(selector).count()
+
+
       contacts = Contacts.find(selector).fetch()
       
-
       button = $('a.search-tags')
       button.data('results', contacts.length)
 
@@ -30,18 +36,17 @@ Template.contact_list.helpers
     console.log 'Unmatched Contacts'
     if Session.get('searchQ')
       selector = {}
-      getResult = Session.get('searchQ')
-      q = '/' + getResult + '/'
+      getResult = Session.get('searchQ') if Session.get('searchQ')
       
       _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
       _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
       _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
       _.extend(selector, {user_id: Meteor.userId()})
-      _.extend(selector, {email: { $not: q}}) if Session.get('searchQ')
+      _.extend(selector, {searchQ: {$ne: getResult}}) 
 
 
-      console.log selector
-      console.log '---------'
+      console.log Contacts.find(selector).count()
+
 
       contacts = Contacts.find(selector).fetch()
 
@@ -351,9 +356,21 @@ Template.contact_list.events
     $(e.target).addClass('tab-active')
 
   'click .contact-tab-matched': (e) ->
+    Session.set('showUnmatchedContacts', false)
+    console.log Session.get('showUnmatchedContacts')
+
     mixpanel.track("clicked on matched contacts tab", { })
 
   'click .contact-tab-unmatched': (e) ->
+    Session.set('showUnmatchedContacts', true)
+    console.log Session.get('showUnmatchedContacts')
+
+    setTimeout ->
+      # populate datatables
+      #refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+      refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+      $('a.contact-tab-matched').removeClass('hidden')
+    , 100
     mixpanel.track("clicked on unmatched contacts tab", { })
 
 

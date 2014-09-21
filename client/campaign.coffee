@@ -1,3 +1,7 @@
+Session.set("showUnmatchedContacts", false)
+
+
+
 introPagesDone = (page, pageObject) ->
   Meteor.call 'introPagesDone', page, pageObject, (err, res) ->
     if res
@@ -210,6 +214,8 @@ Template.new_campaign.events
   'click .search-tags': (e) ->
     mixpanel.track("clicked on search in a campaign", { });
     success = googleOauthOpen(e, true)
+
+
     if success
       button = $(e.currentTarget)
       button.data('pressed', 1)

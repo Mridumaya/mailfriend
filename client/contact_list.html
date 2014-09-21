@@ -52,24 +52,28 @@
                 <div class="loading-contacts">
                     <img src="/images/ajax-loader.gif" alt=""><span> Loading search results...</span>
                 </div>
-
-                {{> DataTable
-                    selector=unmatched_selector
-                    columns=columns
-                }}
+                <!-- inititally showUnmatchedContacts is false -->
+                {{#if showUnmatchedContacts }}
+                    {{> DataTable
+                        selector=unmatched_selector
+                        columns=columns
+                    }}
+                {{/if}}
 
                 <table id="tmp_unmatched_contacts" class="hidden">
-                    {{#each unmatchedContacts}}
-                    <tr class="contact" data-email="{{email}}">
-                        <td class="icon"><i></i></td>
-                        <td>{{name}}</td>
-                        <td>{{email}}</td>
-                        <td>{{sentMessages}}</td>
-                        <td>{{receivedMessages}}</td>
-                        <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
-                        <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
-                    </tr>
-                    {{/each}}
+                    {{#if showUnmatchedContacts }}
+                        {{#each unmatchedContacts}}
+                        <tr class="contact" data-email="{{email}}">
+                            <td class="icon"><i></i></td>
+                            <td>{{name}}</td>
+                            <td>{{email}}</td>
+                            <td>{{sentMessages}}</td>
+                            <td>{{receivedMessages}}</td>
+                            <td>{{#if isGContact}}<i class="glyphicon glyphicon-ok"></i>{{/if}}</td>
+                            <td>{{#if isRelevant}}<i class="relevant-contact glyphicon glyphicon-ok"></i>{{/if}}</td>
+                        </tr>
+                        {{/each}}
+                    {{/if}}
                 </table>
             </div>
         </div>
