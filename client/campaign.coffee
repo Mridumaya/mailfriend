@@ -1,4 +1,5 @@
 Session.set("showUnmatchedContacts", false)
+Session.set("currentPageUnmatchedContacts", 0)
 
 
 
@@ -233,7 +234,7 @@ Template.new_campaign.events
 
         # Show Progress Bar
         progressBarloader('show')
-        $('.mailProgressbar').animate({ width: "100%" },1000);
+        $('.mailProgressbar').animate({ width: "100%" },2000);
 
         # remove the no results warning
         $('div.no-results').addClass('hidden')

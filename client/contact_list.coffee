@@ -1,6 +1,9 @@
 Template.contact_list.showUnmatchedContacts = ->
   return Session.get('showUnmatchedContacts')
 
+Template.contact_list.currentPageUnmatchedContacts = ->
+  return Session.get('currentPageUnmatchedContacts')
+
 
 Template.contact_list.helpers
   matchedContacts: ->
@@ -35,26 +38,7 @@ Template.contact_list.helpers
   unmatchedContacts: ->
     console.log 'Unmatched Contacts'
     if Session.get('searchQ')
-      selector = {}
-      getResult = Session.get('searchQ') if Session.get('searchQ')
-      
-      _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
-      _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
-      _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
-      _.extend(selector, {user_id: Meteor.userId()})
-      _.extend(selector, {searchQ: {$ne: getResult}}) 
-
-
-      console.log Contacts.find(selector).count()
-
-
-      contacts = Contacts.find(selector).fetch()
-
-      if contacts isnt undefined and contacts isnt null and contacts.length isnt 0
-        contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
-        _.map contacts, (c, i) -> _.extend c, {index: i+1}
-      else
-        []
+      loaderUnmachedList()
     else
       []
 
@@ -293,7 +277,6 @@ Template.contact_list.events
     $("#recipients").tagit("removeAll")
 
 
-
   'click .edit-search-term': (e) ->
     searchQuery = $('#s_term').val().trim()
     if searchQuery
@@ -359,7 +342,39 @@ Template.contact_list.events
     Session.set('showUnmatchedContacts', false)
     console.log Session.get('showUnmatchedContacts')
 
-    mixpanel.track("clicked on matched contacts tab", { })
+  'click #previousUnmatched': ->
+    currentSession = Session.get('currentPageUnmatchedContacts')
+    if currentSession<=0
+      console.log 'No Previous Record'
+      $('#previousUnmatched').attr('disabled', 'disabled')
+      return
+    else
+      Session.set('currentPageUnmatchedContacts', currentSession-1)
+      loaderUnmachedList()
+
+      setTimeout ->
+        # populate datatables
+        #refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+        refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+        $('a.contact-tab-matched').removeClass('hidden')
+      , 100
+      mixpanel.track("clicked on unmatched contacts tab", { })
+
+  'click #nextUnmatched': ->
+    currentSession = Session.get('currentPageUnmatchedContacts')
+    Session.set('currentPageUnmatchedContacts', currentSession+1)
+    if currentSession == 0
+      $('#previousUnmatched').removeAttr('disabled', 'disabled')
+
+    loaderUnmachedList()
+
+    setTimeout ->
+      # populate datatables
+      #refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
+      refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
+      $('a.contact-tab-matched').removeClass('hidden')
+    , 100
+    mixpanel.track("clicked on unmatched contacts tab", { })
 
   'click .contact-tab-unmatched': (e) ->
     Session.set('showUnmatchedContacts', true)
@@ -477,3 +492,35 @@ clickSendMessages = (toEmails=[]) ->
       emails = recipientsTagit.tagit("assignedTags")
 
   Session.set("CONF_DATA", emails)
+
+loaderUnmachedList = ->
+  #Session.set("showUnmatchedContacts", false)
+  #Session.set("showUnmatchedContacts", true)
+
+  selector = {}
+  getResult = Session.get('searchQ') if Session.get('searchQ')
+  
+  _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
+  _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
+  _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
+  _.extend(selector, {user_id: Meteor.userId()})
+  _.extend(selector, {searchQ: {$ne: getResult}}) 
+
+
+  contacts = Contacts.find(selector).fetch()
+  currentPage = Session.get('currentPageUnmatchedContacts')
+  skip = 100*currentPage
+  limit = (100*currentPage)+100
+
+  if limit > contacts.length
+    console.log 'There is no more record for load'
+    return
+  else
+    console.log 'Load Record from ' + skip + ' to ' + limit
+
+    contacts = contacts.slice(skip,limit)
+    if contacts isnt undefined and contacts isnt null and contacts.length isnt 0
+      contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
+      _.map contacts, (c, i) -> _.extend c, {index: i+1}
+    else
+      []

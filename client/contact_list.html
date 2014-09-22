@@ -17,6 +17,13 @@
             <a href="#matched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab contact-tab-matched tab-active hidden">Matched Contacts</a>
             <a href="#unmatched-contacts-tab" data-toggle="tab" class="btn btn- btn-sm btn-default contact-tab contact-tab-unmatched">Show all contacts, not just matches</a>
         </div>
+        <!-- inititally showUnmatchedContacts is false -->
+        {{#if showUnmatchedContacts }}
+        <div class="btn-group" data-position="right">
+            <button id='previousUnmatched' class="btn btn- btn-sm btn-default">Load <i class="fa fa-backward fa-lg"></i> 100 </button>
+            <button id='nextUnmatched' class="btn btn- btn-sm btn-default">Load <i class="fa fa-forward fa-lg"></i> 100 </button>
+        </div>
+        {{/if}}
 
         <div class="alert alert-danger alert-dismissable no-results hidden mt20">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
