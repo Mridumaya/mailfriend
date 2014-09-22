@@ -16,6 +16,7 @@ googleOauthOpen = (ev, search) ->
   ev.preventDefault()
   mixpanel.track("logs in", { });
   console.log Session.get 'loggedInWithGoogle'
+  #alert Session.get 'loggedInWithGoogle'
 
   console.log new Date()
   if not Session.get 'loggedInWithGoogle'
@@ -33,6 +34,7 @@ googleOauthOpen = (ev, search) ->
     }, (err, mergedUserId) ->
       $(button).prop('disabled', false)
       console.log mergedUserId
+      #alert Session.get mergedUserId
       unless err
         Meteor.call 'setUserToLoggedInWithGoogle', Meteor.userId(), (err) ->
           false
@@ -46,6 +48,7 @@ googleOauthOpen = (ev, search) ->
           Session.set 'campaign_id', Session.get 'campaign_id'
           Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
             Session.set 'loggedInWithGoogle', res
+            #alert Session.get 'loggedInWithGoogle'
 
           if search isnt undefined
             setTimeout ->
@@ -214,8 +217,8 @@ Template.new_campaign.events
 
   'click .search-tags': (e) ->
     mixpanel.track("clicked on search in a campaign", { });
-    success = googleOauthOpen(e, true)
-
+    #success = googleOauthOpen(e, true)
+    success = Session.get 'loggedInWithGoogle'
 
     if success
       button = $(e.currentTarget)
@@ -234,7 +237,7 @@ Template.new_campaign.events
 
         # Show Progress Bar
         progressBarloader('show')
-        $('.mailProgressbar').animate({ width: "100%" },2000);
+        $('.mailProgressbar').animate({ width: "100%" },3000);
 
         # remove the no results warning
         $('div.no-results').addClass('hidden')
