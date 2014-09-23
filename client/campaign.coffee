@@ -148,7 +148,7 @@ Template.new_campaign.rendered = ->
 
       triggerTimeout = setTimeout ->
         console.log 'trigger the search'
-        # $('a.search-tags').trigger('click');
+        $('a.search-tags').trigger('click');
       , 1000
 
     afterTagRemoved: (event,ui) ->
@@ -164,7 +164,7 @@ Template.new_campaign.rendered = ->
 
       triggerTimeout = setTimeout ->
         console.log 'trigger the search'
-        # $('a.search-tags').trigger('click');
+        $('a.search-tags').trigger('click');
       , 1000
   })
 
@@ -263,6 +263,7 @@ Template.new_campaign.events
                 # if there are matches add them to datatables
                 matches = parseInt($('#tmp_matched_contacts tr').length)
                 if matches
+                  console.log 'match record found load matched tab'
                   # add existing recipients to recipienys list
                   recipients_str = $('#existing-recipients').text()
 
@@ -298,6 +299,7 @@ Template.new_campaign.events
                 # check for results, if there's none, display notification
                 results = button.data('results')
                 if results is 0
+                  console.log 'No record found load unmatched tab'
                   mixpanel.track("no matched contacts after search", { })
                   button.data('destroyContactInt', 1)
 
@@ -319,6 +321,8 @@ Template.new_campaign.events
                   # show all contacts
                   $('a.contact-tab-unmatched').trigger('click')
                   $('a.contact-tab-matched').addClass('hidden')
+                else
+                  console.log results + '---------------'
 
                 # clear interval
                 destroyContactInt = button.data('destroyContactInt')
@@ -891,7 +895,7 @@ getEnteredTagsInit = () ->
     progressBar.removeClass('hidden')
   else if action is 'hide'
     progressBar.addClass('hidden')
-    location.replace('#contact-list-container')
+    #location.replace('#contact-list-container')
 
 
 @searchLoader = (action) ->

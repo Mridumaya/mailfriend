@@ -10,12 +10,12 @@ Template.contact_list.helpers
     console.log 'Matched Contacts'
     if Session.get('searchQ')
       selector = {}
-
+      
       _.extend selector, {source: 'gcontact'} if Session.equals('FILTER_GCONTACT', true)
       _.extend selector, {uids: {$exists: true}} if Session.equals('FILTER_GMAIL_RECEIVED', true)
       _.extend selector, {sent_uids: {$exists: true}} if Session.equals('FILTER_GMAIL_SENT', true)
       _.extend(selector, {user_id: Meteor.userId()})
-      _.extend(selector, {email: { $regex: Session.get('searchQ'), $options: 'i' }})
+      _.extend(selector, {searchQ: Session.get('searchQ')})
 
       console.log Contacts.find(selector).count()
 
@@ -508,19 +508,19 @@ loaderUnmachedList = ->
 
 
   contacts = Contacts.find(selector).fetch()
-  currentPage = Session.get('currentPageUnmatchedContacts')
-  skip = 100*currentPage
-  limit = (100*currentPage)+100
+  #currentPage = Session.get('currentPageUnmatchedContacts')
+  #skip = 100*currentPage
+  #limit = (100*currentPage)+100
 
-  if limit > contacts.length
-    console.log 'There is no more record for load'
-    return
+  #if limit > contacts.length
+    #console.log 'There is no more record for load'
+    #return
+  #else
+    #console.log 'Load Record from ' + skip + ' to ' + limit
+
+    #contacts = contacts.slice(skip,limit)
+  if contacts isnt undefined and contacts isnt null and contacts.length isnt 0
+    contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
+    _.map contacts, (c, i) -> _.extend c, {index: i+1}
   else
-    console.log 'Load Record from ' + skip + ' to ' + limit
-
-    contacts = contacts.slice(skip,limit)
-    if contacts isnt undefined and contacts isnt null and contacts.length isnt 0
-      contacts = _.sortBy contacts, (c) -> -c.sent_uids?.length || 0
-      _.map contacts, (c, i) -> _.extend c, {index: i+1}
-    else
-      []
+    []
