@@ -743,3 +743,12 @@ p.draft-body textarea {
   opacity: 0.0;
   margin-left: 18px;
 }
+
+/*Progress Bar*/
+.six-sec-ease-in-out {
+    -webkit-transition: width 2s ease-in-out;
+    -moz-transition: width 2s ease-in-out;
+    -ms-transition: width 2s ease-in-out;
+    -o-transition: width 2s ease-in-out;
+    transition: width 2s ease-in-out;
+}

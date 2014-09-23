@@ -16,14 +16,16 @@
         else if Meteor.absoluteUrl() == 'http://talentblast.hirenurture.com/'
             Meteor.settings = JSON.parse(Assets.getText("settings_hirenurture.json"))
 
-        else if Meteor.absoluteUrl() == 'http://origin.meteor.com/'
-            Meteor.settings = JSON.parse(Assets.getText("settings_hirenurture.json"))
-
         else if Meteor.absoluteUrl() == 'http://ec2-54-68-179-233.us-west-2.compute.amazonaws.com/'
             Meteor.settings = JSON.parse(Assets.getText("settings_ec2instance.json"))
 
+        else if Meteor.absoluteUrl() == 'http://pollen.meteor.com/'
+            Meteor.settings = JSON.parse(Assets.getText("settings_pollen_meteor.json"))
+
         else
             Meteor.settings = JSON.parse(Assets.getText("settings_live.json"))
+
+
 
         console.log Meteor.settings
 

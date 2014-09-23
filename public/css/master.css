@@ -1725,7 +1725,7 @@ table.dataTable tbody td {
 .dataTables_filter {
     display: inline-block;
     border: 1px solid #ced3d7;
-    width: 83%;
+    width: 80%;
     border-radius:6px;
     background:#fff;
 }
@@ -2381,7 +2381,7 @@ a.delete-message {
 @media ( max-width: 1326px) {
     #DataTables_Table_0_length {
         float: left;
-        margin: 10px 0;
+        /*margin: 10px 0;*/
     }
 }
 

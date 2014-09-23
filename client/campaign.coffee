@@ -1,3 +1,8 @@
+Session.set("showUnmatchedContacts", false)
+Session.set("currentPageUnmatchedContacts", 0)
+
+
+
 introPagesDone = (page, pageObject) ->
   Meteor.call 'introPagesDone', page, pageObject, (err, res) ->
     if res
@@ -11,6 +16,7 @@ googleOauthOpen = (ev, search) ->
   ev.preventDefault()
   mixpanel.track("logs in", { });
   console.log Session.get 'loggedInWithGoogle'
+  #alert Session.get 'loggedInWithGoogle'
 
   console.log new Date()
   if not Session.get 'loggedInWithGoogle'
@@ -28,6 +34,7 @@ googleOauthOpen = (ev, search) ->
     }, (err, mergedUserId) ->
       $(button).prop('disabled', false)
       console.log mergedUserId
+      #alert Session.get mergedUserId
       unless err
         Meteor.call 'setUserToLoggedInWithGoogle', Meteor.userId(), (err) ->
           false
@@ -41,6 +48,7 @@ googleOauthOpen = (ev, search) ->
           Session.set 'campaign_id', Session.get 'campaign_id'
           Meteor.call 'checkIfUserLoggedInWithGoogle', Meteor.userId(), (err, res) ->
             Session.set 'loggedInWithGoogle', res
+            #alert Session.get 'loggedInWithGoogle'
 
           if search isnt undefined
             setTimeout ->
@@ -140,7 +148,7 @@ Template.new_campaign.rendered = ->
 
       triggerTimeout = setTimeout ->
         console.log 'trigger the search'
-        # $('a.search-tags').trigger('click');
+        $('a.search-tags').trigger('click');
       , 1000
 
     afterTagRemoved: (event,ui) ->
@@ -156,7 +164,7 @@ Template.new_campaign.rendered = ->
 
       triggerTimeout = setTimeout ->
         console.log 'trigger the search'
-        # $('a.search-tags').trigger('click');
+        $('a.search-tags').trigger('click');
       , 1000
   })
 
@@ -209,7 +217,9 @@ Template.new_campaign.events
 
   'click .search-tags': (e) ->
     mixpanel.track("clicked on search in a campaign", { });
-    success = googleOauthOpen(e, true)
+    #success = googleOauthOpen(e, true)
+    success = Session.get 'loggedInWithGoogle'
+
     if success
       button = $(e.currentTarget)
       button.data('pressed', 1)
@@ -222,8 +232,12 @@ Template.new_campaign.events
         mixpanel.track("search tag", { });
 
         # show the loaders
-        searchLoader('show');
+        #searchLoader('show');
         $('div.loading-contacts').removeClass('hidden')
+
+        # Show Progress Bar
+        progressBarloader('show')
+        $('.mailProgressbar').animate({ width: "100%" },3000);
 
         # remove the no results warning
         $('div.no-results').addClass('hidden')
@@ -249,6 +263,7 @@ Template.new_campaign.events
                 # if there are matches add them to datatables
                 matches = parseInt($('#tmp_matched_contacts tr').length)
                 if matches
+                  console.log 'match record found load matched tab'
                   # add existing recipients to recipienys list
                   recipients_str = $('#existing-recipients').text()
 
@@ -284,6 +299,7 @@ Template.new_campaign.events
                 # check for results, if there's none, display notification
                 results = button.data('results')
                 if results is 0
+                  console.log 'No record found load unmatched tab'
                   mixpanel.track("no matched contacts after search", { })
                   button.data('destroyContactInt', 1)
 
@@ -292,8 +308,12 @@ Template.new_campaign.events
                   @refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
 
                   # hide loaders
-                  searchLoader('hide');
+                  #searchLoader('hide');
                   $('div.loading-contacts').addClass('hidden')
+
+                  # Hide Progress Bar
+                  progressBarloader('hide')
+                  $('.mailProgressbar').animate({ width: "0%" });
 
                   # show the no results warning
                   $('div.no-results').removeClass('hidden')
@@ -301,6 +321,8 @@ Template.new_campaign.events
                   # show all contacts
                   $('a.contact-tab-unmatched').trigger('click')
                   $('a.contact-tab-matched').addClass('hidden')
+                else
+                  console.log results + '---------------'
 
                 # clear interval
                 destroyContactInt = button.data('destroyContactInt')
@@ -851,8 +873,12 @@ getEnteredTagsInit = () ->
       )
 
     # hide loaders
-    searchLoader('hide');
+    #searchLoader('hide');
     $('div.loading-contacts').addClass('hidden')
+
+    # Hide Progress Bar
+    progressBarloader('hide')
+    $('.mailProgressbar').animate({ width: "0%" });
 
 
 @initScrollbar = (scrollcontent) ->
@@ -861,6 +887,15 @@ getEnteredTagsInit = () ->
       enable: true,
       scrollType: "pixels",
       horizontalScroll: true
+
+
+@progressBarloader = (action) ->
+  progressBar = $('#searchMailProgressbar')
+  if action is 'show'
+    progressBar.removeClass('hidden')
+  else if action is 'hide'
+    progressBar.addClass('hidden')
+    #location.replace('#contact-list-container')
 
 
 @searchLoader = (action) ->
