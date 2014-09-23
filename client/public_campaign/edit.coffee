@@ -20,7 +20,7 @@ Template.public_edit.rendered = ->
 Template.public_edit.helpers
   name: ->
     user = Meteor.user()
-    if user
+    if user and user.profile.name
       user.profile.name.split(" ")[0]
     else
       ''

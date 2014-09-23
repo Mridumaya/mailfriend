@@ -33,3 +33,5 @@ accounts-merge
 houston
 timezone
 bootstrap3-wysihtml5
+spiderable
+phantomjs

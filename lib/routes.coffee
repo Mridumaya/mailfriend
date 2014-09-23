@@ -230,7 +230,10 @@ Router.map ->
       baseurl = Meteor.absoluteUrl("")
 
       if campaign isnt undefined
-        sender_name = sender.profile.name + "'s"
+        sender_name = ''
+        if sender isnt undefined
+          sender_name = sender.profile.name + "'s"
+
         SEO.set
           title: 'Get the word out for ' + sender_name + ' ' + Meteor.settings.public.custom.texts.title + ' campaign'
           meta:

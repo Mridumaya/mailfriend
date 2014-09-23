@@ -17,7 +17,8 @@
       "urlify2": {},
       "houston": {},
       "timezone": {},
-      "bootstrap3-wysihtml5": {}
+      "bootstrap3-wysihtml5": {},
+      "phantomjs": {}
     },
     "packages": {
       "google-contacts": {
@@ -89,6 +90,11 @@
         "git": "https://github.com/andreioprisan/meteor-bootstrap3-wysihtml5.git",
         "tag": "v0.3.3",
         "commit": "251d564c3eb5b5b7a89a3e3e63f58633e0816332"
+      },
+      "phantomjs": {
+        "git": "https://github.com/gadicohen/meteor-phantomjs.git",
+        "tag": "v0.0.2",
+        "commit": "a72eb79af068dd5d5d617ac71a42bd74e0cb52a4"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
