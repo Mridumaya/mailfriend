@@ -330,7 +330,7 @@ Template.new_campaign.events
                   $('a.contact-tab-unmatched').trigger('click')
                   $('a.contact-tab-matched').addClass('hidden')
                 else
-                  console.log results + 'not found ---------------'
+                  console.log results + ' not found ---------------'
 
                 # clear interval
                 destroyContactInt = button.data('destroyContactInt')
@@ -903,7 +903,7 @@ getEnteredTagsInit = () ->
     progressBar.removeClass('hidden')
   else if action is 'hide'
     progressBar.addClass('hidden')
-    #location.replace('#contact-list-container')
+    location.replace('#contact-list-container')
 
 
 @searchLoader = (action) ->
