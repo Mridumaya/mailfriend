@@ -27,7 +27,7 @@ Deps.autorun ->
     console.log 'SUBSCRIBED_SHARINGS: ', new Date
 
   Meteor.subscribe 'search_status'
-  Meteor.subscribe 'loggedInWithGoogle'
+  # Meteor.subscribe 'loggedInWithGoogle'
   UI.registerHelper 'customText', (arg) ->
     Meteor.settings.public.custom.texts[arg]
   UI.registerHelper 'customLogo', (arg) ->
