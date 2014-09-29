@@ -528,6 +528,10 @@ Template.public_search_contacts.events
       searchLoader('show');
       $('div.loading-contacts').removeClass('hidden')
 
+      # Show Progress Bar
+      progressBarloader('show')
+      $('.mailProgressbar').animate({ width: "100%" });
+
       # remove the no results warning
       $('div.no-results').addClass('hidden')
 
@@ -598,6 +602,10 @@ Template.public_search_contacts.events
                 searchLoader('hide');
                 $('div.loading-contacts').addClass('hidden')
 
+                # Hide Progress Bar
+                progressBarloader('hide')
+                $('.mailProgressbar').animate({ width: "0%" });
+
                 # show the no results warning
                 $('div.no-results').removeClass('hidden')
 
@@ -633,7 +641,14 @@ Template.public_search_contacts.events
 
   $("#recipients").tagit("removeTagByLabel", recipient)
 
-
+@progressBarloader = (action) ->
+  progressBar = $('#searchMailProgressbar')
+  if action is 'show'
+    progressBar.removeClass('hidden')
+  else if action is 'hide'
+    progressBar.addClass('hidden')
+    location.replace('#contact-list-container')
+    
 loadAllGmails = (isLoadAll) ->
   Meteor.setTimeout ->
     if Meteor.user()
