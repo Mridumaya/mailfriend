@@ -148,7 +148,7 @@ Template.new_campaign.rendered = ->
 
       triggerTimeout = setTimeout ->
         console.log 'trigger the search'
-        $('a.search-tags').trigger('click');
+        #$('a.search-tags').trigger('click');
       , 1000
 
     afterTagRemoved: (event,ui) ->
@@ -164,7 +164,7 @@ Template.new_campaign.rendered = ->
 
       triggerTimeout = setTimeout ->
         console.log 'trigger the search'
-        $('a.search-tags').trigger('click');
+        #$('a.search-tags').trigger('click');
       , 1000
   })
 
@@ -220,6 +220,11 @@ Template.new_campaign.events
     #success = googleOauthOpen(e, true)
     success = Session.get 'loggedInWithGoogle'
 
+    console.log "Check login before search " + success
+    if !success
+      success = googleOauthOpen(e, true)
+      console.log "User is not login . . . "
+
     if success
       button = $(e.currentTarget)
       button.data('pressed', 1)
@@ -237,7 +242,7 @@ Template.new_campaign.events
 
         # Show Progress Bar
         progressBarloader('show')
-        $('.mailProgressbar').animate({ width: "100%" },3000);
+        $('.mailProgressbar').animate({ width: "100%" });
 
         # remove the no results warning
         $('div.no-results').addClass('hidden')
@@ -257,11 +262,14 @@ Template.new_campaign.events
               introPagesDone 'new_campaign_second', {'introPagesDone.new_campaign_second':true}
               # check for results in every 0.75 seconds
               contactInt = setInterval(->
+                console.log "Time Interval search again ======================"
                 # add tags to datatables header
                 $("span.relevantQ").text(searchQuery)
 
                 # if there are matches add them to datatables
                 matches = parseInt($('#tmp_matched_contacts tr').length)
+
+                console.log 'match record count Interval ' + matches
                 if matches
                   console.log 'match record found load matched tab'
                   # add existing recipients to recipienys list
@@ -292,7 +300,7 @@ Template.new_campaign.events
                       sendToTop10()
                       @autoSelect++
                     button.data('pressed', 0)
-                  , 100
+                  , 1000
 
                   button.data('destroyContactInt', 1)
 
@@ -322,7 +330,7 @@ Template.new_campaign.events
                   $('a.contact-tab-unmatched').trigger('click')
                   $('a.contact-tab-matched').addClass('hidden')
                 else
-                  console.log results + '---------------'
+                  console.log results + ' not found ---------------'
 
                 # clear interval
                 destroyContactInt = button.data('destroyContactInt')
@@ -895,7 +903,7 @@ getEnteredTagsInit = () ->
     progressBar.removeClass('hidden')
   else if action is 'hide'
     progressBar.addClass('hidden')
-    #location.replace('#contact-list-container')
+    location.replace('#contact-list-container')
 
 
 @searchLoader = (action) ->

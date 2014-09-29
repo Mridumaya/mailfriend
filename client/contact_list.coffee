@@ -19,7 +19,6 @@ Template.contact_list.helpers
 
       console.log Contacts.find(selector).count()
 
-
       contacts = Contacts.find(selector).fetch()
       
       button = $('a.search-tags')
@@ -30,8 +29,8 @@ Template.contact_list.helpers
         _.map contacts, (c, i) -> _.extend c, {index: i+1}
       else
         button.data('destroyContactInt', 1)
-        console.log 'no matched contacts'
         []
+      
     else
       []
 
@@ -385,8 +384,11 @@ Template.contact_list.events
       #refreshDataTable($("#matched-contacts-tab table.dataTable"), $('#tmp_matched_contacts tr'))
       refreshDataTable($("#unmatched-contacts-tab table.dataTable"), $('#tmp_unmatched_contacts tr'))
       $('a.contact-tab-matched').removeClass('hidden')
+      $('#DataTables_Table_2_filter>label>input').attr('placeholder', "Search by people I've")
     , 100
     mixpanel.track("clicked on unmatched contacts tab", { })
+    $('#DataTables_Table_1_filter>label>input').attr('placeholder', "Search by people I've")
+    $('#DataTables_Table_3_filter>label>input').attr('placeholder', "Search by people I've")
 
 
 @addRecipient = (row) ->

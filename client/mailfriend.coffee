@@ -20,7 +20,6 @@ Template.masterLayout.helpers
     email = Meteor.user().profile.email
     messages = Messages.find({to: email, new_message: 'yes'}).count()
 
-
 Template.masterLayout.events
   'click .logout': (e) ->
     e.preventDefault
