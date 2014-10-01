@@ -133,7 +133,7 @@
                     <p>Please choose a method to share your campaign:</p>
                     <div class="row text-center success">
                         <div class="mt20">
-                            <input type="hidden" id="share-url">
+                            <input type="hidden" id="share-url"  value="{{shareUrl}}">
                             <input type="hidden" id="share-subject">
                             <input type="hidden" id="share-id">
 
@@ -152,7 +152,7 @@
                         <div class="mt20">
                           <p>or copy the text below to copy the unique link to your campaign.</p>
                           <input type="text" id="shareUrlToCopy" size="30" value="{{shareUrl}}">
-                          <input type="button" id="copyToClipboard" value="copy">
+                          <input type="button" id="copyToClipboard" data-toggle="tooltip" data-placement="top" title="Copy to clipboard" value="copy">
                         </div>
                     </div>
                 </div>
@@ -175,7 +175,7 @@
                     <p class='mt20 text-center'>Please choose a method to share your campaign:</p>
                     <div class="row text-center success">
                         <div class="mt20">
-                            <input type="hidden" id="share-url">
+                            <input type="hidden" id="share-url" value="{{shareUrl}}">
                             <input type="hidden" id="share-subject">
                             <input type="hidden" id="share-id">
 
@@ -193,7 +193,7 @@
                         </div>
                         <div class="mt20">
                           <input type="text" id="shareUrlToCopyAfter" size="30" value="{{shareUrl}}">
-                          <input type="button" id="copyToClipboardAfter" value="copy">
+                          <input type="button" id="copyToClipboardAfter" data-toggle="tooltip" data-placement="top" title="Copy to clipboard" value="copy">
                         </div>
                     </div>
                 </div>

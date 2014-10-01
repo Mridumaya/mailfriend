@@ -384,7 +384,7 @@ Template.list_campaign.rendered = ->
 
   , 750)
 
-  introPagesDone 'share_campaign', {'introPagesDone.share_campaign':true}
+  #introPagesDone 'share_campaign', {'introPagesDone.share_campaign':true}
 
   if Session.get 'sent_campaign_id'
     console.log Session.get 'sent_campaign_id'
@@ -566,6 +566,7 @@ Template.list_campaign.events
     mixpanel.track("clicked on share campaign with facebook", { })
     e.preventDefault()
     shareURL = $('#share-url').val()
+    console.log shareURL + " click on share fb"
     window.open('https://www.facebook.com/sharer/sharer.php?u=' + shareURL, 'facebook-share-dialog', 'width=626,height=436');
 
   'click #share-twitter': (e) ->
@@ -746,6 +747,22 @@ Template.after_send_share_modal.rendered = ->
 Template.after_send_share_modal.helpers
   shareUrl: ->
     Session.get 'shareThisUrl'
+
+
+Template.after_send_share_modal.events 
+  'click #copyToClipboardAfter': (e) ->
+    e.preventDefault()
+    console.log 'copy click'
+    $("#copyToClipboardAfter").val('Copied!')
+    $("#copyToClipboardAfter").attr('title','Copied')
+
+Template.share_modal.events 
+  'click #copyToClipboard': (e) ->
+    e.preventDefault()
+    console.log 'copy click'
+    $("#copyToClipboard").val('Copied!')
+    $("#copyToClipboard").attr('title','Copied')
+
 
 Template.campaign_progress.rendered = ->
   switch Session.get 'campaign_step'
