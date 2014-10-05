@@ -289,12 +289,14 @@ Template.confirm.events
   'click .draft-send': (e) ->
     e.preventDefault()
     slug = $(e.currentTarget).data('shareurl')
+    absoluteUrl = Meteor.absoluteUrl()
 
     subject = Session.get "MAIL_TITLE"
     body = Session.get("OWN_MESS")
     body = body.replace(/style="color:rgb\(150, 150, 150\)"/g, '')
     body = body.replace(/#/g, '');
-    body = body + '<br><br>Support this idea by sending it to people who care by clicking on this link:<br>' + slug
+    body = body + '<br><br>Spread the word about ' + Meteor.user().profile.name + '\'s pollen post<br>'
+    body = body + '<a href="' + slug + '"><img src="' + absoluteUrl + 'images/dandelion.jpg"></a>'
     to = Session.get "CONF_DATA"
 
     $('.draft-send').prop('disabled', true)
