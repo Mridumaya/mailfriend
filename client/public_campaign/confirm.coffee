@@ -56,8 +56,9 @@ Template.public_confirm.events
 
     # console.log subject, body, to
     $('.draft-send').prop('disabled', true)
-    sendingSpinner 'show'
-    Meteor.call 'sendMail', subject, body, to, (err, result) ->
+    # sendingSpinner 'show'
+    campaign_id = Session.get("campaign_id")
+    Meteor.call 'sendMail', subject, body, to, campaign_id, (err, result) ->
       campaign_id = Session.get("campaign_id")
       campaign = Campaigns.findOne({_id: campaign_id})
 
@@ -90,7 +91,7 @@ Template.public_confirm.events
           htmlBody: body
           senderName: Meteor.user()?.profile?.name || ""
 
-        _.each(to,(email) ->
+        # _.each(to,(email) ->
           # message = Messages.findOne({campaign_id: campaign_id, to: email})
 
           # if message
@@ -100,17 +101,17 @@ Template.public_confirm.events
           #       subject: subject
           #       new_message: 'yes'
           # else
-            Messages.insert
-              campaign_id: campaign_id
-              slug: Session.get("slug")
-              from: sender_id
-              to: email
-              message: body
-              subject: subject
-              # password: ''
-              new_message: 'yes'
-              created_at: new Date()
-        )
+        #     Messages.insert
+        #       campaign_id: campaign_id
+        #       slug: Session.get("slug")
+        #       from: sender_id
+        #       to: email
+        #       message: body
+        #       subject: subject
+        #       # password: ''
+        #       new_message: 'yes'
+        #       created_at: new Date()
+        # )
 
         # message = Messages.findOne({campaign_id: campaign_id})
         # if message
@@ -125,11 +126,11 @@ Template.public_confirm.events
         #     password: 'queens'
         #     created_at: new Date()
 
-        # $.gritter.add
-        #   title: "Email sent"
-        #   text: "You have successfully forwarded this campaign email!"
-        sendingSpinner 'hide'
-        apprise "You have successfully forwarded this campaign email!"
+        $.gritter.add
+          title: "Email sent"
+          text: "You campaign email has been sent!"
+        # sendingSpinner 'hide'
+        # apprise "You have successfully forwarded this campaign email!"
 
 
         mixpanel.track("send email", { });
@@ -138,6 +139,8 @@ Template.public_confirm.events
 
         $('.draft-send').prop('disabled', false)
         $('.draft-close').trigger('click')
+
+    apprise "Your campaign email has been qued for sending!"
 
 # functions
 @sendingSpinner = (action) ->

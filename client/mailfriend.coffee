@@ -301,13 +301,27 @@ Template.confirm.events
 
     $('.draft-send').prop('disabled', true)
     sendingSpinner 'show'
-    Meteor.call 'sendMail', subject, body, to, (err, result) ->
+    campaign_id = Session.get("campaign_id")
+    Meteor.call 'sendMail', subject, body, to, campaign_id, (err, result) ->
       campaign_id = Session.get("campaign_id")
       campaign = Campaigns.findOne({_id: campaign_id})
+      Sharings.insert
+        type: 'email'
+        campaign_id: campaign_id
+        sender_id: Meteor.user()._id
+        owner_id: campaign.user_id
+        slug: campaign.slug
+        subject: subject
+        htmlBody: body
+        senderName: Meteor.user()?.profile?.name || ""
 
-      if err
-        console.log err
-      else
+      # Session.set("sent_campaign_id", Session.get("campaign_id"))
+      # Session.set('shareThisUrl', $(e.currentTarget).data('shareurl'))
+      #
+      # Router.go 'list_campaign'
+      # if err
+      #   console.log err
+      # else
         # sharing = Sharings.findOne({type: 'email', campaign_id: campaign_id})
         # if sharing
         #   Sharings.update sharing._id,
@@ -317,17 +331,17 @@ Template.confirm.events
         #       senderName: Meteor.user()?.profile?.name || ""
         # else
 
-        Sharings.insert
-          type: 'email'
-          campaign_id: campaign_id
-          sender_id: Meteor.user()._id
-          owner_id: campaign.user_id
-          slug: campaign.slug
-          subject: subject
-          htmlBody: body
-          senderName: Meteor.user()?.profile?.name || ""
+        # Sharings.insert
+        #   type: 'email'
+        #   campaign_id: campaign_id
+        #   sender_id: Meteor.user()._id
+        #   owner_id: campaign.user_id
+        #   slug: campaign.slug
+        #   subject: subject
+        #   htmlBody: body
+        #   senderName: Meteor.user()?.profile?.name || ""
 
-        _.each(to,(email) ->
+        # _.each(to,(email) ->
           # message = Messages.findOne({campaign_id: campaign_id, to: email})
 
           # if message
@@ -337,34 +351,37 @@ Template.confirm.events
           #       subject: subject
           #       new_message: 'yes'
           # else
-            Messages.insert
-              campaign_id: campaign_id
-              slug: campaign.slug
-              from: Meteor.user()._id
-              to: email
-              message: body
-              subject: subject
-              # password: ''
-              new_message: 'yes'
-              created_at: new Date()
-        )
+            # Messages.insert
+            #   campaign_id: campaign_id
+            #   slug: campaign.slug
+            #   from: Meteor.user()._id
+            #   to: email
+            #   message: body
+            #   subject: subject
+            #   # password: ''
+            #   new_message: 'yes'
+            #   created_at: new Date()
+        # )
 
-        Meteor.call 'markCampaignSent', Session.get("campaign_id"), (e, campaign_id) ->
-          console.log e if e
+        # Meteor.call 'markCampaignSent', Session.get("campaign_id"), (e, campaign_id) ->
+          # console.log e if e
           # $.gritter.add
           #   title: "Email sent"
           #   text: "Your campaign email was successfully sent!"
           # apprise "Your campaign email was successfully sent!"
 
-        mixpanel.track("send email", { });
+        # mixpanel.track("send email", { });
 
-        console.log 'send mail success'
+        # console.log 'send mail success'
 
-        Session.set("sent_campaign_id", Session.get("campaign_id"))
-        Session.set('shareThisUrl', $(e.currentTarget).data('shareurl'))
+        # Session.set("sent_campaign_id", Session.get("campaign_id"))
+        # Session.set('shareThisUrl', $(e.currentTarget).data('shareurl'))
+        #
+        # Router.go 'list_campaign'
+    Session.set("sent_campaign_id", Session.get("campaign_id"))
+    Session.set('shareThisUrl', $(e.currentTarget).data('shareurl'))
 
-        Router.go 'list_campaign'
-
+    Router.go 'list_campaign'
 
 Template.share_via_email.rendered = ->
   menuitemActive()

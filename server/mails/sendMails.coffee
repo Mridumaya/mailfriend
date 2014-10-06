@@ -1,7 +1,7 @@
 Future = Npm.require('fibers/future')
 
 Meteor.methods
-  'sendMail': (subject, body, to) ->
+  'sendMail': (subject, body, to, campaign_id) ->
     check(subject, String)
     check(body, String)
     check(to, [String])
@@ -62,7 +62,7 @@ Meteor.methods
 
     Future.wait(futures)
     transport.close()
-
+    Campaigns.update({ _id: campaign_id }, {$set: { sent: 'yes', sent_on: new Date() } })
     Contacts.update({email: {$in: to}, user_id: user._id}, {$inc: {sends: 1}}, multi: true)
 
   'sendMailUsingMandrill': (subject, body, to) ->
