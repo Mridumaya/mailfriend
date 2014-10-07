@@ -50,8 +50,8 @@ Template.public_confirm.events
     body = Session.get("OWN_MESS") + "<br><b>Forwarded Message</b><br>" + Session.get "ORIG_MESS"
     body = body.replace(/style="color:rgb\(150, 150, 150\)"/g, '')
     body = body.replace(/#/g, '');
-    body = body + '<br><br><a href="' + slug + '">Spread the word about ' + Meteor.user().profile.name + '\'s pollen post</a><br>'
-    body = body + '<a href="' + slug + '"><img src="' + absoluteUrl + 'images/dandelion.jpg"></a>'
+    body = body + '<br><br><a href="' + slug + '">Spread the word about ' + Meteor.user().profile.name + '\'s pollen post</a><br><br>'
+    body = body + '<a href="' + slug + '"><img src="' + absoluteUrl + 'images/dandelion_email.png"></a>'
     to = Session.get "CONF_DATA"
 
     # console.log subject, body, to
