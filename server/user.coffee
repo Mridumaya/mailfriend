@@ -82,3 +82,8 @@ Meteor.methods
       return {'redirect':user.redirectToShareCampaign, 'campaign':campaign}
     else
       return false
+
+  sendFeedback: (name, message) ->
+    subject = 'Feedback on Pollenpost from ' + name
+    Meteor.call "sendMailUsingMandrill", subject, message, 'keith@stirplate.io'
+    true

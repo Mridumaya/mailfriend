@@ -45,6 +45,9 @@
     </script>
     <!-- tinymce -->
     <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+    <!-- jquery tab slide out -->
+    <script type="text/javascript" charset="utf-8" src="/js/jquery.tabSlideOut.v1.3.js"></script>
+
 </head>
 <body>
     {{#if isError}}
@@ -117,6 +120,7 @@
             </div>
         </div>
     </section>
+    {{> feedbackTab}}
     {{else}}
     {{> home}}
     {{/if}}
@@ -384,6 +388,18 @@
                 </div>
             </div>
         </section>
+    </div>
+</template>
+
+<template name="feedbackTab">
+    <div class="feedbackTab">
+    <a class="handle" href="http://link-for-non-js-users">Content</a>
+    <h3>Leave us feedback</h3>
+    <label for="feedbackName">Name: </label>
+    <input type="text" id="feedbackName" value="">
+    <label for="feedbackMessage">Message: </label>
+    <textarea id="feedbackMessage"></textarea>
+    <button class="btn btn-primary" id="feedbackSend" type="button">Send</button>
     </div>
 </template>
 

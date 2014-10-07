@@ -478,6 +478,29 @@ Template.share_via_email.events
         $('.draft-send').prop('disabled', false)
         $('.draft-close').trigger('click')
 
+Template.feedbackTab.rendered = ->
+  feedbackTab =
+    tabHandle: '.handle'
+    pathToTabImage: 'images/feedbacktab.png'
+    imageHeight: '122px'
+    imageWidth: '40px'
+    tabLocation: 'left'
+    speed: 300
+    action: 'click'
+    bottomPos: '50px'
+    leftPos: '20px'
+    fixedPosition: false
+
+  $('.feedbackTab').tabSlideOut feedbackTab
+
+Template.feedbackTab.events
+  'click #feedbackSend': (e) ->
+    e.preventDefault()
+    name = $('#feedbackName').val()
+    message = $('#feedbackMessage').val()
+    console.log 'clicked feedback send'
+    Meteor.call 'sendFeedback', name, message, (err) ->
+      apprise 'Feedback sent!'
 
 @menuitemActive = (elcl) ->
   list = $('.left_nav ul')
