@@ -439,7 +439,7 @@ Template.contact_list.rendered = ->
   mixpanel.track("visits step 3 page", { });
 
   # set some custom stuff in the datatables layout
-  $('div.dataTables_filter input').attr('placeholder', "Sort By People I've:").after('<button type="submit"><img src="/images/search_button.png" alt="Search"></button>')
+  $('div.dataTables_filter input').attr('placeholder', "Search by name or email address").after('<button type="submit"><img src="/images/search_button.png" alt="Search"></button>')
   $('div.dataTables_length select').after(' entries')
 
   $(this.find('.alert-contact')).hide()
